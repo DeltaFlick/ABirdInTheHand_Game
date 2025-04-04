@@ -37,15 +37,6 @@ public partial class @Birb_Inputs : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""WASD"",
-                    ""type"": ""Value"",
-                    ""id"": ""5e9a11ba-bbe4-4654-a575-ff9f38233013"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""956aedf7-da9f-4336-90a2-448be650124e"",
@@ -78,56 +69,56 @@ public partial class @Birb_Inputs : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""WASD"",
-                    ""id"": ""056dfbb8-06a4-4727-9f05-5827167d4c7a"",
+                    ""id"": ""448d5dfa-b7a8-42de-8a73-b06a38a86a29"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WASD"",
+                    ""action"": ""Move"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""523cae5b-9916-495c-8033-b0a35c70aea6"",
+                    ""id"": ""77bd1de7-1193-4249-aec0-258ffeaccc4a"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WASD"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""6fca2755-3595-45a9-81a7-61e0fce1a7a3"",
+                    ""id"": ""a1d53823-6549-498c-abf3-5579fe1ac051"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WASD"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""85b87fd4-dc88-447c-b7d4-5a550188b6e3"",
+                    ""id"": ""c5d51625-2445-41a3-9924-3d0d8c2b5faf"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WASD"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""70749760-812d-4c46-a187-0c50fe65aefd"",
+                    ""id"": ""eda0963c-b8ad-4818-886f-8026d5cf249f"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WASD"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -183,7 +174,6 @@ public partial class @Birb_Inputs : IInputActionCollection2, IDisposable
         // Birb
         m_Birb = asset.FindActionMap("Birb", throwIfNotFound: true);
         m_Birb_Move = m_Birb.FindAction("Move", throwIfNotFound: true);
-        m_Birb_WASD = m_Birb.FindAction("WASD", throwIfNotFound: true);
         m_Birb_Jump = m_Birb.FindAction("Jump", throwIfNotFound: true);
         m_Birb_Look = m_Birb.FindAction("Look", throwIfNotFound: true);
     }
@@ -246,7 +236,6 @@ public partial class @Birb_Inputs : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Birb;
     private IBirbActions m_BirbActionsCallbackInterface;
     private readonly InputAction m_Birb_Move;
-    private readonly InputAction m_Birb_WASD;
     private readonly InputAction m_Birb_Jump;
     private readonly InputAction m_Birb_Look;
     public struct BirbActions
@@ -254,7 +243,6 @@ public partial class @Birb_Inputs : IInputActionCollection2, IDisposable
         private @Birb_Inputs m_Wrapper;
         public BirbActions(@Birb_Inputs wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Birb_Move;
-        public InputAction @WASD => m_Wrapper.m_Birb_WASD;
         public InputAction @Jump => m_Wrapper.m_Birb_Jump;
         public InputAction @Look => m_Wrapper.m_Birb_Look;
         public InputActionMap Get() { return m_Wrapper.m_Birb; }
@@ -269,9 +257,6 @@ public partial class @Birb_Inputs : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_BirbActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_BirbActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_BirbActionsCallbackInterface.OnMove;
-                @WASD.started -= m_Wrapper.m_BirbActionsCallbackInterface.OnWASD;
-                @WASD.performed -= m_Wrapper.m_BirbActionsCallbackInterface.OnWASD;
-                @WASD.canceled -= m_Wrapper.m_BirbActionsCallbackInterface.OnWASD;
                 @Jump.started -= m_Wrapper.m_BirbActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_BirbActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_BirbActionsCallbackInterface.OnJump;
@@ -285,9 +270,6 @@ public partial class @Birb_Inputs : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @WASD.started += instance.OnWASD;
-                @WASD.performed += instance.OnWASD;
-                @WASD.canceled += instance.OnWASD;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -301,7 +283,6 @@ public partial class @Birb_Inputs : IInputActionCollection2, IDisposable
     public interface IBirbActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnWASD(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
     }
