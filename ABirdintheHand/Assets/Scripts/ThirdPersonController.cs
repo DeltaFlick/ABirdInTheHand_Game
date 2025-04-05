@@ -21,7 +21,7 @@ public class ThirdPersonController : MonoBehaviour
     private Vector3 forceDirection = Vector3.zero;
 
     [SerializeField]
-    private Camera birbCamera;
+    private Camera playerCamera;
 
     private void awake()
     {
@@ -44,8 +44,8 @@ public class ThirdPersonController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        forceDirection += move.ReadValue<Vector2>().x * GetCameraRight(birbCamera) * movementForce;
-        forceDirection += move.ReadValue<Vector2>().y * GetCameraForward(birbCamera) * movementForce;
+        forceDirection += move.ReadValue<Vector2>().x * GetCameraRight(playerCamera) * movementForce;
+        forceDirection += move.ReadValue<Vector2>().y * GetCameraForward(playerCamera) * movementForce;
 
         rb.AddForce(forceDirection, ForceMode.Impulse);
         forceDirection = Vector3.zero;
@@ -59,16 +59,16 @@ public class ThirdPersonController : MonoBehaviour
             rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
     }
 
-    private Vector3 GetCameraForward(Camera birbCamera)
+    private Vector3 GetCameraForward(Camera playerCamera)
     {
-        Vector3 forward = birbCamera.transform.forward;
+        Vector3 forward = playerCamera.transform.forward;
         forward.y = 0;
         return forward.normalized;
     }
 
-    private Vector3 GetCameraRight(Camera birbCamera)
+    private Vector3 GetCameraRight(Camera playerCamera)
     {
-        Vector3 right = birbCamera.transform.right;
+        Vector3 right = playerCamera.transform.right;
         right.y = 0;
         return right.normalized;
     }
