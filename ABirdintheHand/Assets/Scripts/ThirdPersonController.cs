@@ -38,7 +38,7 @@ public class ThirdPersonController : MonoBehaviour
 
     private void OnDisable()
     {
-        BirbActionsAsset.Birb.Jump.started += DoJump;
+        BirbActionsAsset.Birb.Jump.started -= DoJump;
         BirbActionsAsset.Birb.Disable();
     }
 
@@ -57,6 +57,19 @@ public class ThirdPersonController : MonoBehaviour
         horizontalVelocity.y = 0;
         if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
             rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
+
+        LookAt();
+    }
+
+    private void LookAt()
+    {
+        Vector3 direction = rb.velocity;
+        direction.y = 0f;
+
+        if (move.ReadValue<Vector2>().sqrMagnitude > 0.1f && direction.sqrMagnitude > 0.1f)
+            this.rb.rotation = Quaternion.LookRotation(direction, Vector3.up);
+        else
+            rb.angularVelocity = Vector3.zero;
     }
 
     private Vector3 GetCameraForward(Camera playerCamera)

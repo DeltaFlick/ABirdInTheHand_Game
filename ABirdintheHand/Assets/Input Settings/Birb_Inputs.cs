@@ -160,7 +160,7 @@ public partial class @Birb_Inputs : IInputActionCollection2, IDisposable
                     ""id"": ""d1c58c33-1522-43a1-b873-d10ab89a80dd"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""InvertVector2(invertY=false)"",
                     ""groups"": """",
                     ""action"": ""Look"",
                     ""isComposite"": false,
