@@ -14,10 +14,10 @@ TagManager:
   - whatIsPlayer
   - whatIsWall
   - whatIsGround
-  - p1
-  - p2
-  - p3
-  - p4
+  - Player1
+  - Player2
+  - Player3
+  - Player4
   - 
   - 
   - 
