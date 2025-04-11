@@ -32,6 +32,11 @@ public class ThirdPersonController : MonoBehaviour
         player = inputAsset.FindActionMap("Player");
     }
 
+    void OnJump()
+    {
+        Debug.Log("Jump pressed");
+    }
+
     private void OnEnable()
     {
         player.FindAction("Jump").started += DoJump;
