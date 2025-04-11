@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 public class ThirdPersonController : MonoBehaviour
 {
     //input fields
-    //private ThirdPersonActionsAsset playerActionsAsset;
     private InputActionAsset inputAsset;
     private InputActionMap player;
     private InputAction move;
@@ -29,17 +28,12 @@ public class ThirdPersonController : MonoBehaviour
     {
         rb = this.GetComponent<Rigidbody>();
 
-        //playerActionsAsset = new ThirdPersonActionsAsset();
         inputAsset = this.GetComponent<PlayerInput>().actions;
         player = inputAsset.FindActionMap("Player");
     }
 
     private void OnEnable()
     {
-        //playerActionsAsset.Player.Jump.started += DoJump;
-        //playerActionsAsset.Player.Attack.started += DoAttack;
-        //move = playerActionsAsset.Player.Move;
-        //playerActionsAsset.Player.Enable();
         player.FindAction("Jump").started += DoJump;
         move = player.FindAction("Move");
         player.Enable();
@@ -47,9 +41,6 @@ public class ThirdPersonController : MonoBehaviour
 
     private void OnDisable()
     {
-        //playerActionsAsset.Player.Jump.started -= DoJump;
-        //playerActionsAsset.Player.Attack.started -= DoAttack;
-        //playerActionsAsset.Player.Disable();
         player.FindAction("Jump").started -= DoJump;
         player.Disable();
     }
