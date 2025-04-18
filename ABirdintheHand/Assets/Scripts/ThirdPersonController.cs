@@ -32,11 +32,6 @@ public class ThirdPersonController : MonoBehaviour
         player = inputAsset.FindActionMap("Player");
     }
 
-    void OnJump()
-    {
-        Debug.Log("Jump pressed");
-    }
-
     private void OnEnable()
     {
         player.FindAction("Jump").started += DoJump;
@@ -94,9 +89,9 @@ public class ThirdPersonController : MonoBehaviour
         return right.normalized;
     }
 
-    private void DoJump(InputAction.CallbackContext obj)
+    private void DoJump(InputAction.CallbackContext context)
     {
-        if (IsGrounded())
+        if(IsGrounded())
         {
             forceDirection += Vector3.up * jumpForce;
         }
@@ -104,10 +99,6 @@ public class ThirdPersonController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        Ray ray = new Ray(this.transform.position + Vector3.up * 0.25f, Vector3.down);
-        if (Physics.Raycast(ray, out RaycastHit hit, 0.5f))
-            return true;
-        else
-            return false;
+        return GetComponent<Rigidbody>().velocity.y == 0;
     }
 }
