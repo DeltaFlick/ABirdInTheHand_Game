@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Destructible : MonoBehaviour
 {
+    public float scoreAddAmount = 10;
+    
+    ScoreSystem scoreSystem;
+
 
     public GameObject destroyedVersion;
     private Rigidbody rb;
@@ -11,6 +15,8 @@ public class Destructible : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        scoreSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<ScoreSystem>();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -20,6 +26,8 @@ public class Destructible : MonoBehaviour
             float impactVelocity = collision.relativeVelocity.magnitude;
             if (impactVelocity > 1) 
             {
+                scoreSystem.AddScore(scoreAddAmount);
+
                 Instantiate(destroyedVersion, transform.position, transform.rotation);               
                 Destroy(gameObject);
             }
