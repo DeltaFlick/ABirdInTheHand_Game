@@ -24,6 +24,12 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField]
     private Camera playerCamera;
 
+    public void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     private void Awake()
     {
         rb = this.GetComponent<Rigidbody>();

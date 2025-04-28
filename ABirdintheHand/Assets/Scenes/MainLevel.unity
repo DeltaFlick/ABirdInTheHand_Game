@@ -650,6 +650,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &561835402 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2356524553880166482, guid: e73c43b2574399145a788bb7a7436a75,
+    type: 3}
+  m_PrefabInstance: {fileID: 2356524554785644052}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &625871543
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,7 +790,7 @@ MonoBehaviour:
       m_Flags: 0
     m_Reference: {fileID: -7048763669409863733, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
       type: 3}
-  m_PlayerPrefab: {fileID: 2101499656}
+  m_PlayerPrefab: {fileID: 561835402}
   m_SplitScreen: 1
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1
@@ -2116,12 +2122,6 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 2356524554785644052}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2101499656 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6830177298320691631, guid: 056b33b12cc4a154d9d293a56648b0f0,
-    type: 3}
-  m_PrefabInstance: {fileID: 6830177299306235559}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2356524554785644052
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2134,6 +2134,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HumanPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 2356524553880166482, guid: e73c43b2574399145a788bb7a7436a75,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2356524553880166483, guid: e73c43b2574399145a788bb7a7436a75,
         type: 3}

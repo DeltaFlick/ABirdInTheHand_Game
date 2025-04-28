@@ -5,11 +5,6 @@ using UnityEngine.InputSystem.Users;
 using Cinemachine;
 
 
-/// <summary>
-/// This is an add-on to override the legacy input system and read input using the
-/// UnityEngine.Input package API.  Add this behaviour to any CinemachineVirtualCamera 
-/// or FreeLook that requires user input, and drag in the the desired actions.
-/// </summary>
 public class CinemachineInputHandler : MonoBehaviour, AxisState.IInputAxisProvider
 {
     [HideInInspector]
