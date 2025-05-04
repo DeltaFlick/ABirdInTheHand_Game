@@ -94,6 +94,6 @@ public class PlayerObjectHandler : MonoBehaviour
         // with their PlayerInput components over to the next selection screen.
         shouldPersistCursors = false;
 
-        SceneManager.LoadScene("GameplayTest");
+        SceneManager.LoadScene("MainLevel");
     }
 }

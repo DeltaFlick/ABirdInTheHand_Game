@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ThirdPersonController : MonoBehaviour
+public class PlayerControls : MonoBehaviour
 {
     //input fields
     private InputActionAsset inputAsset;
@@ -20,6 +20,7 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField]
     private float maxSpeed = 5f;
     private Vector3 forceDirection = Vector3.zero;
+    public PlayerInput pi { get; private set; }
 
     [SerializeField]
     private Camera playerCamera;
@@ -30,12 +31,23 @@ public class ThirdPersonController : MonoBehaviour
         Cursor.visible = false;
     }
 
+    public void SetPlayerInputActive(bool activation, PlayerInput playerInput)
+    {
+        // UnityEngine.Debug.Log("Activating pi at " + Time.time);
+        if (pi == null)
+            pi = playerInput;
+
+        pi.enabled = activation;
+    }
+
     private void Awake()
     {
         rb = this.GetComponent<Rigidbody>();
 
         inputAsset = this.GetComponent<PlayerInput>().actions;
         player = inputAsset.FindActionMap("Player");
+
+        pi = GetComponent<PlayerInput>();
     }
 
     private void OnEnable()
