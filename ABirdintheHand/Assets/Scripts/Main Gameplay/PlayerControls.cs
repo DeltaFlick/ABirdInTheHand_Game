@@ -23,7 +23,7 @@ public class PlayerControls : MonoBehaviour
     public PlayerInput pi { get; private set; }
 
     [SerializeField]
-    private Camera playerCamera;
+    public Camera playerCamera;
 
     public void Start()
     {

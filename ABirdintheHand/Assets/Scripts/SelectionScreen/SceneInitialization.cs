@@ -7,6 +7,13 @@ using UnityEngine.SceneManagement;
 
 public class SceneInitialization : MonoBehaviour
 {
+    PlayerControls playerControls;
+
+    void start()
+    {
+        playerControls = GameObject.FindGameObjectWithTag("BirdPlayer").GetComponent<PlayerControls>();
+    }
+
     private void OnEnable()
     {
         SceneManager.activeSceneChanged += SceneBeginCheck;
@@ -55,7 +62,7 @@ public class SceneInitialization : MonoBehaviour
                 if (i == 0)
                 {
                     parentPlayerObject = currentObject;
-                    PlayerInput playerInput = PlayerInput.Instantiate(currentObject, player.Key, playerControlScheme, -1, playerController);
+                    PlayerInput playerInput = PlayerInput.Instantiate(currentObject, player.Key, playerControlScheme, -1, playerController, playerControls.playerCamera);
                     
                     // Activates the player input component on the prefab we just instantiated
                     // We have the component disabled by default, otherwise it could not be a "selectable object" independent of the PlayerInput component on the cursor
