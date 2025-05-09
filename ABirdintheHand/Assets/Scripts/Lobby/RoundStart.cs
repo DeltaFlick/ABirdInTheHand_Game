@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class RoundStart : MonoBehaviour
 {
-    public Vector3 teleportDestination;
+    public GameObject[] teleportDestinations;
+    public Timer timer;
     public int totalPlayers;
     public int playersInTrigger = 0;
+
+    public bool startRoundActive = false;
     
     void OnTriggerEnter (Collider other)
     {
@@ -38,13 +41,24 @@ public class RoundStart : MonoBehaviour
         }
     }
 
-    void StartRound()
+    public void StartRound()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject player in players)
         {
-            player.transform.position = teleportDestination;
+            if (teleportDestinations.Length > 0)
+            {
+                int randomIndex = Random.Range(0, teleportDestinations.Length);
+
+                player.transform.position = teleportDestinations[randomIndex].transform.position;
+            }
         }
-        playersInTrigger = 0; // Reset player count
+        playersInTrigger = 0;
+        startRoundActive = true;
+
+        if (timer != null)
+        {
+            timer.ResetTimer(10f);
+        }
     }
 }

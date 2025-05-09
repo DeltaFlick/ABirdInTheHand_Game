@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementForce: 1
-  jumpForce: 7.5
+  jumpForce: 0
   maxSpeed: 5
   playerCamera: {fileID: 2450838526486368027}
 --- !u!54 &3260929064872657636

@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameplayTest.unity
     guid: f6392522505df1d4b8f42b8349711951
+  - enabled: 1
+    path: Assets/Scenes/BirdsWin.unity
+    guid: 8e551673d4b83034183526e587fede00
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 3a1d2ebf9316514489939872e5736da3,
       type: 2}
