@@ -62,7 +62,7 @@ public class SceneInitialization : MonoBehaviour
                 if (i == 0)
                 {
                     parentPlayerObject = currentObject;
-                    PlayerInput playerInput = PlayerInput.Instantiate(currentObject, player.Key, playerControlScheme, -1, playerController, playerControls.playerCamera);
+                    PlayerInput playerInput = PlayerInput.Instantiate(currentObject, player.Key, playerControlScheme, -1, playerController);
                     
                     // Activates the player input component on the prefab we just instantiated
                     // We have the component disabled by default, otherwise it could not be a "selectable object" independent of the PlayerInput component on the cursor
