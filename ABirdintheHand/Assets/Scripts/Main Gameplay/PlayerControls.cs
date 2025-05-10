@@ -6,12 +6,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerControls : MonoBehaviour
 {
-    //input fields
     private InputActionAsset inputAsset;
     private InputActionMap player;
     private InputAction move;
 
-    //movement fields
     private Rigidbody rb;
     [SerializeField]
     private float movementForce = 1f;
@@ -33,7 +31,6 @@ public class PlayerControls : MonoBehaviour
 
     public void SetPlayerInputActive(bool activation, PlayerInput playerInput)
     {
-        // UnityEngine.Debug.Log("Activating pi at " + Time.time);
         if (pi == null)
             pi = playerInput;
 

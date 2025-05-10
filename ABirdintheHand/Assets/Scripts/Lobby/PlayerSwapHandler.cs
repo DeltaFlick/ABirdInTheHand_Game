@@ -40,7 +40,6 @@ public class PlayerSwapHandler : MonoBehaviour
     {
         isInSwapZone = true;
         teleportTarget = target;
-        Debug.Log($"Entered swap zone, teleport target set to: {teleportTarget.name}");
     }
 
     public void ExitSwapZone()
@@ -51,26 +50,17 @@ public class PlayerSwapHandler : MonoBehaviour
 
     private void OnInteract(InputAction.CallbackContext ctx)
     {
-        if (!isInSwapZone || teleportTarget == null)
-        {
-            Debug.LogWarning("Swap attempt failed — either not in swap zone or teleport target is null.");
-            return;
-        }
-
         var inputManager = PlayerInputManager.instance;
 
         bool isCurrentlyBird = GetComponentInChildren<Cinemachine.CinemachineFreeLook>() != null;
         GameObject newPrefab = isCurrentlyBird ? humanPrefab : birdPrefab;
 
-        Debug.Log($"Swapping player prefab. IsCurrentlyBird: {isCurrentlyBird}. New prefab: {newPrefab.name}");
 
         inputManager.playerPrefab = newPrefab;
 
-        Debug.Log("Destroying current player object.");
         Destroy(gameObject);
 
         inputManager.JoinPlayer(playerIndex, -1, null, inputDevice);
-        Debug.Log("Player rejoined. Starting reposition coroutine.");
 
         PlayerSwapCoordinator.Instance.RepositionPlayerNextFrame(playerIndex, teleportTarget);
         Destroy(gameObject);

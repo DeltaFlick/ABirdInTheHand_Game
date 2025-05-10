@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2157.4092, g: 2262.1504, b: 3285.8086, a: 1}
+  m_IndirectSpecularColor: {r: 2159.5537, g: 2263.3438, b: 3286.3984, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -407,26 +407,6 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d485dacdb83718429921208fad6450d, type: 3}
---- !u!1 &92522269 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4449889510382639914, guid: 45d60c9a2aef7004089840d272d0b7fc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1053037534}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &92522271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 92522269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d45e28dcbac88bd47b4f9eb778379023, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  birdPrefab: {fileID: 1733075442}
-  humanPrefab: {fileID: 92522269}
 --- !u!1 &120112416 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 83a0da96ba3791246aa3c704a6cb5b25,
@@ -550,7 +530,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &122796513
 MonoBehaviour:
@@ -2299,7 +2279,7 @@ MonoBehaviour:
       m_Flags: 0
     m_Reference: {fileID: -7048763669409863733, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
       type: 3}
-  m_PlayerPrefab: {fileID: 92522269}
+  m_PlayerPrefab: {fileID: 1752705131}
   m_SplitScreen: 1
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1
@@ -2378,7 +2358,7 @@ Transform:
   - {fileID: 813403260}
   - {fileID: 1086163683}
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &762533823 stripped
 GameObject:
@@ -2653,7 +2633,7 @@ Transform:
   - {fileID: 1650570711}
   - {fileID: 636921963}
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &813403259
 GameObject:
@@ -3209,7 +3189,7 @@ Transform:
   m_Children:
   - {fileID: 1385975688}
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &917856050
 PrefabInstance:
@@ -3399,12 +3379,6 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: fcccafb0ddd1a844bb85c2767e7e2425, type: 3}
---- !u!4 &972658290 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7369689793250586874, guid: 45d60c9a2aef7004089840d272d0b7fc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1053037534}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1013318875
 GameObject:
   m_ObjectHideFlags: 0
@@ -3608,6 +3582,11 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1501565115204725709, guid: 45d60c9a2aef7004089840d272d0b7fc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 21
+      objectReference: {fileID: 0}
     - target: {fileID: 3569109272016888537, guid: 45d60c9a2aef7004089840d272d0b7fc,
         type: 3}
       propertyPath: m_RootOrder
@@ -3682,7 +3661,17 @@ PrefabInstance:
         type: 3}
       propertyPath: cameraTransform
       value: 
-      objectReference: {fileID: 972658290}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8861686427103804382, guid: 45d60c9a2aef7004089840d272d0b7fc,
+        type: 3}
+      propertyPath: sensX
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 8861686427103804382, guid: 45d60c9a2aef7004089840d272d0b7fc,
+        type: 3}
+      propertyPath: sensY
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 45d60c9a2aef7004089840d272d0b7fc, type: 3}
@@ -3933,7 +3922,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 0f93c09995c5ee7478b62a1ebdb00229,
         type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0f93c09995c5ee7478b62a1ebdb00229,
         type: 3}
@@ -4050,7 +4039,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 0e7d1b6533a248648afefe1a4bdfe870,
         type: 3}
       propertyPath: m_RootOrder
-      value: 17
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0e7d1b6533a248648afefe1a4bdfe870,
         type: 3}
@@ -5263,7 +5252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   birdPrefab: {fileID: 1733075442}
-  humanPrefab: {fileID: 92522269}
+  humanPrefab: {fileID: 0}
 --- !u!1 &1734930646
 GameObject:
   m_ObjectHideFlags: 0
@@ -5301,6 +5290,12 @@ Transform:
   m_Father: {fileID: 550751674}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1752705131 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1774289145223696958, guid: 45d60c9a2aef7004089840d272d0b7fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1053037534}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1772163666
 GameObject:
   m_ObjectHideFlags: 0
@@ -5377,7 +5372,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1778897281
 PrefabInstance:

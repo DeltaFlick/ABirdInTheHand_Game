@@ -24,18 +24,7 @@ public class PlayerSwapCoordinator : MonoBehaviour
 
         var newPlayer = GameObject.FindGameObjectsWithTag("Player")
             .FirstOrDefault(p => p.GetComponent<PlayerInput>()?.playerIndex == playerIndex);
-
-        if (newPlayer == null)
         {
-            Debug.LogError("Failed to find new player object after swap.");
-        }
-        else if (target == null)
-        {
-            Debug.LogError("Teleport target is null during reposition.");
-        }
-        else
-        {
-            Debug.Log($"Teleporting new player {newPlayer.name} to {target.position}");
             newPlayer.transform.position = target.position;
             newPlayer.transform.rotation = target.rotation;
         }

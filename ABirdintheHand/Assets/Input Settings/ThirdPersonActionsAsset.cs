@@ -52,7 +52,7 @@ public partial class @ThirdPersonActionsAsset : IInputActionCollection2, IDispos
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Join"",

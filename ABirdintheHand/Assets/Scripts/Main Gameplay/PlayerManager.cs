@@ -32,28 +32,23 @@ public class PlayerManager : MonoBehaviour
     {
         players.Add(player);
 
-        // Set position
         Transform playerParent = player.transform.parent;
         playerParent.position = startingPoints[players.Count - 1].position;
 
-        // Set up layer
         int layerToAdd = (int)Mathf.Log(playerLayers[players.Count - 1].value, 2);
 
-        // Handle CinemachineFreeLook (third person)
         var freeLook = playerParent.GetComponentInChildren<CinemachineFreeLook>();
         if (freeLook != null)
         {
             freeLook.gameObject.layer = layerToAdd;
         }
 
-        // Handle camera layer mask
         var cam = playerParent.GetComponentInChildren<Camera>();
         if (cam != null)
         {
             cam.cullingMask |= 1 << layerToAdd;
         }
 
-        // Handle input
         var inputHandler = playerParent.GetComponentInChildren<InputHandler>();
         if (inputHandler != null)
         {
