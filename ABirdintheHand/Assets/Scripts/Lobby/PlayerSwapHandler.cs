@@ -1,20 +1,26 @@
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
-using System.Linq;
 
 public class PlayerSwapHandler : MonoBehaviour
 {
+    [Header("Alternate Character Prefabs")]
     public GameObject birdPrefab;
     public GameObject humanPrefab;
 
     private bool isInSwapZone = false;
+    private Transform teleportTarget;
     private PlayerInput playerInput;
-    private Transform spawnTransform;
+    private int playerIndex;
+    private InputDevice inputDevice;
 
     private void Awake()
     {
         playerInput = GetComponentInChildren<PlayerInput>();
+        playerIndex = playerInput.playerIndex;
+        inputDevice = playerInput.devices.FirstOrDefault();
     }
 
     private void OnEnable()
@@ -24,59 +30,50 @@ public class PlayerSwapHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        playerInput.actions["Interact"].performed -= OnInteract;
+        if (playerInput != null && playerInput.actions != null)
+        {
+            playerInput.actions["Interact"].performed -= OnInteract;
+        }
     }
 
-    public void EnterSwapZone(Transform swapZoneTransform)
+    public void EnterSwapZone(Transform target)
     {
         isInSwapZone = true;
-        spawnTransform = swapZoneTransform;
+        teleportTarget = target;
+        Debug.Log($"Entered swap zone, teleport target set to: {teleportTarget.name}");
     }
 
     public void ExitSwapZone()
     {
         isInSwapZone = false;
+        teleportTarget = null;
     }
 
     private void OnInteract(InputAction.CallbackContext ctx)
     {
-        if (!isInSwapZone) return;
+        if (!isInSwapZone || teleportTarget == null)
+        {
+            Debug.LogWarning("Swap attempt failed — either not in swap zone or teleport target is null.");
+            return;
+        }
 
         var inputManager = PlayerInputManager.instance;
 
-        // Decide new prefab
         bool isCurrentlyBird = GetComponentInChildren<Cinemachine.CinemachineFreeLook>() != null;
         GameObject newPrefab = isCurrentlyBird ? humanPrefab : birdPrefab;
 
-        // Change the default prefab temporarily
+        Debug.Log($"Swapping player prefab. IsCurrentlyBird: {isCurrentlyBird}. New prefab: {newPrefab.name}");
+
         inputManager.playerPrefab = newPrefab;
 
-        // Save data
-        var device = playerInput.devices[0];
-        var index = playerInput.playerIndex;
-        Vector3 spawnPos = transform.position;
-        Quaternion spawnRot = transform.rotation;
-
-        // Remove current player
+        Debug.Log("Destroying current player object.");
         Destroy(gameObject);
 
-        // Rejoin with same device
-        inputManager.JoinPlayer(index, -1, null, device);
+        inputManager.JoinPlayer(playerIndex, -1, null, inputDevice);
+        Debug.Log("Player rejoined. Starting reposition coroutine.");
 
-        // Optionally: reposition new player
-        StartCoroutine(RepositionNextFrame(spawnPos, spawnRot));
-    }
-
-    private System.Collections.IEnumerator RepositionNextFrame(Vector3 position, Quaternion rotation)
-    {
-        yield return null; // wait one frame
-        var newPlayer = GameObject.FindGameObjectsWithTag("Player")
-            .FirstOrDefault(p => p.GetComponent<PlayerInput>()?.playerIndex == playerInput.playerIndex);
-
-        if (newPlayer != null)
-        {
-            newPlayer.transform.position = position;
-            newPlayer.transform.rotation = rotation;
-        }
+        PlayerSwapCoordinator.Instance.RepositionPlayerNextFrame(playerIndex, teleportTarget);
+        Destroy(gameObject);
     }
 }
+
