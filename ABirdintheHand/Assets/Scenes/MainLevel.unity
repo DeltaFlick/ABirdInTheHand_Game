@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2159.9678, g: 2265.9922, b: 3294.9648, a: 1}
+  m_IndirectSpecularColor: {r: 2158.8516, g: 2263.3242, b: 3286.8242, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2115,7 +2115,6 @@ GameObject:
   - component: {fileID: 625871545}
   - component: {fileID: 625871544}
   - component: {fileID: 625871548}
-  - component: {fileID: 625871549}
   m_Layer: 8
   m_Name: Floor
   m_TagString: whatisGround
@@ -2247,19 +2246,6 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &625871549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625871543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83c1c02ee2207e64d8996f7c63892c48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterSelector: {fileID: 0}
 --- !u!4 &636921963 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 84d83c03cb18b75449f248d40bf399d6,
