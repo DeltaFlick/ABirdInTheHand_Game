@@ -32,19 +32,32 @@ public class PlayerManager : MonoBehaviour
     {
         players.Add(player);
 
-        //need to use the parent due to the structure of the prefab
+        // Set position
         Transform playerParent = player.transform.parent;
         playerParent.position = startingPoints[players.Count - 1].position;
 
-        //convert layer mask (bit) to an integer 
+        // Set up layer
         int layerToAdd = (int)Mathf.Log(playerLayers[players.Count - 1].value, 2);
 
-        //set the layer
-        playerParent.GetComponentInChildren<CinemachineFreeLook>().gameObject.layer = layerToAdd;
-        //add the layer
-        playerParent.GetComponentInChildren<Camera>().cullingMask |= 1 << layerToAdd;
-        //set the action in the custom cinemachine Input Handler
-        playerParent.GetComponentInChildren<InputHandler>().horizontal = player.actions.FindAction("Look");
+        // Handle CinemachineFreeLook (third person)
+        var freeLook = playerParent.GetComponentInChildren<CinemachineFreeLook>();
+        if (freeLook != null)
+        {
+            freeLook.gameObject.layer = layerToAdd;
+        }
 
+        // Handle camera layer mask
+        var cam = playerParent.GetComponentInChildren<Camera>();
+        if (cam != null)
+        {
+            cam.cullingMask |= 1 << layerToAdd;
+        }
+
+        // Handle input
+        var inputHandler = playerParent.GetComponentInChildren<InputHandler>();
+        if (inputHandler != null)
+        {
+            inputHandler.horizontal = player.actions.FindAction("Look");
+        }
     }
 }
