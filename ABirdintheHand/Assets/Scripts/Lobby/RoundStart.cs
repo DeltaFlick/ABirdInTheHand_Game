@@ -68,7 +68,6 @@ public class RoundStart : MonoBehaviour
                     player.transform.position = newPos;
                 }
 
-                // Optional: temporarily disable input to prevent immediate movement
                 PlayerControls pc = player.GetComponent<PlayerControls>();
                 if (pc != null)
                 {
@@ -83,7 +82,7 @@ public class RoundStart : MonoBehaviour
 
         if (timer != null)
         {
-            timer.ResetTimer(10f);
+            timer.ResetTimer(300f);
         }
     }
 
