@@ -1,16 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class HumanCamera : MonoBehaviour
 {
-    public float sensX;
-    public float sensY;
+    public float mouseSensitivity = 100f;
+    public float controllerSensitivity = 250f;
 
     public Transform orientation;
 
-    float xRotation;
-    float yRotation;
+    private float xRotation;
+    private float yRotation;
+
+    private PlayerInput playerInput;
+    private InputAction lookAction;
+    private InputDevice lastUsedDevice;
+
+    private void Awake()
+    {
+        playerInput = GetComponentInParent<PlayerInput>();
+        lookAction = playerInput.actions["Look"];
+    }
 
     public void Start()
     {
@@ -20,11 +31,23 @@ public class HumanCamera : MonoBehaviour
 
     private void Update()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+        if (lookAction.activeControl != null)
+        {
+            lastUsedDevice = lookAction.activeControl.device;
+        }
+
+        Vector2 lookInput = lookAction.ReadValue<Vector2>();
+
+        float sensitivity = mouseSensitivity;
+        if (lastUsedDevice != null && lastUsedDevice is Gamepad)
+        {
+            sensitivity = controllerSensitivity;
+        }
+
+        float mouseX = lookInput.x * Time.deltaTime * sensitivity;
+        float mouseY = lookInput.y * Time.deltaTime * sensitivity;
 
         yRotation += mouseX;
-
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
@@ -32,3 +55,4 @@ public class HumanCamera : MonoBehaviour
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 }
+

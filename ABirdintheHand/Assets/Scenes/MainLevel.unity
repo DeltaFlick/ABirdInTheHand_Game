@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2159.5537, g: 2263.3438, b: 3286.3984, a: 1}
+  m_IndirectSpecularColor: {r: 2159.9678, g: 2265.9922, b: 3294.9648, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3587,6 +3587,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 21
       objectReference: {fileID: 0}
+    - target: {fileID: 2692770485782715861, guid: 45d60c9a2aef7004089840d272d0b7fc,
+        type: 3}
+      propertyPath: birdPrefab
+      value: 
+      objectReference: {fileID: 1733075442}
     - target: {fileID: 3569109272016888537, guid: 45d60c9a2aef7004089840d272d0b7fc,
         type: 3}
       propertyPath: m_RootOrder
@@ -5252,7 +5257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   birdPrefab: {fileID: 1733075442}
-  humanPrefab: {fileID: 0}
+  humanPrefab: {fileID: 1752705131}
 --- !u!1 &1734930646
 GameObject:
   m_ObjectHideFlags: 0
