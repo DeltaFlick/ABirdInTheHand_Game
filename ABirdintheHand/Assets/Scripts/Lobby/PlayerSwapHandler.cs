@@ -50,11 +50,16 @@ public class PlayerSwapHandler : MonoBehaviour
 
     private void OnInteract(InputAction.CallbackContext ctx)
     {
+        if (!isInSwapZone || teleportTarget == null)
+        {
+            Debug.Log("Not in swap zone. Ignoring swap.");
+            return;
+        }
+
         var inputManager = PlayerInputManager.instance;
 
         bool isCurrentlyBird = GetComponentInChildren<Cinemachine.CinemachineFreeLook>() != null;
         GameObject newPrefab = isCurrentlyBird ? humanPrefab : birdPrefab;
-
 
         inputManager.playerPrefab = newPrefab;
 
@@ -63,7 +68,6 @@ public class PlayerSwapHandler : MonoBehaviour
         inputManager.JoinPlayer(playerIndex, -1, null, inputDevice);
 
         PlayerSwapCoordinator.Instance.RepositionPlayerNextFrame(playerIndex, teleportTarget);
-        Destroy(gameObject);
     }
 }
 

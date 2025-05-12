@@ -9,8 +9,16 @@ public class PlayerSwapCoordinator : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            // Optional: uncomment this if you want the coordinator to persist between scenes
+            // DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void RepositionPlayerNextFrame(int playerIndex, Transform target)
@@ -20,13 +28,19 @@ public class PlayerSwapCoordinator : MonoBehaviour
 
     private IEnumerator RepositionNextFrame(int playerIndex, Transform target)
     {
-        yield return null;
+        yield return null; // Wait until the next frame
 
         var newPlayer = GameObject.FindGameObjectsWithTag("Player")
             .FirstOrDefault(p => p.GetComponent<PlayerInput>()?.playerIndex == playerIndex);
+
+        if (newPlayer != null && target != null)
         {
             newPlayer.transform.position = target.position;
             newPlayer.transform.rotation = target.rotation;
+        }
+        else
+        {
+            Debug.LogWarning($"[PlayerSwapCoordinator] Reposition failed: newPlayer = {newPlayer}, target = {target}");
         }
     }
 }

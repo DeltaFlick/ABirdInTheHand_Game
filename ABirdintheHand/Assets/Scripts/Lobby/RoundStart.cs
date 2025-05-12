@@ -1,19 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RoundStart : MonoBehaviour
 {
+    [Header("Teleport Settings (one per player, ordered by index)")]
     public GameObject[] teleportDestinations;
-    public Timer timer;
-    public int totalPlayers;
-    public int playersInTrigger = 0;
 
+    [Header("Timer Reference")]
+    public Timer timer;
+
+    [Header("Round Control")]
+    public int totalPlayers;
+    private int playersInTrigger = 0;
     public bool startRoundActive = false;
 
-    void OnTriggerEnter(Collider other)
+    private HashSet<GameObject> teleportedPlayers = new HashSet<GameObject>();
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             playersInTrigger++;
             Debug.Log($"Player entered trigger. Players in trigger: {playersInTrigger}");
@@ -21,69 +28,90 @@ public class RoundStart : MonoBehaviour
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            playersInTrigger--;
-            if (playersInTrigger < 0)
-                playersInTrigger = 0;
-
+            playersInTrigger = Mathf.Max(0, playersInTrigger - 1);
             Debug.Log($"Player exited trigger. Players in trigger: {playersInTrigger}");
-            CheckStartCondition();
         }
     }
 
-    void CheckStartCondition()
+    private void CheckStartCondition()
     {
-        if (playersInTrigger == totalPlayers)
+        if (playersInTrigger == totalPlayers && !startRoundActive)
         {
-            StartRound();
+            StartCoroutine(StartRound());
         }
     }
 
-    public void StartRound()
+    private IEnumerator StartRound()
     {
+        startRoundActive = true;
+
+        // Wait a frame to allow character swaps to complete
+        yield return null;
+
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (GameObject player in players)
         {
-            if (teleportDestinations.Length > 0)
+            if (teleportedPlayers.Contains(player)) continue;
+
+            PlayerInput input = player.GetComponent<PlayerInput>();
+            if (input == null)
             {
-                int randomIndex = Random.Range(0, teleportDestinations.Length);
-                Vector3 newPos = teleportDestinations[randomIndex].transform.position;
+                Debug.LogWarning($"Player {player.name} is missing PlayerInput component.");
+                continue;
+            }
 
-                Debug.Log($"Teleporting {player.name} to index {randomIndex}: {newPos}");
+            int index = input.playerIndex;
 
-                Rigidbody rb = player.GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    rb.velocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
-                    rb.transform.position = newPos;
-                    rb.MovePosition(newPos);
-                }
-                else
-                {
-                    player.transform.position = newPos;
-                }
+            if (index >= teleportDestinations.Length)
+            {
+                Debug.LogWarning($"No teleport destination for player index {index}");
+                continue;
+            }
 
-                PlayerControls pc = player.GetComponent<PlayerControls>();
-                if (pc != null)
-                {
-                    pc.enabled = false;
-                    StartCoroutine(ReenableControls(pc, 0.1f));
-                }
+            Transform destination = teleportDestinations[index].transform;
+            Vector3 newPos = destination.position;
+            Quaternion newRot = destination.rotation;
+
+            Debug.Log($"Teleporting {player.name} (Player {index}) to: {newPos}");
+
+            Rigidbody rb = player.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.MovePosition(newPos);
+                rb.MoveRotation(newRot);
+            }
+            else
+            {
+                player.transform.SetPositionAndRotation(newPos, newRot);
+            }
+
+            teleportedPlayers.Add(player);
+
+            PlayerControls pc = player.GetComponent<PlayerControls>();
+            if (pc != null)
+            {
+                pc.enabled = false;
+                StartCoroutine(ReenableControls(pc, 0.1f));
             }
         }
 
         playersInTrigger = 0;
-        startRoundActive = true;
 
         if (timer != null)
         {
             timer.ResetTimer(300f);
         }
+
+        yield return new WaitForSeconds(1f); // Optional delay before resetting tracking
+        teleportedPlayers.Clear();
+        startRoundActive = false;
     }
 
     private IEnumerator ReenableControls(PlayerControls pc, float delay)
