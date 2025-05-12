@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BirdCageTrigger : MonoBehaviour
 {
@@ -28,8 +29,7 @@ public class BirdCageTrigger : MonoBehaviour
         int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
         if (totalBirds > 0 && birdsInCage.Count == totalBirds)
         {
-            Debug.Log("All birds are in the cage! Human wins!");
-            // Trigger win condition
+            SceneManager.LoadScene("HumansWin");
         }
     }
 }

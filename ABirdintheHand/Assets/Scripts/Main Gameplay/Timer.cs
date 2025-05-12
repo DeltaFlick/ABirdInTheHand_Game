@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
 {
-
     public RoundStart roundStart;
 
     [SerializeField] TextMeshProUGUI timerText;
@@ -41,7 +40,6 @@ public class Timer : MonoBehaviour
 
     public void StartTimer()
     {
-
         if (remainingTime > 0)
         {
             remainingTime -= Time.deltaTime;
@@ -49,16 +47,16 @@ public class Timer : MonoBehaviour
         else
         {
             remainingTime = 0;
-            roundStart.startRoundActive = false;
             timerText.color = Color.red;
 
-            if (timerText != null)
+            if (roundStart != null)
             {
-                timerText.gameObject.SetActive(false);
+                roundStart.EndRound();
             }
 
             SceneManager.LoadScene("BirdsWin");
         }
+
         int minutes = Mathf.FloorToInt(remainingTime / 60);
         int seconds = Mathf.FloorToInt(remainingTime % 60);
         timerText.text = string.Format("{0}:{1:00}", minutes, seconds);

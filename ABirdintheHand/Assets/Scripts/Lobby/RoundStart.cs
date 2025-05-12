@@ -18,6 +18,10 @@ public class RoundStart : MonoBehaviour
 
     private HashSet<GameObject> teleportedPlayers = new HashSet<GameObject>();
 
+    [Header("UI Elements")]
+    public GameObject scoreTextObject;
+    public GameObject timerTextObject;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -49,7 +53,6 @@ public class RoundStart : MonoBehaviour
     {
         startRoundActive = true;
 
-        // Wait a frame to allow character swaps to complete
         yield return null;
 
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -59,37 +62,25 @@ public class RoundStart : MonoBehaviour
             if (teleportedPlayers.Contains(player)) continue;
 
             PlayerInput input = player.GetComponent<PlayerInput>();
-            if (input == null)
-            {
-                Debug.LogWarning($"Player {player.name} is missing PlayerInput component.");
-                continue;
-            }
+            if (input == null) continue;
 
             int index = input.playerIndex;
 
-            if (index >= teleportDestinations.Length)
-            {
-                Debug.LogWarning($"No teleport destination for player index {index}");
-                continue;
-            }
+            if (index >= teleportDestinations.Length) continue;
 
             Transform destination = teleportDestinations[index].transform;
-            Vector3 newPos = destination.position;
-            Quaternion newRot = destination.rotation;
-
-            Debug.Log($"Teleporting {player.name} (Player {index}) to: {newPos}");
 
             Rigidbody rb = player.GetComponent<Rigidbody>();
             if (rb != null)
             {
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
-                rb.MovePosition(newPos);
-                rb.MoveRotation(newRot);
+                rb.MovePosition(destination.position);
+                rb.MoveRotation(destination.rotation);
             }
             else
             {
-                player.transform.SetPositionAndRotation(newPos, newRot);
+                player.transform.SetPositionAndRotation(destination.position, destination.rotation);
             }
 
             teleportedPlayers.Add(player);
@@ -104,19 +95,43 @@ public class RoundStart : MonoBehaviour
 
         playersInTrigger = 0;
 
+        // Activate UI
+        if (scoreTextObject != null) scoreTextObject.SetActive(true);
+        if (timerTextObject != null) timerTextObject.SetActive(true);
+
+        // Reset score
+        ScoreSystem.CurrentScore = 0;
+        ScoreSystem scoreSystem = FindObjectOfType<ScoreSystem>();
+        if (scoreSystem != null)
+        {
+            scoreSystem.AddScore(0);
+        }
+
         if (timer != null)
         {
             timer.ResetTimer(300f);
         }
 
-        yield return new WaitForSeconds(1f); // Optional delay before resetting tracking
+        yield return new WaitForSeconds(1f);
         teleportedPlayers.Clear();
-        startRoundActive = false;
     }
 
     private IEnumerator ReenableControls(PlayerControls pc, float delay)
     {
         yield return new WaitForSeconds(delay);
         pc.enabled = true;
+    }
+
+    public void EndRound()
+    {
+        if (scoreTextObject != null) scoreTextObject.SetActive(false);
+        if (timerTextObject != null) timerTextObject.SetActive(false);
+
+        ScoreSystem.CurrentScore = 0;
+        ScoreSystem scoreSystem = FindObjectOfType<ScoreSystem>();
+        if (scoreSystem != null)
+        {
+            scoreSystem.AddScore(0); // Trigger UI update
+        }
     }
 }

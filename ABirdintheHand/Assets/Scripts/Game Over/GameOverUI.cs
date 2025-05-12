@@ -17,8 +17,8 @@ public class GameOverUI : MonoBehaviour
         SceneManager.LoadScene("MainLevel");
     }
 
-    public void QuitGame()
+    public void TitleScreen()
     {
-        Application.Quit();
+        SceneManager.LoadScene("MainMenu");
     }
 }

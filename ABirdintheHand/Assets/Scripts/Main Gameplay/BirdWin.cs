@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BirdWin : MonoBehaviour
 {
-    public int winningScore = 5;
+    public int winningScore = 1;
     public ScoreSystem scoreSystem;
     private bool gameEnded;
 
@@ -26,7 +27,7 @@ public class BirdWin : MonoBehaviour
         if (!gameEnded)
         {
 
-            Debug.Log("You Win!");
+            SceneManager.LoadScene("BirdsWin");
             gameEnded = true;
         }
     }

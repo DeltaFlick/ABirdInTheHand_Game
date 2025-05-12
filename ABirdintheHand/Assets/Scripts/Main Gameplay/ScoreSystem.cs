@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class ScoreSystem : MonoBehaviour
@@ -11,9 +10,15 @@ public class ScoreSystem : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI scoreAmount;
 
-    private void start()
+    private void Start()
     {
         CurrentScore = 0;
+
+        if (scoreAmount != null && scoreAmount.transform.parent != null)
+        {
+            scoreAmount.transform.parent.gameObject.SetActive(false);
+        }
+
         UpdateScoreUI();
     }
 
