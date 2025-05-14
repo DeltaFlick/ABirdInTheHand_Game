@@ -5,9 +5,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
-    private List<PlayerInput> players = new List<PlayerInput>();
+    private Dictionary<int, PlayerInput> players = new Dictionary<int, PlayerInput>();
+
     [SerializeField]
     private List<Transform> startingPoints;
+
     [SerializeField]
     private List<LayerMask> playerLayers;
 
@@ -30,25 +32,50 @@ public class PlayerManager : MonoBehaviour
 
     public void AddPlayer(PlayerInput player)
     {
-        players.Add(player);
+        int index = player.playerIndex;
+
+        if (players.ContainsKey(index))
+        {
+            if (players[index] != null)
+            {
+                Destroy(players[index].gameObject);
+            }
+            players[index] = player;
+        }
+        else
+        {
+            players.Add(index, player);
+        }
 
         Transform playerParent = player.transform.parent;
-        playerParent.position = startingPoints[players.Count - 1].position;
 
-        int layerToAdd = (int)Mathf.Log(playerLayers[players.Count - 1].value, 2);
-
-        var freeLook = playerParent.GetComponentInChildren<CinemachineFreeLook>();
-        if (freeLook != null)
+        if (index < startingPoints.Count)
         {
-            freeLook.gameObject.layer = layerToAdd;
+            playerParent.position = startingPoints[index].position;
+            playerParent.rotation = startingPoints[index].rotation;
+        }
+        else
+        {
+            playerParent.position = Vector3.zero;
+            playerParent.rotation = Quaternion.identity;
         }
 
-        var cam = playerParent.GetComponentInChildren<Camera>();
-        if (cam != null)
+        if (index < playerLayers.Count)
         {
-            cam.cullingMask |= 1 << layerToAdd;
-        }
+            int layerToAdd = (int)Mathf.Log(playerLayers[index].value, 2);
 
+            var freeLook = playerParent.GetComponentInChildren<CinemachineFreeLook>();
+            if (freeLook != null)
+            {
+                freeLook.gameObject.layer = layerToAdd;
+            }
+
+            var cam = playerParent.GetComponentInChildren<Camera>();
+            if (cam != null)
+            {
+                cam.cullingMask |= 1 << layerToAdd;
+            }
+        }
         var inputHandler = playerParent.GetComponentInChildren<InputHandler>();
         if (inputHandler != null)
         {

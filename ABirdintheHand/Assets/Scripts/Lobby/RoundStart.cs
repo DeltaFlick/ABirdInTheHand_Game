@@ -27,7 +27,6 @@ public class RoundStart : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playersInTrigger++;
-            Debug.Log($"Player entered trigger. Players in trigger: {playersInTrigger}");
             CheckStartCondition();
         }
     }
@@ -37,7 +36,6 @@ public class RoundStart : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playersInTrigger = Mathf.Max(0, playersInTrigger - 1);
-            Debug.Log($"Player exited trigger. Players in trigger: {playersInTrigger}");
         }
     }
 
@@ -95,11 +93,9 @@ public class RoundStart : MonoBehaviour
 
         playersInTrigger = 0;
 
-        // Activate UI
         if (scoreTextObject != null) scoreTextObject.SetActive(true);
         if (timerTextObject != null) timerTextObject.SetActive(true);
 
-        // Reset score
         ScoreSystem.CurrentScore = 0;
         ScoreSystem scoreSystem = FindObjectOfType<ScoreSystem>();
         if (scoreSystem != null)
@@ -131,7 +127,7 @@ public class RoundStart : MonoBehaviour
         ScoreSystem scoreSystem = FindObjectOfType<ScoreSystem>();
         if (scoreSystem != null)
         {
-            scoreSystem.AddScore(0); // Trigger UI update
+            scoreSystem.AddScore(0);
         }
     }
 }

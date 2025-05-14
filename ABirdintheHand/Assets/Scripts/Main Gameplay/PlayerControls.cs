@@ -11,17 +11,21 @@ public class PlayerControls : MonoBehaviour
     private InputAction move;
 
     private Rigidbody rb;
-    [SerializeField]
-    private float movementForce = 1f;
-    [SerializeField]
-    private float jumpForce = 5f;
-    [SerializeField]
-    private float maxSpeed = 5f;
+    [SerializeField] private float movementForce = 1f;
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float maxSpeed = 5f;
     private Vector3 forceDirection = Vector3.zero;
     public PlayerInput pi { get; private set; }
 
-    [SerializeField]
-    public Camera playerCamera;
+    [SerializeField] public Camera playerCamera;
+
+    [Header("Ground Check Settings")]
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius = 0.2f;
+    [SerializeField] private LayerMask groundMask;
+
+    [Header("Friction Settings")]
+    [SerializeField] private float counterSlidingForce = 0.1f; // Adjust as needed
 
     public void Start()
     {
@@ -39,11 +43,9 @@ public class PlayerControls : MonoBehaviour
 
     private void Awake()
     {
-        rb = this.GetComponent<Rigidbody>();
-
-        inputAsset = this.GetComponent<PlayerInput>().actions;
+        rb = GetComponent<Rigidbody>();
+        inputAsset = GetComponent<PlayerInput>().actions;
         player = inputAsset.FindActionMap("Player");
-
         pi = GetComponent<PlayerInput>();
     }
 
@@ -62,19 +64,31 @@ public class PlayerControls : MonoBehaviour
 
     private void FixedUpdate()
     {
-        forceDirection += move.ReadValue<Vector2>().x * GetCameraRight(playerCamera) * movementForce;
-        forceDirection += move.ReadValue<Vector2>().y * GetCameraForward(playerCamera) * movementForce;
+        Vector2 moveInput = move.ReadValue<Vector2>();
+
+        forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce;
+        forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce;
 
         rb.AddForce(forceDirection, ForceMode.Impulse);
         forceDirection = Vector3.zero;
 
+        // Apply additional gravity if falling
         if (rb.velocity.y < 0f)
             rb.velocity -= Vector3.down * Physics.gravity.y * Time.fixedDeltaTime;
 
+        // Cap horizontal speed
         Vector3 horizontalVelocity = rb.velocity;
         horizontalVelocity.y = 0;
         if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
             rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
+
+        // Counter sliding
+        if (IsGrounded() && moveInput.sqrMagnitude < 0.1f)
+        {
+            Vector3 counterForce = -rb.velocity;
+            counterForce.y = 0f; // don't affect vertical motion
+            rb.AddForce(counterForce * counterSlidingForce, ForceMode.Impulse);
+        }
 
         LookAt();
     }
@@ -85,7 +99,7 @@ public class PlayerControls : MonoBehaviour
         direction.y = 0f;
 
         if (move.ReadValue<Vector2>().sqrMagnitude > 0.1f && direction.sqrMagnitude > 0.1f)
-            this.rb.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            rb.rotation = Quaternion.LookRotation(direction, Vector3.up);
         else
             rb.angularVelocity = Vector3.zero;
     }
@@ -106,7 +120,7 @@ public class PlayerControls : MonoBehaviour
 
     private void DoJump(InputAction.CallbackContext context)
     {
-        if(IsGrounded())
+        if (IsGrounded())
         {
             forceDirection += Vector3.up * jumpForce;
         }
@@ -114,6 +128,6 @@ public class PlayerControls : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return GetComponent<Rigidbody>().velocity.y == 0;
+        return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
     }
 }

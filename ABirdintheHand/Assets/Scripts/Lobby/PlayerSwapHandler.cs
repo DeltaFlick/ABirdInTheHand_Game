@@ -58,7 +58,7 @@ public class PlayerSwapHandler : MonoBehaviour
 
         var inputManager = PlayerInputManager.instance;
 
-        bool isCurrentlyBird = GetComponentInChildren<Cinemachine.CinemachineFreeLook>() != null;
+        bool isCurrentlyBird = GetComponentInChildren<BirdIdentifier>() != null;
         GameObject newPrefab = isCurrentlyBird ? humanPrefab : birdPrefab;
 
         inputManager.playerPrefab = newPrefab;

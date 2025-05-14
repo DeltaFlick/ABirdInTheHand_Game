@@ -54,7 +54,7 @@ public class Timer : MonoBehaviour
                 roundStart.EndRound();
             }
 
-            SceneManager.LoadScene("BirdsWin");
+            SceneManager.LoadScene("Draw");
         }
 
         int minutes = Mathf.FloorToInt(remainingTime / 60);

@@ -12,8 +12,6 @@ public class PlayerSwapCoordinator : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // Optional: uncomment this if you want the coordinator to persist between scenes
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -28,7 +26,7 @@ public class PlayerSwapCoordinator : MonoBehaviour
 
     private IEnumerator RepositionNextFrame(int playerIndex, Transform target)
     {
-        yield return null; // Wait until the next frame
+        yield return null;
 
         var newPlayer = GameObject.FindGameObjectsWithTag("Player")
             .FirstOrDefault(p => p.GetComponent<PlayerInput>()?.playerIndex == playerIndex);
@@ -37,10 +35,6 @@ public class PlayerSwapCoordinator : MonoBehaviour
         {
             newPlayer.transform.position = target.position;
             newPlayer.transform.rotation = target.rotation;
-        }
-        else
-        {
-            Debug.LogWarning($"[PlayerSwapCoordinator] Reposition failed: newPlayer = {newPlayer}, target = {target}");
         }
     }
 }

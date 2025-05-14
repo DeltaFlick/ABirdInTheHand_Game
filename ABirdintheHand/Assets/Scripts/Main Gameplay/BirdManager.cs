@@ -28,6 +28,7 @@ public class BirdManager : MonoBehaviour
         allBirds.Remove(bird);
     }
 
+
     public int GetBirdCount()
     {
         return allBirds.Count;

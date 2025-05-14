@@ -9,29 +9,37 @@ public class BirdCageTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<BirdIdentifier>() != null)
+
+        BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
+        if (bird != null)
         {
-            birdsInCage.Add(other.gameObject);
-            CheckWinCondition();
+            if (!birdsInCage.Contains(other.gameObject))
+            {
+                birdsInCage.Add(other.gameObject);
+                CheckWinCondition();
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<BirdIdentifier>() != null)
+        BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
+        if (bird != null)
         {
-            birdsInCage.Remove(other.gameObject);
+            if (birdsInCage.Contains(other.gameObject))
+            {
+                birdsInCage.Remove(other.gameObject);
+            }
         }
     }
 
     private void CheckWinCondition()
     {
         int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
+
         if (totalBirds > 0 && birdsInCage.Count == totalBirds)
         {
             SceneManager.LoadScene("HumansWin");
         }
     }
 }
-
-

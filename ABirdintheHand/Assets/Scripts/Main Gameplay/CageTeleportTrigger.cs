@@ -28,16 +28,15 @@ public class CageTeleportTrigger : MonoBehaviour
         if (birdRigidbody != null && birdCollider != null)
         {
             birdRigidbody.isKinematic = true;
-            birdCollider.enabled = false;
 
             bird.transform.position = cageSpawnPoint.position;
             bird.transform.rotation = cageSpawnPoint.rotation;
-
-            birdRigidbody.velocity = Vector3.zero;
+            Physics.SyncTransforms();
 
             Invoke("EnableBirdMovement", teleportDelay);
         }
     }
+
 
     private void EnableBirdMovement()
     {
@@ -49,7 +48,6 @@ public class CageTeleportTrigger : MonoBehaviour
             if (birdRigidbody != null && birdCollider != null)
             {
                 birdRigidbody.isKinematic = false;
-                birdCollider.enabled = true;
             }
         }
     }

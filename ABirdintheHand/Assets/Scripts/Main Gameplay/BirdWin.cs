@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class BirdWin : MonoBehaviour
 {
-    public int winningScore = 1;
+    public int winningScore = 30;
     public ScoreSystem scoreSystem;
     private bool gameEnded;
 
