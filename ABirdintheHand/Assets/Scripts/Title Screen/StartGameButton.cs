@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class StartGameButton : MonoBehaviour
 {
-    // Build number of scene to start when start button is pressed
 
     public int gameStartScene;
 

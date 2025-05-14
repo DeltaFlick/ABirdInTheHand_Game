@@ -14,26 +14,24 @@ public class PickupController : MonoBehaviour
     [SerializeField] private float pickupRange = 5.0f;
     [SerializeField] private float pickupForce = 150.0f;
 
-    private RigidbodyConstraints originalConstraints;  // To store the original constraints
+    private RigidbodyConstraints originalConstraints;
 
-    private PlayerInput playerInput;  // Reference to the Player Input component
-    private Camera playerCamera;  // Reference to the Player's Camera
+    private PlayerInput playerInput; 
+    private Camera playerCamera; 
 
     private void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();  // Get the PlayerInput component
-        playerCamera = GetComponentInChildren<Camera>();  // Get the camera attached to this player (assuming the camera is a child)
+        playerInput = GetComponent<PlayerInput>(); 
+        playerCamera = GetComponentInChildren<Camera>(); 
     }
 
     private void Update()
     {
-        // Get the "Grab" action directly from the PlayerInput
-        if (playerInput.actions["Grab"].triggered)  // Ensure "Grab" action is mapped in your Input Asset
+        if (playerInput.actions["Grab"].triggered)
         {
             if (heldObj == null)
             {
                 RaycastHit hit;
-                // Raycast from the center of the player's camera
                 if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, pickupRange))
                 {
                     PickupObject(hit.transform.gameObject);
@@ -69,11 +67,11 @@ public class PickupController : MonoBehaviour
             heldObjRB.drag = 10;
             heldObjRB.constraints = RigidbodyConstraints.FreezeRotation;
 
-            // Store original constraints if it's a player (assuming "Player" tag)
+
             if (pickObj.CompareTag("Player"))
             {
                 originalConstraints = heldObjRB.constraints;
-                heldObjRB.constraints = RigidbodyConstraints.FreezeAll;  // Prevent movement
+                heldObjRB.constraints = RigidbodyConstraints.FreezeAll;
             }
 
             heldObjRB.transform.parent = holdArea;
@@ -88,7 +86,6 @@ public class PickupController : MonoBehaviour
             heldObjRB.useGravity = true;
             heldObjRB.drag = 1;
 
-            // If it was a player, restore original constraints
             if (heldObj.CompareTag("Player"))
             {
                 heldObjRB.constraints = originalConstraints;

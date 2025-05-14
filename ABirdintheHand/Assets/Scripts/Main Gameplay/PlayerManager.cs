@@ -62,20 +62,28 @@ public class PlayerManager : MonoBehaviour
 
         if (index < playerLayers.Count)
         {
-            int layerToAdd = (int)Mathf.Log(playerLayers[index].value, 2);
+            int ownLayer = (int)Mathf.Log(playerLayers[index].value, 2);
 
-            var freeLook = playerParent.GetComponentInChildren<CinemachineFreeLook>();
-            if (freeLook != null)
+            foreach (Renderer renderer in playerParent.GetComponentsInChildren<Renderer>())
             {
-                freeLook.gameObject.layer = layerToAdd;
+                renderer.gameObject.layer = ownLayer;
             }
 
             var cam = playerParent.GetComponentInChildren<Camera>();
             if (cam != null)
             {
-                cam.cullingMask |= 1 << layerToAdd;
+                cam.cullingMask = -1;
+
+                cam.cullingMask &= ~(1 << ownLayer);
+            }
+
+            var freeLook = playerParent.GetComponentInChildren<CinemachineFreeLook>();
+            if (freeLook != null)
+            {
+                freeLook.gameObject.layer = LayerMask.NameToLayer("Default");
             }
         }
+
         var inputHandler = playerParent.GetComponentInChildren<InputHandler>();
         if (inputHandler != null)
         {

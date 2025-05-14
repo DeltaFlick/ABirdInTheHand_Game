@@ -25,7 +25,7 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
 
     [Header("Friction Settings")]
-    [SerializeField] private float counterSlidingForce = 0.1f; // Adjust as needed
+    [SerializeField] private float counterSlidingForce = 0.1f;
 
     public void Start()
     {
@@ -72,21 +72,18 @@ public class PlayerControls : MonoBehaviour
         rb.AddForce(forceDirection, ForceMode.Impulse);
         forceDirection = Vector3.zero;
 
-        // Apply additional gravity if falling
         if (rb.velocity.y < 0f)
             rb.velocity -= Vector3.down * Physics.gravity.y * Time.fixedDeltaTime;
 
-        // Cap horizontal speed
         Vector3 horizontalVelocity = rb.velocity;
         horizontalVelocity.y = 0;
         if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
             rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
 
-        // Counter sliding
         if (IsGrounded() && moveInput.sqrMagnitude < 0.1f)
         {
             Vector3 counterForce = -rb.velocity;
-            counterForce.y = 0f; // don't affect vertical motion
+            counterForce.y = 0f;
             rb.AddForce(counterForce * counterSlidingForce, ForceMode.Impulse);
         }
 
