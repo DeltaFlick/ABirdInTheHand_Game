@@ -2,7 +2,6 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
 
 public class PlayerSwapHandler : MonoBehaviour
 {
@@ -20,7 +19,15 @@ public class PlayerSwapHandler : MonoBehaviour
     {
         playerInput = GetComponentInChildren<PlayerInput>();
         playerIndex = playerInput.playerIndex;
+
         inputDevice = playerInput.devices.FirstOrDefault();
+
+        if (inputDevice == null)
+        {
+            inputDevice = playerInput.currentControlScheme == "Keyboard&Mouse"
+                ? Keyboard.current
+                : Gamepad.all.ElementAtOrDefault(playerIndex);
+        }
     }
 
     private void OnEnable()
@@ -56,18 +63,20 @@ public class PlayerSwapHandler : MonoBehaviour
             return;
         }
 
-        var inputManager = PlayerInputManager.instance;
-
         bool isCurrentlyBird = GetComponentInChildren<BirdIdentifier>() != null;
         GameObject newPrefab = isCurrentlyBird ? humanPrefab : birdPrefab;
 
-        inputManager.playerPrefab = newPrefab;
+        int index = playerInput.playerIndex;
+        var device = inputDevice;
 
         Destroy(gameObject);
 
-        inputManager.JoinPlayer(playerIndex, -1, null, inputDevice);
+        PlayerInput newPlayerInput = PlayerInput.Instantiate(newPrefab, index, controlScheme: null, pairWithDevice: device);
+        GameObject newPlayer = newPlayerInput.gameObject;
 
-        PlayerSwapCoordinator.Instance.RepositionPlayerNextFrame(playerIndex, teleportTarget);
+        newPlayer.transform.position = teleportTarget.position;
+        newPlayer.transform.rotation = teleportTarget.rotation;
+
+        PlayerSwapCoordinator.Instance.RepositionPlayerNextFrame(index, teleportTarget);
     }
 }
-
