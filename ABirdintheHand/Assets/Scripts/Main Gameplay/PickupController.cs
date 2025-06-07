@@ -1,41 +1,46 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PickupController : MonoBehaviour
 {
     [Header("Pickup Settings")]
-    [SerializeField] Transform holdArea;
+    [SerializeField] private Transform holdArea;
+    [SerializeField] private float pickupRange = 5f;
+    [SerializeField] private float spring = 500f;
+    [SerializeField] private float damper = 30f;
+
+    [Header("Crosshair Feedback")]
+    [SerializeField] private Image crosshair;
+    [SerializeField] private Sprite defaultSprite;
+    [SerializeField] private Sprite highlightSprite;
+    [SerializeField] private Sprite heldSprite;
+    [SerializeField] private Color defaultColor = Color.white;
+    [SerializeField] private Color highlightColor = Color.yellow;
+    [SerializeField] private Color heldColor = Color.green;
+
     private GameObject heldObj;
     private Rigidbody heldObjRB;
-
-    [Header("Physics Parameters")]
-    [SerializeField] private float pickupRange = 5.0f;
-    [SerializeField] private float pickupForce = 150.0f;
+    private SpringJoint joint;
+    private PlayerInput playerInput;
+    private Camera playerCamera;
 
     private RigidbodyConstraints originalConstraints;
 
-    private PlayerInput playerInput; 
-    private Camera playerCamera; 
-
-    private void Awake()
+    void Awake()
     {
-        playerInput = GetComponent<PlayerInput>(); 
-        playerCamera = GetComponentInChildren<Camera>(); 
+        playerInput = GetComponent<PlayerInput>();
+        playerCamera = GetComponentInChildren<Camera>();
     }
 
-    private void Update()
+    void Update()
     {
         if (playerInput.actions["Grab"].triggered)
         {
             if (heldObj == null)
             {
-                RaycastHit hit;
-                if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, pickupRange))
-                {
-                    PickupObject(hit.transform.gameObject);
-                }
+                TryPickup();
             }
             else
             {
@@ -43,48 +48,62 @@ public class PickupController : MonoBehaviour
             }
         }
 
-        if (heldObj != null)
+        HandleCrosshairFeedback();
+    }
+
+    void FixedUpdate()
+    {
+        if (joint != null)
         {
-            MoveObject();
+            joint.connectedAnchor = holdArea.position;
         }
     }
 
-    void MoveObject()
+    void TryPickup()
     {
-        if (Vector3.Distance(heldObj.transform.position, holdArea.position) > 0.1f)
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, pickupRange))
         {
-            Vector3 moveDirection = (holdArea.position - heldObj.transform.position);
-            heldObjRB.AddForce(moveDirection * pickupForce);
-        }
-    }
-
-    void PickupObject(GameObject pickObj)
-    {
-        if (pickObj.GetComponent<Rigidbody>())
-        {
-            heldObjRB = pickObj.GetComponent<Rigidbody>();
-            heldObjRB.useGravity = false;
-            heldObjRB.drag = 10;
-            heldObjRB.constraints = RigidbodyConstraints.FreezeRotation;
-
-
-            if (pickObj.CompareTag("Player"))
+            Rigidbody rb = hit.rigidbody;
+            if (rb != null)
             {
-                originalConstraints = heldObjRB.constraints;
-                heldObjRB.constraints = RigidbodyConstraints.FreezeAll;
-            }
+                heldObj = rb.gameObject;
+                heldObjRB = rb;
 
-            heldObjRB.transform.parent = holdArea;
-            heldObj = pickObj;
+                heldObjRB.useGravity = true;
+                heldObjRB.drag = 4f;
+                heldObjRB.interpolation = RigidbodyInterpolation.Interpolate;
+                heldObjRB.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+
+                joint = heldObj.AddComponent<SpringJoint>();
+                joint.autoConfigureConnectedAnchor = false;
+                joint.connectedAnchor = holdArea.position;
+                joint.spring = spring;
+                joint.damper = damper;
+                joint.maxDistance = 0.1f;
+                joint.minDistance = 0f;
+
+                Vector3 localHitPoint = heldObj.transform.InverseTransformPoint(hit.point);
+                joint.anchor = localHitPoint;
+
+                if (heldObj.CompareTag("Player"))
+                {
+                    originalConstraints = heldObjRB.constraints;
+                    heldObjRB.constraints = RigidbodyConstraints.FreezeRotation;
+                }
+            }
         }
     }
 
     void DropObject()
     {
+        if (joint != null)
+        {
+            Destroy(joint);
+        }
+
         if (heldObjRB != null)
         {
-            heldObjRB.useGravity = true;
-            heldObjRB.drag = 1;
+            heldObjRB.drag = 1f;
 
             if (heldObj.CompareTag("Player"))
             {
@@ -94,14 +113,36 @@ public class PickupController : MonoBehaviour
             {
                 heldObjRB.constraints = RigidbodyConstraints.None;
             }
-
-            heldObj.transform.parent = null;
-            heldObj = null;
         }
+
+        heldObj = null;
+        heldObjRB = null;
+        joint = null;
+    }
+
+    void HandleCrosshairFeedback()
+    {
+        if (crosshair == null)
+            return;
+
+        if (heldObj != null)
+        {
+            crosshair.sprite = heldSprite;
+            crosshair.color = heldColor;
+            return;
+        }
+
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, pickupRange))
+        {
+            if (hit.rigidbody != null)
+            {
+                crosshair.sprite = highlightSprite;
+                crosshair.color = highlightColor;
+                return;
+            }
+        }
+
+        crosshair.sprite = defaultSprite;
+        crosshair.color = defaultColor;
     }
 }
-
-
-
-
-

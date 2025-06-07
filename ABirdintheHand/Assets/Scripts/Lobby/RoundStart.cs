@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class RoundStart : MonoBehaviour
 {
@@ -15,12 +16,16 @@ public class RoundStart : MonoBehaviour
     public int totalPlayers;
     private int playersInTrigger = 0;
     public bool startRoundActive = false;
-
+    private Coroutine countdownCoroutine;
     private HashSet<GameObject> teleportedPlayers = new HashSet<GameObject>();
 
     [Header("UI Elements")]
     public GameObject scoreTextObject;
     public GameObject timerTextObject;
+    public TextMeshProUGUI countdownText;
+
+    [Header("Countdown Settings")]
+    public float countdownDuration = 3f;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -36,6 +41,11 @@ public class RoundStart : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playersInTrigger = Mathf.Max(0, playersInTrigger - 1);
+
+            if (startRoundActive && playersInTrigger < totalPlayers)
+            {
+                CancelCountdown();
+            }
         }
     }
 
@@ -43,7 +53,24 @@ public class RoundStart : MonoBehaviour
     {
         if (playersInTrigger == totalPlayers && !startRoundActive)
         {
-            StartCoroutine(StartRound());
+            countdownCoroutine = StartCoroutine(StartRound());
+        }
+    }
+
+    private void CancelCountdown()
+    {
+        if (countdownCoroutine != null)
+        {
+            StopCoroutine(countdownCoroutine);
+            countdownCoroutine = null;
+        }
+
+        startRoundActive = false;
+
+        if (countdownText != null)
+        {
+            countdownText.text = "";
+            countdownText.gameObject.SetActive(false);
         }
     }
 
@@ -51,7 +78,35 @@ public class RoundStart : MonoBehaviour
     {
         startRoundActive = true;
 
-        yield return null;
+        float countdown = countdownDuration;
+        if (countdownText != null)
+        {
+            countdownText.gameObject.SetActive(true);
+        }
+
+        while (countdown > 0)
+        {
+            if (countdownText != null)
+            {
+                countdownText.text = Mathf.Ceil(countdown).ToString();
+            }
+
+            yield return new WaitForSeconds(1f);
+            countdown -= 1f;
+
+            if (playersInTrigger < totalPlayers)
+            {
+                CancelCountdown();
+                yield break;
+            }
+        }
+
+        if (countdownText != null)
+        {
+            countdownText.text = "GO!";
+            yield return new WaitForSeconds(1f);
+            countdownText.gameObject.SetActive(false);
+        }
 
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
@@ -63,7 +118,6 @@ public class RoundStart : MonoBehaviour
             if (input == null) continue;
 
             int index = input.playerIndex;
-
             if (index >= teleportDestinations.Length) continue;
 
             Transform destination = teleportDestinations[index].transform;
@@ -108,8 +162,9 @@ public class RoundStart : MonoBehaviour
             timer.ResetTimer(300f);
         }
 
-        yield return new WaitForSeconds(1f);
         teleportedPlayers.Clear();
+        startRoundActive = false;
+        countdownCoroutine = null;
     }
 
     private IEnumerator ReenableControls(PlayerControls pc, float delay)
