@@ -92,15 +92,15 @@ public class PlayerControls : MonoBehaviour
 
     private void LookAt()
     {
-        Vector3 direction = rb.velocity;
-        direction.y = 0f;
+        Vector3 lookDirection = playerCamera.transform.forward;
+        lookDirection.y = 0f;
 
-        if (move.ReadValue<Vector2>().sqrMagnitude > 0.1f && direction.sqrMagnitude > 0.1f)
-            rb.rotation = Quaternion.LookRotation(direction, Vector3.up);
-        else
-            rb.angularVelocity = Vector3.zero;
+        if (lookDirection.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 10f * Time.fixedDeltaTime));
+        }
     }
-
     private Vector3 GetCameraForward(Camera playerCamera)
     {
         Vector3 forward = playerCamera.transform.forward;
