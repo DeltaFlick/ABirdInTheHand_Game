@@ -9,6 +9,7 @@ public class PlayerControls : MonoBehaviour
     private InputActionAsset inputAsset;
     private InputActionMap player;
     private InputAction move;
+    public bool isWalking = false;
 
     private Rigidbody rb;
     [SerializeField] private float movementForce = 1f;
@@ -66,6 +67,8 @@ public class PlayerControls : MonoBehaviour
     {
         Vector2 moveInput = move.ReadValue<Vector2>();
 
+        isWalking = moveInput.sqrMagnitude > 0.1f && IsGrounded();
+
         forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce;
         forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce;
 
@@ -89,6 +92,7 @@ public class PlayerControls : MonoBehaviour
 
         LookAt();
     }
+
 
     private void LookAt()
     {
