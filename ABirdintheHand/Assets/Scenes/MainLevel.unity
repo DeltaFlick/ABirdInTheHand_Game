@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5568.6484, g: 3942.8535, b: 3942.7578, a: 1}
+  m_IndirectSpecularColor: {r: 5572.1133, g: 3944.1348, b: 3942.2031, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2066,6 +2066,23 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4664959142345605834}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &186455513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186455512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cf76a96ad6e04b468cc7649e92d0e49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionDistance: 3
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 16384
+  playerCamera: {fileID: 336345515}
 --- !u!1 &193230661 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8512c9888d460444a9b5819d7f748950,
@@ -3285,6 +3302,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1515674030}
   m_PrefabAsset: {fileID: 0}
+--- !u!20 &336345515 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 4664959142770033666, guid: 39d09e00db2498b4aade98e210a5abb8,
+    type: 3}
+  m_PrefabInstance: {fileID: 4664959142345605834}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &354661757
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4071,6 +4094,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.019999996, z: 0.019999996}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &426087995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 426087992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 432d750baf4957f40805bad5b1f726d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &428050345
 GameObject:
   m_ObjectHideFlags: 0
@@ -13266,6 +13301,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c0f71e795fdaa2947855baff9f0c46ca,
+        type: 3}
+      propertyPath: m_TagString
+      value: whatisGround
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
