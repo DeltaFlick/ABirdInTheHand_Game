@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5572.1133, g: 3944.1348, b: 3942.2031, a: 1}
+  m_IndirectSpecularColor: {r: 5560.092, g: 3939.3398, b: 3946.4844, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3201,7 +3201,6 @@ Transform:
   m_Children:
   - {fileID: 1795155998}
   - {fileID: 511276556}
-  - {fileID: 580596469}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4094,18 +4093,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.019999996, z: 0.019999996}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &426087995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 426087992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 432d750baf4957f40805bad5b1f726d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &428050345
 GameObject:
   m_ObjectHideFlags: 0
@@ -5271,58 +5258,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!1 &580596468
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 580596469}
-  - component: {fileID: 580596470}
-  m_Layer: 0
-  m_Name: MusicManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &580596469
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 580596468}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.632316, y: 0.51711196, z: -0.25027674}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 313780443}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &580596470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 580596468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74b535375859d974fbd13ee557853300, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HappyDays:
-    Guid:
-      Data1: -1002849597
-      Data2: 1124079246
-      Data3: -1762569600
-      Data4: 1887783348
-    Path: event:/HappyDays
-  radio: {fileID: 2107527222}
 --- !u!1 &602537542
 GameObject:
   m_ObjectHideFlags: 0
@@ -18451,7 +18386,8 @@ GameObject:
   - component: {fileID: 2107527225}
   - component: {fileID: 2107527224}
   - component: {fileID: 2107527227}
-  m_Layer: 0
+  - component: {fileID: 2107527228}
+  m_Layer: 14
   m_Name: Radio
   m_TagString: whatisGround
   m_Icon: {fileID: 0}
@@ -18552,6 +18488,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2107527228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107527222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 432d750baf4957f40805bad5b1f726d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HappyDays:
+    Guid:
+      Data1: -1002849597
+      Data2: 1124079246
+      Data3: -1762569600
+      Data4: 1887783348
+    Path: event:/HappyDays
+  radio: {fileID: 2107527222}
 --- !u!1001 &2108313076
 PrefabInstance:
   m_ObjectHideFlags: 0
