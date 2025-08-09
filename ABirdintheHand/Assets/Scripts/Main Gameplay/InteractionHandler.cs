@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
 public class InteractionHandler : MonoBehaviour
@@ -11,6 +11,7 @@ public class InteractionHandler : MonoBehaviour
 
     private PlayerInput playerInput;
     private InputAction interactAction;
+    private IInteractable currentInteractable;
 
     private void Awake()
     {
@@ -35,7 +36,7 @@ public class InteractionHandler : MonoBehaviour
         interactAction.performed -= TryInteract;
     }
 
-    private void TryInteract(InputAction.CallbackContext context)
+    private void Update()
     {
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
 
@@ -45,8 +46,28 @@ public class InteractionHandler : MonoBehaviour
 
             if (interactable != null)
             {
-                interactable.Interact();
+                if (currentInteractable != interactable)
+                {
+                    if (currentInteractable != null)
+                        currentInteractable.HidePrompt();
+
+                    currentInteractable = interactable;
+                    currentInteractable.ShowPrompt();
+                }
+                return;
             }
         }
+
+        if (currentInteractable != null)
+        {
+            currentInteractable.HidePrompt();
+            currentInteractable = null;
+        }
+    }
+
+    private void TryInteract(InputAction.CallbackContext context)
+    {
+        if (currentInteractable != null)
+            currentInteractable.Interact();
     }
 }

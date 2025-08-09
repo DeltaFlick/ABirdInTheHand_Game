@@ -41,6 +41,33 @@ MonoBehaviour:
   - Name: Desktop
     Value: 37984
   Exists: 1
+--- !u!114 &-7790565696622476939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Cat Song
+  m_EditorClassIdentifier: 
+  Path: event:/Cat Song
+  Guid:
+    Data1: 2055323694
+    Data2: 1267378757
+    Data3: -825466752
+    Data4: -2006633013
+  Banks:
+  - {fileID: 4816686592662095254}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 134739
 --- !u!114 &-4935514565694642989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +109,33 @@ MonoBehaviour:
   - Name: Desktop
     Value: 1254656
   Exists: 1
+--- !u!114 &-3280278230075786994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Boo-Womp
+  m_EditorClassIdentifier: 
+  Path: event:/Boo-Womp
+  Guid:
+    Data1: 694511378
+    Data2: 1266886016
+    Data3: 118564769
+    Data4: -779808519
+  Banks:
+  - {fileID: 4816686592662095254}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2115
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,18 +156,24 @@ MonoBehaviour:
   EditorEvents:
   - {fileID: 2621709834355110359}
   - {fileID: 4007006537757209162}
+  - {fileID: -3280278230075786994}
+  - {fileID: -7790565696622476939}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2889666482317646285}
   StringsBanks:
   - {fileID: 8828912674707933039}
   cacheVersion: 131848
-  cacheTime: 638897637771695744
+  cacheTime: 638903612797171060
   SerializableEventsDict:
   - key: event:/GrassyFootsteps
     index: 0
   - key: event:/HappyDays
     index: 1
+  - key: event:/Boo-Womp
+    index: 2
+  - key: event:/Cat Song
+    index: 3
 --- !u!114 &2621709834355110359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,7 +216,7 @@ MonoBehaviour:
   Path: ../../FMOD Projects/A Bird In The Hand/ABirdInTheHand/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638897630813977236
+  lastModified: 638903612797165980
   FileSizes:
   - Name: Desktop
     Value: 1074
@@ -231,10 +291,10 @@ MonoBehaviour:
     Music.bank
   Name: Background Music
   StudioPath: bank:/Background Music
-  lastModified: 638897637771695744
+  lastModified: 638903612797104716
   FileSizes:
   - Name: Desktop
-    Value: 1809856
+    Value: 3630016
   Exists: 1
 --- !u!114 &8828912674707933039
 MonoBehaviour:
@@ -251,8 +311,8 @@ MonoBehaviour:
   Path: ../../FMOD Projects/A Bird In The Hand/ABirdInTheHand/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638897630813987517
+  lastModified: 638903612797171060
   FileSizes:
   - Name: Desktop
-    Value: 932
+    Value: 1010
   Exists: 1
