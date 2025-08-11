@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class SwapZone : MonoBehaviour
 {
-    [Header("Teleport Target")]
-    [SerializeField] private Transform teleportTarget;
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             PlayerSwapHandler handler = other.GetComponentInParent<PlayerSwapHandler>();
-            if (handler != null && teleportTarget != null)
+            if (handler != null)
             {
-                handler.EnterSwapZone(teleportTarget);
+                handler.EnterSwapZone();
             }
         }
     }

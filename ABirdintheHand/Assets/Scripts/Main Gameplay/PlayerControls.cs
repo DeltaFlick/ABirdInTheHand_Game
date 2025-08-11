@@ -7,8 +7,9 @@ using UnityEngine.InputSystem;
 public class PlayerControls : MonoBehaviour
 {
     private InputActionAsset inputAsset;
-    private InputActionMap player;
+    private InputActionMap playerMap;
     private InputAction move;
+    private InputAction look;
     public bool isWalking = false;
 
     private Rigidbody rb;
@@ -16,8 +17,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float maxSpeed = 5f;
     private Vector3 forceDirection = Vector3.zero;
-    public PlayerInput pi { get; private set; }
 
+    public PlayerInput pi { get; private set; }
     [SerializeField] public Camera playerCamera;
 
     [Header("Ground Check Settings")]
@@ -28,39 +29,36 @@ public class PlayerControls : MonoBehaviour
     [Header("Friction Settings")]
     [SerializeField] private float counterSlidingForce = 0.1f;
 
-    public void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
-    public void SetPlayerInputActive(bool activation, PlayerInput playerInput)
-    {
-        if (pi == null)
-            pi = playerInput;
-
-        pi.enabled = activation;
-    }
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        inputAsset = GetComponent<PlayerInput>().actions;
-        player = inputAsset.FindActionMap("Player");
         pi = GetComponent<PlayerInput>();
+
+        inputAsset = pi.actions;
+        playerMap = inputAsset.FindActionMap("Player");
+
+        move = playerMap.FindAction("Move");
+        look = playerMap.FindAction("Look");
     }
 
     private void OnEnable()
     {
-        player.FindAction("Jump").started += DoJump;
-        move = player.FindAction("Move");
-        player.Enable();
+        playerMap.FindAction("Jump").started += DoJump;
+        playerMap.Enable();
     }
 
     private void OnDisable()
     {
-        player.FindAction("Jump").started -= DoJump;
-        player.Disable();
+        playerMap.FindAction("Jump").started -= DoJump;
+        playerMap.Disable();
+    }
+
+    public void SetControlsEnabled(bool enabled)
+    {
+        if (enabled)
+            playerMap.Enable();
+        else
+            playerMap.Disable();
     }
 
     private void FixedUpdate()
@@ -93,7 +91,6 @@ public class PlayerControls : MonoBehaviour
         LookAt();
     }
 
-
     private void LookAt()
     {
         Vector3 lookDirection = playerCamera.transform.forward;
@@ -105,6 +102,7 @@ public class PlayerControls : MonoBehaviour
             rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 10f * Time.fixedDeltaTime));
         }
     }
+
     private Vector3 GetCameraForward(Camera playerCamera)
     {
         Vector3 forward = playerCamera.transform.forward;

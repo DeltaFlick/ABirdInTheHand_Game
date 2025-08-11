@@ -43,25 +43,26 @@ public class PlayerSwapHandler : MonoBehaviour
         }
     }
 
-    public void EnterSwapZone(Transform target)
+    public void EnterSwapZone()
     {
         isInSwapZone = true;
-        teleportTarget = target;
     }
 
     public void ExitSwapZone()
     {
         isInSwapZone = false;
-        teleportTarget = null;
     }
 
     private void OnInteract(InputAction.CallbackContext ctx)
     {
-        if (!isInSwapZone || teleportTarget == null)
+        if (!isInSwapZone)
         {
             Debug.Log("Not in swap zone. Ignoring swap.");
             return;
         }
+
+        Vector3 oldPosition = transform.position;
+        Quaternion oldRotation = transform.rotation;
 
         bool isCurrentlyBird = GetComponentInChildren<BirdIdentifier>() != null;
         GameObject newPrefab = isCurrentlyBird ? humanPrefab : birdPrefab;
@@ -74,9 +75,6 @@ public class PlayerSwapHandler : MonoBehaviour
         PlayerInput newPlayerInput = PlayerInput.Instantiate(newPrefab, index, controlScheme: null, pairWithDevice: device);
         GameObject newPlayer = newPlayerInput.gameObject;
 
-        newPlayer.transform.position = teleportTarget.position;
-        newPlayer.transform.rotation = teleportTarget.rotation;
-
-        PlayerSwapCoordinator.Instance.RepositionPlayerNextFrame(index, teleportTarget);
+        newPlayer.transform.SetPositionAndRotation(oldPosition, oldRotation);
     }
 }

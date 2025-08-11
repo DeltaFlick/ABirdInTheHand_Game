@@ -260,6 +260,45 @@ public partial class @ThirdPersonActionsAsset : IInputActionCollection2, IDispos
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""b2f24fae-982d-4404-adff-38db305bf8d1"",
+            ""actions"": [
+                {
+                    ""name"": ""Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""5ecd285f-03ff-4d6b-bd4d-3098f56a10cd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""a3708724-c908-4fc2-bf60-5dbba5e7db2f"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4e052e46-1c84-4e31-b430-385aa08f2308"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -300,6 +339,9 @@ public partial class @ThirdPersonActionsAsset : IInputActionCollection2, IDispos
         m_Player_Join = m_Player.FindAction("Join", throwIfNotFound: true);
         m_Player_Grab = m_Player.FindAction("Grab", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_Menu = m_UI.FindAction("Menu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -428,6 +470,39 @@ public partial class @ThirdPersonActionsAsset : IInputActionCollection2, IDispos
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private IUIActions m_UIActionsCallbackInterface;
+    private readonly InputAction m_UI_Menu;
+    public struct UIActions
+    {
+        private @ThirdPersonActionsAsset m_Wrapper;
+        public UIActions(@ThirdPersonActionsAsset wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Menu => m_Wrapper.m_UI_Menu;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void SetCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterface != null)
+            {
+                @Menu.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMenu;
+                @Menu.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMenu;
+                @Menu.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMenu;
+            }
+            m_Wrapper.m_UIActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Menu.started += instance.OnMenu;
+                @Menu.performed += instance.OnMenu;
+                @Menu.canceled += instance.OnMenu;
+            }
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     private int m_MouseKeyboardSchemeIndex = -1;
     public InputControlScheme MouseKeyboardScheme
     {
@@ -454,5 +529,9 @@ public partial class @ThirdPersonActionsAsset : IInputActionCollection2, IDispos
         void OnJoin(InputAction.CallbackContext context);
         void OnGrab(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnMenu(InputAction.CallbackContext context);
     }
 }
