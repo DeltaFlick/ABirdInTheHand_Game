@@ -9,64 +9,43 @@ public class PlayerSwapHandler : MonoBehaviour
     public GameObject birdPrefab;
     public GameObject humanPrefab;
 
-    private bool isInSwapZone = false;
-    private Transform teleportTarget;
     private PlayerInput playerInput;
-    private int playerIndex;
     private InputDevice inputDevice;
 
     private void Awake()
     {
         playerInput = GetComponentInChildren<PlayerInput>();
-        playerIndex = playerInput.playerIndex;
-
         inputDevice = playerInput.devices.FirstOrDefault();
 
         if (inputDevice == null)
         {
             inputDevice = playerInput.currentControlScheme == "Keyboard&Mouse"
                 ? Keyboard.current
-                : Gamepad.all.ElementAtOrDefault(playerIndex);
+                : Gamepad.all.ElementAtOrDefault(playerInput.playerIndex);
         }
     }
 
-    private void OnEnable()
+    private bool IsCurrentlyHuman()
     {
-        playerInput.actions["Interact"].performed += OnInteract;
+        return GetComponentInChildren<BirdIdentifier>() == null;
     }
 
-    private void OnDisable()
+    public void SwapToHuman()
     {
-        if (playerInput != null && playerInput.actions != null)
-        {
-            playerInput.actions["Interact"].performed -= OnInteract;
-        }
+        if (IsCurrentlyHuman()) return;
+        Swap(humanPrefab);
     }
 
-    public void EnterSwapZone()
+    public void SwapToBird()
     {
-        isInSwapZone = true;
+        if (!IsCurrentlyHuman()) return;
+        Swap(birdPrefab);
     }
 
-    public void ExitSwapZone()
+    private void Swap(GameObject newPrefab)
     {
-        isInSwapZone = false;
-    }
-
-    private void OnInteract(InputAction.CallbackContext ctx)
-    {
-        if (!isInSwapZone)
-        {
-            Debug.Log("Not in swap zone. Ignoring swap.");
-            return;
-        }
-
         Vector3 oldPosition = transform.position;
         Quaternion oldRotation = transform.rotation;
-
-        bool isCurrentlyBird = GetComponentInChildren<BirdIdentifier>() != null;
-        GameObject newPrefab = isCurrentlyBird ? humanPrefab : birdPrefab;
-
         int index = playerInput.playerIndex;
         var device = inputDevice;
 

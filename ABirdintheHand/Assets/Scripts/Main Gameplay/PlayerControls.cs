@@ -29,8 +29,6 @@ public class PlayerControls : MonoBehaviour
     [Header("Friction Settings")]
     [SerializeField] private float counterSlidingForce = 0.1f;
 
-    public bool controlsEnabled = true;
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -57,27 +55,14 @@ public class PlayerControls : MonoBehaviour
 
     public void SetControlsEnabled(bool enabled)
     {
-        controlsEnabled = enabled;
-
         if (enabled)
-        {
             playerMap.Enable();
-        }
         else
-        {
             playerMap.Disable();
-
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-
-            isWalking = false;
-        }
     }
 
     private void FixedUpdate()
     {
-        if (!controlsEnabled) return;
-
         Vector2 moveInput = move.ReadValue<Vector2>();
 
         isWalking = moveInput.sqrMagnitude > 0.1f && IsGrounded();

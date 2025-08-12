@@ -12,10 +12,6 @@ public class PlayerMenuController : MonoBehaviour
     [Header("Other UI")]
     [SerializeField] private GameObject crosshairCanvas;
 
-    [Header("Cameras")]
-    [SerializeField] private Camera gameplayCamera;
-    [SerializeField] private Camera menuCamera;
-
     private bool menuOpen = false;
     private PlayerControls playerControls;
     private InputAction menuAction;
@@ -29,9 +25,6 @@ public class PlayerMenuController : MonoBehaviour
 
         if (menuPanel != null)
             menuPanel.SetActive(false);
-
-        if (menuCamera != null)
-            menuCamera.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -49,20 +42,10 @@ public class PlayerMenuController : MonoBehaviour
     {
         menuOpen = !menuOpen;
 
-        if (menuPanel != null)
-            menuPanel.SetActive(menuOpen);
+        if (menuPanel != null) menuPanel.SetActive(menuOpen);
+        if (crosshairCanvas != null) crosshairCanvas.SetActive(!menuOpen);
 
-        if (crosshairCanvas != null)
-            crosshairCanvas.SetActive(!menuOpen);
-
-        if (playerControls != null)
-            playerControls.SetControlsEnabled(!menuOpen);
-
-        if (gameplayCamera != null)
-            gameplayCamera.gameObject.SetActive(!menuOpen);
-
-        if (menuCamera != null)
-            menuCamera.gameObject.SetActive(menuOpen);
+        if (playerControls != null) playerControls.SetControlsEnabled(!menuOpen);
 
         Cursor.lockState = menuOpen ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = menuOpen;
