@@ -143,6 +143,12 @@ public class RoundStart : MonoBehaviour
                 pc.enabled = false;
                 StartCoroutine(ReenableControls(pc, 0.1f));
             }
+
+            PlayerMenuController menuController = player.GetComponent<PlayerMenuController>();
+            if (menuController != null)
+            {
+                menuController.SetRoundStarted(true);
+            }
         }
 
         playersInTrigger = 0;
