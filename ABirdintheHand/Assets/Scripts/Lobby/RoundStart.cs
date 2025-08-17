@@ -13,7 +13,6 @@ public class RoundStart : MonoBehaviour
     public Timer timer;
 
     [Header("Round Control")]
-    public int totalPlayers;
     private int playersInTrigger = 0;
     public bool startRoundActive = false;
     private Coroutine countdownCoroutine;
@@ -26,6 +25,13 @@ public class RoundStart : MonoBehaviour
 
     [Header("Countdown Settings")]
     public float countdownDuration = 3f;
+
+    private PlayerInputManager playerInputManager;
+
+    private void Awake()
+    {
+        playerInputManager = FindObjectOfType<PlayerInputManager>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -42,6 +48,7 @@ public class RoundStart : MonoBehaviour
         {
             playersInTrigger = Mathf.Max(0, playersInTrigger - 1);
 
+            int totalPlayers = PlayerInput.all.Count;
             if (startRoundActive && playersInTrigger < totalPlayers)
             {
                 CancelCountdown();
@@ -51,6 +58,9 @@ public class RoundStart : MonoBehaviour
 
     private void CheckStartCondition()
     {
+        int totalPlayers = PlayerInput.all.Count;
+        if (totalPlayers == 0) return;
+
         if (playersInTrigger == totalPlayers && !startRoundActive)
         {
             countdownCoroutine = StartCoroutine(StartRound());
@@ -83,6 +93,8 @@ public class RoundStart : MonoBehaviour
         {
             countdownText.gameObject.SetActive(true);
         }
+
+        int totalPlayers = PlayerInput.all.Count;
 
         while (countdown > 0)
         {
@@ -168,6 +180,11 @@ public class RoundStart : MonoBehaviour
             timer.ResetTimer(300f);
         }
 
+        if (playerInputManager != null)
+        {
+            playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+        }
+
         teleportedPlayers.Clear();
         startRoundActive = false;
         countdownCoroutine = null;
@@ -189,6 +206,11 @@ public class RoundStart : MonoBehaviour
         if (scoreSystem != null)
         {
             scoreSystem.AddScore(0);
+        }
+
+        if (playerInputManager != null)
+        {
+            playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
         }
     }
 }

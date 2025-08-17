@@ -9,7 +9,7 @@ public class TextSlider : MonoBehaviour
     public TextMeshProUGUI numberText;
     private Slider slider;
 
-    void start()
+    void Start()
     {
         slider = GetComponent<Slider>();
         SetNumberText(slider.value);
