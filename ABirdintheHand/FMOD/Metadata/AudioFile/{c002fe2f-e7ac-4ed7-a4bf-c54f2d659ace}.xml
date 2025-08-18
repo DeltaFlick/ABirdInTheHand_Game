@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{c002fe2f-e7ac-4ed7-a4bf-c54f2d659ace}">
+		<property name="assetPath">
+			<value>672065__silverillusionist__footsteps-on-dirt-retro-style.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>6.5454648526077097</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{466b664e-d2af-4ac7-aa72-9f576d719d7e}</destination>
+		</relationship>
+	</object>
+</objects>

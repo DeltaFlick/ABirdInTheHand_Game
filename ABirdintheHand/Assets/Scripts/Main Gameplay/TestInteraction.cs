@@ -9,7 +9,7 @@ public class TestInteraction : MonoBehaviour, IInteractable
     [SerializeField] private GameObject promptUI;
     [SerializeField] private TextMeshProUGUI promptText;
 
-    public void Interact()
+    public void Interact(InteractionHandler interactor)
     {
         Debug.Log("Interacted!");
     }

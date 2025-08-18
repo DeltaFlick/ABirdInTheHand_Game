@@ -29,7 +29,7 @@ public class RadioInteraction : MonoBehaviour, IInteractable
             promptUI.SetActive(false);
     }
 
-    public void Interact()
+    public void Interact(InteractionHandler interactor)
     {
         PlayNextShuffledSong();
     }

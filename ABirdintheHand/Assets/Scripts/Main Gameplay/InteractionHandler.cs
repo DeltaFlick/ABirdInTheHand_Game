@@ -68,6 +68,6 @@ public class InteractionHandler : MonoBehaviour
     private void TryInteract(InputAction.CallbackContext context)
     {
         if (currentInteractable != null)
-            currentInteractable.Interact();
+            currentInteractable.Interact(this);
     }
 }

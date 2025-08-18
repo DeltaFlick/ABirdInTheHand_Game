@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{23e8fece-582f-4a91-ac65-d26dc09d27b6}">
+		<property name="assetPath">
+			<value>GrassyFootstep-03.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.51947845804988657</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{466b664e-d2af-4ac7-aa72-9f576d719d7e}</destination>
+		</relationship>
+	</object>
+</objects>

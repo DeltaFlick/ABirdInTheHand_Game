@@ -44,6 +44,18 @@ public class PlayerSwapHandler : MonoBehaviour
 
     private void Swap(GameObject newPrefab)
     {
+        var interactHandler = GetComponentInChildren<InteractionHandler>();
+        if (interactHandler != null)
+        {
+            var currentInteractableField = typeof(InteractionHandler)
+                .GetField("currentInteractable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (currentInteractableField != null)
+            {
+                var current = currentInteractableField.GetValue(interactHandler) as IInteractable;
+                current?.HidePrompt();
+            }
+        }
+
         Vector3 oldPosition = transform.position;
         Quaternion oldRotation = transform.rotation;
         int index = playerInput.playerIndex;
@@ -57,3 +69,5 @@ public class PlayerSwapHandler : MonoBehaviour
         newPlayer.transform.SetPositionAndRotation(oldPosition, oldRotation);
     }
 }
+
+

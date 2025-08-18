@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{7b98a065-2531-4b40-af72-7c898ccdc729}">
+		<property name="assetPath">
+			<value>Happy Days.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>137.60417233560091</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{466b664e-d2af-4ac7-aa72-9f576d719d7e}</destination>
+		</relationship>
+	</object>
+</objects>
