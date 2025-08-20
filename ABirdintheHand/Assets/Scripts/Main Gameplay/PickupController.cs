@@ -69,6 +69,12 @@ public class PickupController : MonoBehaviour
                 heldObj = rb.gameObject;
                 heldObjRB = rb;
 
+                BirdIdentifier bird = heldObj.GetComponent<BirdIdentifier>();
+                if (bird != null)
+                {
+                    bird.IsBeingHeld = true;
+                }
+
                 heldObjRB.useGravity = true;
                 heldObjRB.drag = 4f;
                 heldObjRB.interpolation = RigidbodyInterpolation.Interpolate;
@@ -103,6 +109,13 @@ public class PickupController : MonoBehaviour
 
         if (heldObjRB != null)
         {
+
+            BirdIdentifier bird = heldObj.GetComponent<BirdIdentifier>();
+            if (bird != null)
+            {
+                bird.IsBeingHeld = false;
+            }
+
             heldObjRB.drag = 1f;
 
             if (heldObj.CompareTag("Player"))

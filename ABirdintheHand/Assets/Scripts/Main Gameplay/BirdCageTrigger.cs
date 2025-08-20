@@ -9,9 +9,8 @@ public class BirdCageTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
-        if (bird != null)
+        if (bird != null && bird.IsBeingHeld)
         {
             if (!birdsInCage.Contains(other.gameObject))
             {

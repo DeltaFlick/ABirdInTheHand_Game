@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BirdIdentifier : MonoBehaviour
 {
+
+    public bool IsBeingHeld { get; set; }
+
     void Start()
     {
         BirdManager.Instance?.RegisterBird(this.gameObject);

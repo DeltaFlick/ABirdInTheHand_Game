@@ -12,7 +12,7 @@ public class CageTeleportTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
-        if (bird != null)
+        if (bird != null && bird.IsBeingHeld)
         {
             TeleportToCage(other.gameObject);
         }
