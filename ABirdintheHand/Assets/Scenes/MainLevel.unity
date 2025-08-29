@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5572.7617, g: 3944.787, b: 3943.789, a: 1}
+  m_IndirectSpecularColor: {r: 5575.92, g: 3946.2266, b: 3943.4688, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -19311,7 +19311,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 71683ed486ef68b45a771ab1765ba682, type: 2}
-  - {fileID: 2100000, guid: a02015b7550b590458db6b0262ea7543, type: 2}
+  - {fileID: 2100000, guid: 71683ed486ef68b45a771ab1765ba682, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

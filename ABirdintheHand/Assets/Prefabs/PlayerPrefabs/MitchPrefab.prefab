@@ -63,7 +63,7 @@ Transform:
   m_Children:
   - {fileID: 519551467192422545}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &519551467180705834
 MonoBehaviour:
@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 519551467192422546}
   - component: {fileID: 519551467192422547}
   - component: {fileID: 519551467192422544}
+  - component: {fileID: 5342215830526172498}
   m_Layer: 0
   m_Name: Mitch
   m_TagString: Player
@@ -287,6 +288,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16384
   playerCamera: {fileID: 519551467194819378}
+  shaderSwapper: {fileID: 5342215830526172498}
 --- !u!114 &519551467192422544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,6 +304,20 @@ MonoBehaviour:
   preRoundMenuPanel: {fileID: 519551467870786407}
   inRoundMenuPanel: {fileID: 519551468947208162}
   crosshairCanvas: {fileID: 519551468814340393}
+--- !u!114 &5342215830526172498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519551467192422510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8527ccd2616195d4794d70bb1eeb0789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appliedShaderMaterial: {fileID: 2100000, guid: a02015b7550b590458db6b0262ea7543,
+    type: 2}
 --- !u!1 &519551467296408004
 GameObject:
   m_ObjectHideFlags: 0

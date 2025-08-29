@@ -9,9 +9,13 @@ public class InteractionHandler : MonoBehaviour
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private Camera playerCamera;
 
+    [SerializeField] private ShaderSwapper shaderSwapper;
+
     private PlayerInput playerInput;
     private InputAction interactAction;
     private IInteractable currentInteractable;
+
+
 
     private void Awake()
     {
@@ -24,6 +28,11 @@ public class InteractionHandler : MonoBehaviour
             if (pc != null)
                 playerCamera = pc.playerCamera;
         }
+        if (shaderSwapper == null)
+        {
+            shaderSwapper = GetComponent<ShaderSwapper>();
+        }
+    
     }
 
     private void OnEnable()
@@ -49,10 +58,16 @@ public class InteractionHandler : MonoBehaviour
                 if (currentInteractable != interactable)
                 {
                     if (currentInteractable != null)
+                    {
                         currentInteractable.HidePrompt();
 
+                        shaderSwapper.RevertShader();
+                    }
                     currentInteractable = interactable;
                     currentInteractable.ShowPrompt();
+
+                    shaderSwapper.ChangeShader(hit.collider.gameObject);
+                    
                 }
                 return;
             }
@@ -61,6 +76,8 @@ public class InteractionHandler : MonoBehaviour
         if (currentInteractable != null)
         {
             currentInteractable.HidePrompt();
+            shaderSwapper.RevertShader();
+
             currentInteractable = null;
         }
     }
