@@ -44,6 +44,8 @@ public class PlayerSwapHandler : MonoBehaviour
 
     private void Swap(GameObject newPrefab)
     {
+
+        PickupManager.RequestDropAll();
         var interactHandler = GetComponentInChildren<InteractionHandler>();
         if (interactHandler != null)
         {

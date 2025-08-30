@@ -29,6 +29,12 @@ public class PlayerControls : MonoBehaviour
     [Header("Friction Settings")]
     [SerializeField] private float counterSlidingForce = 0.1f;
 
+    [Header("Caged Movement Settings")]
+    [SerializeField] private float cagedSpeedMultiplier = 0.5f;
+    [SerializeField] private float cagedJumpMultiplier = 0.5f;
+
+    private BirdIdentifier birdIdentifier;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -39,6 +45,8 @@ public class PlayerControls : MonoBehaviour
 
         move = playerMap.FindAction("Move");
         look = playerMap.FindAction("Look");
+
+        birdIdentifier = GetComponent<BirdIdentifier>();
     }
 
     private void OnEnable()
@@ -63,12 +71,20 @@ public class PlayerControls : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (rb.isKinematic) return;
+
         Vector2 moveInput = move.ReadValue<Vector2>();
+        float speedMultiplier = 1f;
+
+        if (birdIdentifier != null && birdIdentifier.IsCaged)
+        {
+            speedMultiplier = cagedSpeedMultiplier;
+        }
 
         isWalking = moveInput.sqrMagnitude > 0.1f && IsGrounded();
 
-        forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce;
-        forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce;
+        forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce * speedMultiplier;
+        forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce * speedMultiplier;
 
         rb.AddForce(forceDirection, ForceMode.Impulse);
         forceDirection = Vector3.zero;
@@ -115,9 +131,13 @@ public class PlayerControls : MonoBehaviour
 
     private void DoJump(InputAction.CallbackContext context)
     {
-        if (IsGrounded())
+        if (IsGrounded() && !rb.isKinematic)
         {
-            forceDirection += Vector3.up * jumpForce;
+            float jumpMultiplier = 1f;
+            if (birdIdentifier != null && birdIdentifier.IsCaged)
+                jumpMultiplier = cagedJumpMultiplier;
+
+            forceDirection += Vector3.up * jumpForce * jumpMultiplier;
         }
     }
 

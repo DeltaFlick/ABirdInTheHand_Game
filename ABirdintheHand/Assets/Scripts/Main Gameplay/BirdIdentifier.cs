@@ -6,6 +6,7 @@ public class BirdIdentifier : MonoBehaviour
 {
 
     public bool IsBeingHeld { get; set; }
+    public bool IsCaged { get; set; }
 
     void Start()
     {

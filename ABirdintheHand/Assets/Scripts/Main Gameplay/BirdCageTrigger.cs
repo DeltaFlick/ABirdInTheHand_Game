@@ -5,83 +5,162 @@ using UnityEngine.SceneManagement;
 
 public class BirdCageTrigger : MonoBehaviour
 {
-    private HashSet<GameObject> birdsInCage = new HashSet<GameObject>();
-    private Coroutine rescueRoutine;
-
-    [Header("Rescue Settings")]
-    [SerializeField] private float rescueTime = 3f;
+    [Header("Cage Settings")]
+    [SerializeField] private Transform cageSpawnPoint;
     [SerializeField] private Transform releasePoint;
+    [SerializeField] private float rescueTime = 3f;
+
+    [Header("Win Condition")]
+    [Tooltip("Scene to load when all birds are caged")]
+    [SerializeField] private string humansWinSceneName = "HumansWin";
+
+    [Header("Gizmo Settings")]
+    [SerializeField] private Color gizmoColor = Color.green;
+
+    private List<BirdIdentifier> birdsInCage = new List<BirdIdentifier>();
+    private HashSet<BirdIdentifier> freeBirdsInTrigger = new HashSet<BirdIdentifier>();
+    private Coroutine rescueRoutine;
 
     private void OnTriggerEnter(Collider other)
     {
         BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
-        if (bird != null)
+        if (bird == null) return;
+
+        Debug.Log($"[BirdCageTrigger] Bird entered trigger: {bird.name}");
+
+        if (!bird.IsCaged)
         {
-            if (bird.IsBeingHeld)
+            freeBirdsInTrigger.Add(bird);
+            Debug.Log($"[BirdCageTrigger] Free bird in trigger: {bird.name} | Total free: {freeBirdsInTrigger.Count}");
+
+            if (birdsInCage.Count > 0 && rescueRoutine == null)
             {
-                if (!birdsInCage.Contains(other.gameObject))
-                {
-                    birdsInCage.Add(other.gameObject);
-                    CheckWinCondition();
-                }
+                Debug.Log("[BirdCageTrigger] Starting rescue countdown (free bird entered while cage occupied)");
+                rescueRoutine = StartCoroutine(RescueCountdown());
             }
-            else
-            {
-                if (rescueRoutine == null)
-                    rescueRoutine = StartCoroutine(RescueCountdown());
-            }
+        }
+
+        if (bird.IsBeingHeld)
+        {
+            CageBird(bird);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
-        if (bird != null)
+        if (bird == null) return;
+
+        if (bird.IsCaged)
+            return;
+
+        Debug.Log($"[BirdCageTrigger] Bird exited trigger: {bird.name}");
+
+        if (freeBirdsInTrigger.Contains(bird))
         {
-            if (!bird.IsBeingHeld && rescueRoutine != null)
+            freeBirdsInTrigger.Remove(bird);
+            Debug.Log($"[BirdCageTrigger] Free bird removed from trigger: {bird.name} | Remaining free: {freeBirdsInTrigger.Count}");
+
+            if (freeBirdsInTrigger.Count == 0 && rescueRoutine != null)
             {
+                Debug.Log("[BirdCageTrigger] Stopping rescue countdown (no free birds left)");
                 StopCoroutine(rescueRoutine);
                 rescueRoutine = null;
             }
+        }
+    }
 
-            if (birdsInCage.Contains(other.gameObject))
+    private void CageBird(BirdIdentifier bird)
+    {
+        if (bird == null || bird.IsCaged) return;
+
+        Debug.Log($"[BirdCageTrigger] Caging bird: {bird.name}");
+        PickupManager.RequestDropAll();
+
+        bird.IsBeingHeld = false;
+        bird.IsCaged = true;
+
+        if (!birdsInCage.Contains(bird))
+        {
+            birdsInCage.Add(bird);
+            Debug.Log($"[BirdCageTrigger] Bird added to cage list: {bird.name}");
+        }
+
+        if (cageSpawnPoint != null)
+        {
+            Rigidbody rb = bird.GetComponent<Rigidbody>();
+            if (rb != null)
             {
-                birdsInCage.Remove(other.gameObject);
+                rb.isKinematic = true;
             }
+
+            bird.transform.position = cageSpawnPoint.position;
+            bird.transform.rotation = cageSpawnPoint.rotation;
+            Physics.SyncTransforms();
+
+            if (rb != null)
+            {
+                rb.isKinematic = false;
+            }
+        }
+
+        CheckWinCondition();
+    }
+
+    public void RegisterCagedBird(BirdIdentifier bird)
+    {
+        if (bird != null && !birdsInCage.Contains(bird))
+        {
+            birdsInCage.Add(bird);
+            Debug.Log($"[BirdCageTrigger] Bird registered in cage: {bird.name}");
+            CheckWinCondition();
         }
     }
 
     private IEnumerator RescueCountdown()
     {
         float timer = 0f;
+        Debug.Log("[BirdCageTrigger] Rescue timer started");
+
         while (timer < rescueTime)
         {
+            if (freeBirdsInTrigger.Count == 0 || birdsInCage.Count == 0)
+            {
+                Debug.Log("[BirdCageTrigger] Rescue timer stopped (conditions not met)");
+                rescueRoutine = null;
+                yield break;
+            }
+
             timer += Time.deltaTime;
             yield return null;
         }
 
+        Debug.Log("[BirdCageTrigger] Rescue timer completed, releasing all birds");
         ReleaseAllBirds();
         rescueRoutine = null;
     }
 
     private void ReleaseAllBirds()
     {
-        foreach (GameObject bird in birdsInCage)
+        Debug.Log("[BirdCageTrigger] Releasing all birds from cage");
+
+        foreach (var bird in birdsInCage)
         {
-            if (bird != null)
+            if (bird == null) continue;
+
+            Rigidbody rb = bird.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = false;
+
+            if (releasePoint != null)
             {
-                Rigidbody rb = bird.GetComponent<Rigidbody>();
-                if (rb != null) rb.isKinematic = false;
-
-                if (releasePoint != null)
-                {
-                    bird.transform.position = releasePoint.position;
-                    bird.transform.rotation = releasePoint.rotation;
-                }
-
-                BirdIdentifier id = bird.GetComponent<BirdIdentifier>();
-                if (id != null) id.IsBeingHeld = false;
+                bird.transform.position = releasePoint.position;
+                bird.transform.rotation = releasePoint.rotation;
             }
+
+            bird.IsCaged = false;
+            bird.IsBeingHeld = false;
+
+            Debug.Log($"[BirdCageTrigger] Bird released: {bird.name}");
         }
 
         birdsInCage.Clear();
@@ -89,11 +168,46 @@ public class BirdCageTrigger : MonoBehaviour
 
     private void CheckWinCondition()
     {
-        int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
+        //int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
 
-        if (totalBirds > 0 && birdsInCage.Count == totalBirds)
+        //if (totalBirds > 0 && birdsInCage.Count == totalBirds)
+
+        int totalBirds = 5; // temporary for testing
+
+        if (birdsInCage.Count == totalBirds)
+
         {
-            SceneManager.LoadScene("Humans1Win");
+            Debug.Log("[BirdCageTrigger] All birds caged, humans win!");
+            if (!string.IsNullOrEmpty(humansWinSceneName))
+            {
+                SceneManager.LoadScene(humansWinSceneName);
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            Gizmos.color = gizmoColor;
+
+            if (col is BoxCollider box)
+            {
+                Gizmos.matrix = transform.localToWorldMatrix;
+                Gizmos.DrawWireCube(box.center, box.size);
+            }
+            else if (col is SphereCollider sphere)
+            {
+                Gizmos.matrix = transform.localToWorldMatrix;
+                Gizmos.DrawWireSphere(sphere.center, sphere.radius);
+            }
+        }
+
+        if (releasePoint != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(releasePoint.position, 0.5f);
         }
     }
 }

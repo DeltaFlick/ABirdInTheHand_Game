@@ -34,6 +34,16 @@ public class PickupController : MonoBehaviour
         playerCamera = GetComponentInChildren<Camera>();
     }
 
+    void OnEnable()
+    {
+        PickupManager.ForceDropAll += DropObject;
+    }
+
+    void OnDisable()
+    {
+        PickupManager.ForceDropAll -= DropObject;
+    }
+
     void Update()
     {
         if (playerInput.actions["Grab"].triggered)

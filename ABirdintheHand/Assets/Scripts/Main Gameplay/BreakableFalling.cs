@@ -27,6 +27,7 @@ public class BreakableFalling : MonoBehaviour
             if (impactVelocity > impactThreshold)
             {
                 scoreSystem.AddScore(scoreAddAmount);
+                PickupManager.RequestDropAll();
                 Instantiate(destroyedVersion, transform.position, transform.rotation);
                 Destroy(gameObject);
             }

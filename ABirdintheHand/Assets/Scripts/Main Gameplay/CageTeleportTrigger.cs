@@ -1,11 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CageTeleportTrigger : MonoBehaviour
 {
     [SerializeField] private Transform cageSpawnPoint;
-    public float teleportDelay = 0.1f;
+    [SerializeField] private float teleportDelay = 0.1f;
 
     private GameObject birdToTeleport;
 
@@ -21,33 +20,42 @@ public class CageTeleportTrigger : MonoBehaviour
     private void TeleportToCage(GameObject bird)
     {
         birdToTeleport = bird;
-
         Rigidbody birdRigidbody = bird.GetComponent<Rigidbody>();
-        Collider birdCollider = bird.GetComponent<Collider>();
 
-        if (birdRigidbody != null && birdCollider != null)
+        if (birdRigidbody != null)
         {
             birdRigidbody.isKinematic = true;
+        }
 
-            bird.transform.position = cageSpawnPoint.position;
-            bird.transform.rotation = cageSpawnPoint.rotation;
-            Physics.SyncTransforms();
+        bird.transform.position = cageSpawnPoint.position;
+        bird.transform.rotation = cageSpawnPoint.rotation;
+        Physics.SyncTransforms();
 
-            Invoke("EnableBirdMovement", teleportDelay);
+        BirdIdentifier birdId = bird.GetComponent<BirdIdentifier>();
+        if (birdId != null)
+        {
+            birdId.IsCaged = true;
+            birdId.IsBeingHeld = false;
+            Debug.Log($"[CageTeleportTrigger] Bird caged via teleport: {bird.name}");
+        }
+
+        Invoke(nameof(EnableBirdMovement), teleportDelay);
+
+        BirdCageTrigger cageTrigger = GetComponent<BirdCageTrigger>();
+        if (cageTrigger != null)
+        {
+            cageTrigger.RegisterCagedBird(birdId);
         }
     }
-
 
     private void EnableBirdMovement()
     {
         if (birdToTeleport != null)
         {
-            Rigidbody birdRigidbody = birdToTeleport.GetComponent<Rigidbody>();
-            Collider birdCollider = birdToTeleport.GetComponent<Collider>();
-
-            if (birdRigidbody != null && birdCollider != null)
+            Rigidbody rb = birdToTeleport.GetComponent<Rigidbody>();
+            if (rb != null)
             {
-                birdRigidbody.isKinematic = false;
+                rb.isKinematic = false;
             }
         }
     }
