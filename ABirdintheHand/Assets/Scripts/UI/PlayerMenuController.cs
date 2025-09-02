@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerMenuController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerMenuController : MonoBehaviour
 
     [Header("Other UI")]
     [SerializeField] private GameObject crosshairCanvas;
+    [SerializeField] private Slider rescueTimerSlider;
 
     private bool menuOpen = false;
     private bool roundHasStarted = false;
@@ -26,17 +28,28 @@ public class PlayerMenuController : MonoBehaviour
 
         if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(false);
         if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
+
+        if (rescueTimerSlider != null)
+            rescueTimerSlider.gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
         menuAction.performed += ToggleMenu;
         menuAction.Enable();
+
+        RescueEvents.OnRescueStarted += ShowRescueTimer;
+        RescueEvents.OnRescueUpdated += UpdateRescueTimer;
+        RescueEvents.OnRescueEnded += HideRescueTimer;
     }
 
     private void OnDisable()
     {
         menuAction.performed -= ToggleMenu;
+
+        RescueEvents.OnRescueStarted -= ShowRescueTimer;
+        RescueEvents.OnRescueUpdated -= UpdateRescueTimer;
+        RescueEvents.OnRescueEnded -= HideRescueTimer;
     }
 
     private void ToggleMenu(InputAction.CallbackContext ctx)
@@ -81,5 +94,28 @@ public class PlayerMenuController : MonoBehaviour
     public void OnTitleScreenPressed()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
+    public void ShowRescueTimer(float maxTime)
+    {
+        if (rescueTimerSlider == null) return;
+
+        rescueTimerSlider.maxValue = maxTime;
+        rescueTimerSlider.value = maxTime;
+        rescueTimerSlider.gameObject.SetActive(true);
+    }
+
+    public void UpdateRescueTimer(float timeLeft)
+    {
+        if (rescueTimerSlider == null) return;
+
+        rescueTimerSlider.value = timeLeft;
+    }
+
+    public void HideRescueTimer()
+    {
+        if (rescueTimerSlider == null) return;
+
+        rescueTimerSlider.gameObject.SetActive(false);
     }
 }
