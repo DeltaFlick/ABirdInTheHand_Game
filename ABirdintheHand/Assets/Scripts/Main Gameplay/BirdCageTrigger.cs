@@ -182,6 +182,10 @@ public class BirdCageTrigger : MonoBehaviour
 
     private void CheckWinCondition()
     {
+        //int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
+
+        //if (totalBirds > 0 && birdsInCage.Count == totalBirds)
+
         int totalBirds = 5; // temporary for testing
 
         if (birdsInCage.Count == totalBirds)
