@@ -14,9 +14,6 @@ public class BirdCageTrigger : MonoBehaviour
     [Tooltip("Scene to load when all birds are caged")]
     [SerializeField] private string humansWinSceneName = "HumansWin";
 
-    [Header("Gizmo Settings")]
-    [SerializeField] private Color gizmoColor = Color.green;
-
     private List<BirdIdentifier> birdsInCage = new List<BirdIdentifier>();
     private HashSet<BirdIdentifier> freeBirdsInTrigger = new HashSet<BirdIdentifier>();
     private Coroutine rescueRoutine;
@@ -27,16 +24,12 @@ public class BirdCageTrigger : MonoBehaviour
         BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
         if (bird == null) return;
 
-        Debug.Log($"[BirdCageTrigger] Bird entered trigger: {bird.name}");
-
         if (!bird.IsCaged)
         {
             freeBirdsInTrigger.Add(bird);
-            Debug.Log($"[BirdCageTrigger] Free bird in trigger: {bird.name} | Total free: {freeBirdsInTrigger.Count}");
 
             if (birdsInCage.Count > 0 && rescueRoutine == null)
             {
-                Debug.Log("[BirdCageTrigger] Starting rescue countdown (free bird entered while cage occupied)");
                 currentRescuer = bird;
                 rescueRoutine = StartCoroutine(RescueCountdown(bird));
             }
@@ -56,16 +49,12 @@ public class BirdCageTrigger : MonoBehaviour
         if (bird.IsCaged)
             return;
 
-        Debug.Log($"[BirdCageTrigger] Bird exited trigger: {bird.name}");
-
         if (freeBirdsInTrigger.Contains(bird))
         {
             freeBirdsInTrigger.Remove(bird);
-            Debug.Log($"[BirdCageTrigger] Free bird removed from trigger: {bird.name} | Remaining free: {freeBirdsInTrigger.Count}");
 
             if (bird == currentRescuer && rescueRoutine != null)
             {
-                Debug.Log("[BirdCageTrigger] Rescuer left, stopping rescue");
                 StopCoroutine(rescueRoutine);
                 bird.MenuController?.HideRescueTimer();
                 rescueRoutine = null;
@@ -78,7 +67,6 @@ public class BirdCageTrigger : MonoBehaviour
     {
         if (bird == null || bird.IsCaged) return;
 
-        Debug.Log($"[BirdCageTrigger] Caging bird: {bird.name}");
         PickupManager.RequestDropAll();
 
         bird.IsBeingHeld = false;
@@ -87,7 +75,6 @@ public class BirdCageTrigger : MonoBehaviour
         if (!birdsInCage.Contains(bird))
         {
             birdsInCage.Add(bird);
-            Debug.Log($"[BirdCageTrigger] Bird added to cage list: {bird.name}");
         }
 
         if (cageSpawnPoint != null)
@@ -116,7 +103,6 @@ public class BirdCageTrigger : MonoBehaviour
         if (bird != null && !birdsInCage.Contains(bird))
         {
             birdsInCage.Add(bird);
-            Debug.Log($"[BirdCageTrigger] Bird registered in cage: {bird.name}");
             CheckWinCondition();
         }
     }
@@ -124,7 +110,6 @@ public class BirdCageTrigger : MonoBehaviour
     private IEnumerator RescueCountdown(BirdIdentifier rescuer)
     {
         float timer = 0f;
-        Debug.Log("[BirdCageTrigger] Rescue timer started");
 
         rescuer.MenuController?.ShowRescueTimer(rescueTime);
 
@@ -132,7 +117,6 @@ public class BirdCageTrigger : MonoBehaviour
         {
             if (freeBirdsInTrigger.Count == 0 || birdsInCage.Count == 0)
             {
-                Debug.Log("[BirdCageTrigger] Rescue timer stopped (conditions not met)");
                 rescuer.MenuController?.HideRescueTimer();
                 rescueRoutine = null;
                 currentRescuer = null;
@@ -146,7 +130,6 @@ public class BirdCageTrigger : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("[BirdCageTrigger] Rescue timer completed, releasing all birds");
         ReleaseAllBirds();
 
         rescuer.MenuController?.HideRescueTimer();
@@ -156,8 +139,6 @@ public class BirdCageTrigger : MonoBehaviour
 
     private void ReleaseAllBirds()
     {
-        Debug.Log("[BirdCageTrigger] Releasing all birds from cage");
-
         foreach (var bird in birdsInCage)
         {
             if (bird == null) continue;
@@ -173,8 +154,6 @@ public class BirdCageTrigger : MonoBehaviour
 
             bird.IsCaged = false;
             bird.IsBeingHeld = false;
-
-            Debug.Log($"[BirdCageTrigger] Bird released: {bird.name}");
         }
 
         birdsInCage.Clear();
@@ -195,32 +174,6 @@ public class BirdCageTrigger : MonoBehaviour
             {
                 SceneManager.LoadScene(humansWinSceneName);
             }
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Collider col = GetComponent<Collider>();
-        if (col != null)
-        {
-            Gizmos.color = gizmoColor;
-
-            if (col is BoxCollider box)
-            {
-                Gizmos.matrix = transform.localToWorldMatrix;
-                Gizmos.DrawWireCube(box.center, box.size);
-            }
-            else if (col is SphereCollider sphere)
-            {
-                Gizmos.matrix = transform.localToWorldMatrix;
-                Gizmos.DrawWireSphere(sphere.center, sphere.radius);
-            }
-        }
-
-        if (releasePoint != null)
-        {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(releasePoint.position, 0.5f);
         }
     }
 }

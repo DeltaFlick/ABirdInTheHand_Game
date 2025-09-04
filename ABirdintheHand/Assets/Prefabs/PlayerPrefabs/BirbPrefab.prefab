@@ -31,7 +31,7 @@ Transform:
   m_Children:
   - {fileID: 8067967318915886586}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3899606978993276538
 MonoBehaviour:
@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   birdPrefab: {fileID: 3899606978993276539}
-  humanPrefab: {fileID: 0}
+  humanPrefab: {fileID: 4480887753532147281, guid: 39d09e00db2498b4aade98e210a5abb8,
+    type: 3}
 --- !u!1 &8067967317746616218
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,7 +59,7 @@ GameObject:
   - component: {fileID: 8067967317746616213}
   - component: {fileID: 8067967317746616215}
   - component: {fileID: 8067967317746616212}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: InRoundMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +137,7 @@ GameObject:
   - component: {fileID: 8067967317771742607}
   - component: {fileID: 8067967317771742601}
   - component: {fileID: 8067967317771742606}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -340,7 +341,7 @@ GameObject:
   - component: {fileID: 8067967317898523143}
   - component: {fileID: 8067967317898523140}
   - component: {fileID: 8067967317898523141}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Human
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -473,7 +474,7 @@ GameObject:
   - component: {fileID: 8067967317973620418}
   - component: {fileID: 8067967317973620476}
   - component: {fileID: 8067967317973620477}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -775,7 +776,7 @@ GameObject:
   - component: {fileID: 8067967318448174313}
   - component: {fileID: 8067967318448174315}
   - component: {fileID: 8067967318448174312}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -939,7 +940,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8067967318525986879}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1338,7 +1339,7 @@ GameObject:
   - component: {fileID: 8067967318723768797}
   - component: {fileID: 8067967318723768799}
   - component: {fileID: 8067967318723768796}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1506,7 +1507,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8067967318802345783}
   - component: {fileID: 8067967318802345782}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: RescueTimer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1598,7 +1599,7 @@ GameObject:
   - component: {fileID: 8067967318814540157}
   - component: {fileID: 8067967318814540098}
   - component: {fileID: 8067967318814540099}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Title Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1941,7 +1942,7 @@ GameObject:
   - component: {fileID: 8067967319039547092}
   - component: {fileID: 8067967319039547093}
   - component: {fileID: 8067967319039547098}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Options
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2125,7 +2126,7 @@ GameObject:
   - component: {fileID: 8067967319318695384}
   - component: {fileID: 8067967319318695385}
   - component: {fileID: 8067967319318695390}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bird
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2291,7 +2292,7 @@ GameObject:
   - component: {fileID: 8067967319472279083}
   - component: {fileID: 8067967319472279080}
   - component: {fileID: 8067967319472279081}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2332,7 +2333,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 8067967319575752489}
-  m_PlaneDistance: 1
+  m_PlaneDistance: 0.2
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -2341,7 +2342,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &8067967319472279083
 MonoBehaviour:
@@ -2407,7 +2408,7 @@ GameObject:
   - component: {fileID: 8067967319506978025}
   - component: {fileID: 8067967319506978027}
   - component: {fileID: 8067967319506978024}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2483,7 +2484,7 @@ GameObject:
   - component: {fileID: 8067967319575592830}
   - component: {fileID: 8067967319575592831}
   - component: {fileID: 8067967319575592828}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PreRoundMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2561,7 +2562,7 @@ GameObject:
   - component: {fileID: 8067967319581587596}
   - component: {fileID: 8067967319581587598}
   - component: {fileID: 8067967319581587599}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

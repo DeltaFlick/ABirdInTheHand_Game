@@ -36,7 +36,6 @@ public class CageTeleportTrigger : MonoBehaviour
         {
             birdId.IsCaged = true;
             birdId.IsBeingHeld = false;
-            Debug.Log($"[CageTeleportTrigger] Bird caged via teleport: {bird.name}");
         }
 
         Invoke(nameof(EnableBirdMovement), teleportDelay);
