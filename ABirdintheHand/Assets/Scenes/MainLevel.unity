@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5572.7617, g: 3944.787, b: 3943.789, a: 1}
+  m_IndirectSpecularColor: {r: 5569.4277, g: 3943.287, b: 3943.4766, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2889,6 +2889,50 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1163240759}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &250153418
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 250153419}
+  - component: {fileID: 250153420}
+  m_Layer: 0
+  m_Name: PlayerShaderManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &250153419
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250153418}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 313780443}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &250153420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250153418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c9ab4cacf38454186af1808259e160, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &259881331 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c0f71e795fdaa2947855baff9f0c46ca,
@@ -3361,6 +3405,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 250153419}
   - {fileID: 1795155998}
   - {fileID: 511276556}
   m_Father: {fileID: 2099149196}
@@ -11233,7 +11278,6 @@ MonoBehaviour:
   releasePoint: {fileID: 1392186520}
   rescueTime: 10
   humansWinSceneName: 
-  gizmoColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!65 &1354637799
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16777,7 +16821,6 @@ MonoBehaviour:
   releasePoint: {fileID: 1737649836}
   rescueTime: 10
   humansWinSceneName: HumansWin
-  gizmoColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!65 &1911892010
 BoxCollider:
   m_ObjectHideFlags: 0

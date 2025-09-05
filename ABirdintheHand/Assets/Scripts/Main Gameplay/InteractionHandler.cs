@@ -16,7 +16,6 @@ public class InteractionHandler : MonoBehaviour
     private IInteractable currentInteractable;
 
 
-
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -30,9 +29,10 @@ public class InteractionHandler : MonoBehaviour
         }
         if (shaderSwapper == null)
         {
+
             shaderSwapper = GetComponent<ShaderSwapper>();
         }
-    
+
     }
 
     private void OnEnable()
@@ -47,6 +47,7 @@ public class InteractionHandler : MonoBehaviour
 
     private void Update()
     {
+        
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance, interactableMask))
@@ -65,9 +66,8 @@ public class InteractionHandler : MonoBehaviour
                     }
                     currentInteractable = interactable;
                     currentInteractable.ShowPrompt();
+                    shaderSwapper.ChangeShader(hit.collider.gameObject, playerCamera);
 
-                    shaderSwapper.ChangeShader(hit.collider.gameObject);
-                    
                 }
                 return;
             }
@@ -76,11 +76,12 @@ public class InteractionHandler : MonoBehaviour
         if (currentInteractable != null)
         {
             currentInteractable.HidePrompt();
-            shaderSwapper.RevertShader();
-
+            shaderSwapper.RemoveCamera(playerCamera);
             currentInteractable = null;
         }
     }
+
+   
 
     private void TryInteract(InputAction.CallbackContext context)
     {

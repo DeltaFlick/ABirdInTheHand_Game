@@ -4,71 +4,110 @@ using UnityEngine;
 
 public class ShaderSwapper : MonoBehaviour
 {
-    private Material[] originalMaterials;
     private GameObject currentIObject;
     private MeshRenderer targetMeshRenderer;
+    private Material originalMaterial;
     
-    //private Color originalColor;
+    private HashSet<Camera> activeCameras = new HashSet<Camera>();
+    private Dictionary<Camera, MaterialPropertyBlock> cameraPropertyBlocks = new Dictionary<Camera, MaterialPropertyBlock>();
+
+    private Material[] cachedMaterials;
 
     public Material appliedShaderMaterial;
-    public int targetMaterialIndex = 1; 
+    public int targetMaterialIndex = 1;
+    public int playerID = 1;
 
     public void RevertShader()
     {
-        if (currentIObject != null && originalMaterials != null)
+        if (currentIObject != null && targetMeshRenderer != null && originalMaterial != null && cachedMaterials != null)
         {
-            targetMeshRenderer.materials = originalMaterials;
+            foreach (var kvp in cameraPropertyBlocks)
+            {
+                var propertyBlock = kvp.Value;
+                propertyBlock.SetFloat("_IsVisible", 0f);
+                targetMeshRenderer.SetPropertyBlock(propertyBlock);
+            }
+
+            cachedMaterials[targetMaterialIndex] = originalMaterial;
+            targetMeshRenderer.materials = cachedMaterials;
         }
+
+        activeCameras.Clear();
+        cameraPropertyBlocks.Clear();
+        cachedMaterials = null;
         currentIObject = null;
-        originalMaterials = null;
         targetMeshRenderer = null;
+        originalMaterial = null;
     }
 
-   public void ChangeShader(GameObject targetIObject)
-{
-    if (currentIObject == targetIObject) return;
-    if (currentIObject != null)
+    public void ChangeShader(GameObject targetIObject, Camera targetCamera = null)
     {
-        RevertShader();
-    }
-    if (targetIObject == null || appliedShaderMaterial == null)
-        return;
-
-    targetMeshRenderer = targetIObject.GetComponent<MeshRenderer>();
-    if (targetMeshRenderer == null || targetMeshRenderer.materials.Length <= targetMaterialIndex)
-        return;
-
-    currentIObject = targetIObject;
-    
-    Material[] currentMaterials = targetMeshRenderer.materials;
-    originalMaterials = new Material[currentMaterials.Length];
-    for (int i = 0; i < currentMaterials.Length; i++)
-    {
-        originalMaterials[i] = currentMaterials[i];
-    }
-
-    Material[] materials = new Material[currentMaterials.Length];
-    for (int i = 0; i < materials.Length; i++)
-    {
-        materials[i] = (i == targetMaterialIndex) ? appliedShaderMaterial : currentMaterials[i];
-    }
-    
-    if (materials.Length > targetMaterialIndex)
-    {
-        targetMeshRenderer.materials = materials;
-    }
-}
-//  DebugCheckRenderer();
-    public void DebugCheckRenderer()
-    {
-
-        if (targetMeshRenderer == null)
+        if (currentIObject != targetIObject)
         {
-            Debug.Log("No Mesh Renderer found on object");
-        }else
+            if (currentIObject != null)
+            {
+                RevertShader();
+            }
+            
+            if (targetIObject == null || targetCamera == null)
+            {
+                return;
+            }
+
+            targetMeshRenderer = targetIObject.GetComponent<MeshRenderer>();
+            if (targetMeshRenderer == null) return;
+
+            cachedMaterials = targetMeshRenderer.materials;
+            if (cachedMaterials.Length <= targetMaterialIndex)
+            {
+                cachedMaterials = null;
+                return;
+            }
+
+            originalMaterial = cachedMaterials[targetMaterialIndex];
+            currentIObject = targetIObject;
+            
+            cachedMaterials[targetMaterialIndex] = appliedShaderMaterial;
+            targetMeshRenderer.materials = cachedMaterials;
+        }
+
+        if (targetCamera != null && !activeCameras.Contains(targetCamera))
         {
-            Debug.Log(targetMeshRenderer.materials.Length);
+            activeCameras.Add(targetCamera);
+            
+            if (!cameraPropertyBlocks.ContainsKey(targetCamera))
+            {
+                cameraPropertyBlocks[targetCamera] = new MaterialPropertyBlock();
+            }
+
+            var propertyBlock = cameraPropertyBlocks[targetCamera];
+            targetMeshRenderer.GetPropertyBlock(propertyBlock);
+            propertyBlock.SetInt("_PlayerCameraID", targetCamera.GetInstanceID());
+          //  propertyBlock.SetInt("_PlayerID", playerID); // Add player ID to property block
+            propertyBlock.SetFloat("_IsVisible", 1f);
+            propertyBlock.SetFloat("_TimeStamp", Time.time);
+            targetMeshRenderer.SetPropertyBlock(propertyBlock);
         }
     }
-    
+
+    public void RemoveCamera(Camera targetCamera)
+    {
+        if (activeCameras.Contains(targetCamera))
+        {
+            activeCameras.Remove(targetCamera);
+            
+            if (cameraPropertyBlocks.ContainsKey(targetCamera))
+            {
+                var propertyBlock = cameraPropertyBlocks[targetCamera];
+                propertyBlock.SetFloat("_IsVisible", 0f);
+                targetMeshRenderer.SetPropertyBlock(propertyBlock);
+                cameraPropertyBlocks.Remove(targetCamera);
+            }
+
+            if (activeCameras.Count == 0)
+            {
+                RevertShader();
+            }
+        }
+    }
 }
