@@ -20,27 +20,6 @@ MonoBehaviour:
   - Name: Desktop
     Value: 832
   Exists: 1
---- !u!114 &-8513330747570123824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Sound Effects.bank
-  m_EditorClassIdentifier: 
-  Path: ../../FMOD Projects/A Bird In The Hand/ABirdInTheHand/Build/Desktop/Sound
-    Effects.bank
-  Name: Sound Effects
-  StudioPath: bank:/Sound Effects
-  lastModified: 638897625878785237
-  FileSizes:
-  - Name: Desktop
-    Value: 37984
-  Exists: 1
 --- !u!114 &-7790565696622476939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,7 +39,7 @@ MonoBehaviour:
     Data3: -825466752
     Data4: -2006633013
   Banks:
-  - {fileID: 4816686592662095254}
+  - {fileID: 3566529987522570746}
   IsStream: 1
   Is3D: 1
   IsOneShot: 1
@@ -68,6 +47,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 134739
+--- !u!114 &-5416070948197342453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Sound Effects.bank
+  m_EditorClassIdentifier: 
+  Path: FMOD/Build/Desktop/Sound Effects.bank
+  Name: Sound Effects
+  StudioPath: bank:/Sound Effects
+  lastModified: 638920648145075386
+  FileSizes:
+  - Name: Desktop
+    Value: 37984
+  Exists: 1
 --- !u!114 &-4935514565694642989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,7 +127,7 @@ MonoBehaviour:
     Data3: 118564769
     Data4: -779808519
   Banks:
-  - {fileID: 4816686592662095254}
+  - {fileID: 3566529987522570746}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -136,6 +135,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2115
+--- !u!114 &-9946768971237807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: FMOD/Build/Desktop/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+  lastModified: 638920648145065395
+  FileSizes:
+  - Name: Desktop
+    Value: 1010
+  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,10 +168,10 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 8828912674707933039}
-  - {fileID: 4816686592662095254}
-  - {fileID: 2889666482317646285}
-  - {fileID: -8513330747570123824}
+  - {fileID: -9946768971237807}
+  - {fileID: 3566529987522570746}
+  - {fileID: 2711673511143771348}
+  - {fileID: -5416070948197342453}
   EditorEvents:
   - {fileID: 2621709834355110359}
   - {fileID: 4007006537757209162}
@@ -160,11 +179,11 @@ MonoBehaviour:
   - {fileID: -7790565696622476939}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 2889666482317646285}
+  - {fileID: 2711673511143771348}
   StringsBanks:
-  - {fileID: 8828912674707933039}
+  - {fileID: -9946768971237807}
   cacheVersion: 131848
-  cacheTime: 638903612797171060
+  cacheTime: 638920648145075386
   SerializableEventsDict:
   - key: event:/GrassyFootsteps
     index: 0
@@ -193,7 +212,7 @@ MonoBehaviour:
     Data3: 789661355
     Data4: 600553811
   Banks:
-  - {fileID: -8513330747570123824}
+  - {fileID: -5416070948197342453}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -201,7 +220,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &2889666482317646285
+--- !u!114 &2711673511143771348
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -213,10 +232,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: bank:/Master.bank
   m_EditorClassIdentifier: 
-  Path: ../../FMOD Projects/A Bird In The Hand/ABirdInTheHand/Build/Desktop/Master.bank
+  Path: FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638903612797165980
+  lastModified: 638920648145055400
   FileSizes:
   - Name: Desktop
     Value: 1074
@@ -248,6 +267,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &3566529987522570746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Background Music.bank
+  m_EditorClassIdentifier: 
+  Path: FMOD/Build/Desktop/Background Music.bank
+  Name: Background Music
+  StudioPath: bank:/Background Music
+  lastModified: 638920648145055400
+  FileSizes:
+  - Name: Desktop
+    Value: 3630016
+  Exists: 1
 --- !u!114 &4007006537757209162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,7 +306,7 @@ MonoBehaviour:
     Data3: -1762569600
     Data4: 1887783348
   Banks:
-  - {fileID: 4816686592662095254}
+  - {fileID: 3566529987522570746}
   IsStream: 1
   Is3D: 1
   IsOneShot: 1
@@ -275,44 +314,3 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 137604
---- !u!114 &4816686592662095254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Background Music.bank
-  m_EditorClassIdentifier: 
-  Path: ../../FMOD Projects/A Bird In The Hand/ABirdInTheHand/Build/Desktop/Background
-    Music.bank
-  Name: Background Music
-  StudioPath: bank:/Background Music
-  lastModified: 638903612797104716
-  FileSizes:
-  - Name: Desktop
-    Value: 3630016
-  Exists: 1
---- !u!114 &8828912674707933039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.strings.bank
-  m_EditorClassIdentifier: 
-  Path: ../../FMOD Projects/A Bird In The Hand/ABirdInTheHand/Build/Desktop/Master.strings.bank
-  Name: Master.strings
-  StudioPath: bank:/Master.strings
-  lastModified: 638903612797171060
-  FileSizes:
-  - Name: Desktop
-    Value: 1010
-  Exists: 1

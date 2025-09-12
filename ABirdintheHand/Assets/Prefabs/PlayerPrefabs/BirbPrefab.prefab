@@ -1755,6 +1755,8 @@ GameObject:
   - component: {fileID: 8067967318915886578}
   - component: {fileID: 8067967318915886579}
   - component: {fileID: 8067967318915886576}
+  - component: {fileID: 2795665452152934329}
+  - component: {fileID: 2455041457270777189}
   m_Layer: 0
   m_Name: BudgieV1B
   m_TagString: Player
@@ -1899,6 +1901,40 @@ MonoBehaviour:
   inRoundMenuPanel: {fileID: 8067967317746616218}
   crosshairCanvas: {fileID: 0}
   rescueTimerSlider: {fileID: 8067967318802345782}
+--- !u!114 &2795665452152934329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8067967318915886587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cf76a96ad6e04b468cc7649e92d0e49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionDistance: 3
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 16384
+  playerCamera: {fileID: 8067967319575752489}
+  shaderSwapper: {fileID: 2455041457270777189}
+--- !u!114 &2455041457270777189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8067967318915886587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8527ccd2616195d4794d70bb1eeb0789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appliedShaderMaterial: {fileID: 2100000, guid: a02015b7550b590458db6b0262ea7543,
+    type: 2}
+  targetMaterialIndex: 1
+  playerID: 1
 --- !u!1 &8067967318925251315
 GameObject:
   m_ObjectHideFlags: 0
