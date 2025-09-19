@@ -155,7 +155,7 @@ Material:
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
     - _CullModeForward: 2
-    - _CurrentCameraID: -76876
+    - _CurrentCameraID: -27768
     - _Cutoff: 0.5
     - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 1
@@ -210,7 +210,7 @@ Material:
     - _PPDPrimitiveLength: 1
     - _PPDPrimitiveWidth: 1
     - _PerPixelSorting: 0
-    - _PlayerCameraID: -76876
+    - _PlayerCameraID: -27768
     - _PlayerID: 1
     - _RayTracing: 0
     - _ReceivesSSR: 1

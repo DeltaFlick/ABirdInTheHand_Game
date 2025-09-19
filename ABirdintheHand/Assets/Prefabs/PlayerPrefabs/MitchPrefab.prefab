@@ -542,6 +542,7 @@ GameObject:
   - component: {fileID: 4480887752859391010}
   - component: {fileID: 4480887752859391011}
   - component: {fileID: 4480887752859391008}
+  - component: {fileID: 2879597774148063907}
   m_Layer: 3
   m_Name: Title Screeen
   m_TagString: Untagged
@@ -651,7 +652,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4480887752859391011}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2879597774148063907}
+        m_TargetAssemblyTypeName: GameOverUI, Assembly-CSharp
+        m_MethodName: TitleScreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2879597774148063907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4480887752859391022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 974010acac7852847a30054f2b9a87d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4480887752889022874
 GameObject:
   m_ObjectHideFlags: 0
