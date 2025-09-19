@@ -13,6 +13,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ALPHATEST_ON
+  - _ALPHATOMASK_ON
   - _ENABLE_FOG_ON_TRANSPARENT
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords:
@@ -136,26 +138,29 @@ Material:
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
+    - _AbsolLess: 0.1
     - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
     - _AlphaCutoff: 0.5
-    - _AlphaCutoffEnable: 0
+    - _AlphaCutoffEnable: 1
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffShadow: 0.5
     - _AlphaDstBlend: 10
+    - _AlphaMaskTolerance: 1.6
     - _AlphaRemapMax: 1
     - _AlphaRemapMin: 0
     - _AlphaSrcBlend: 1
-    - _AlphaToMask: 0
-    - _AlphaToMaskInspectorValue: 0
+    - _AlphaToMask: 1
+    - _AlphaToMaskInspectorValue: 1
     - _Anisotropy: 0
+    - _BaseThicknes: 1
     - _BlendMode: 0
     - _CoatMask: 0
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
     - _CullModeForward: 2
-    - _CurrentCameraID: -27768
+    - _CurrentCameraID: -111106
     - _Cutoff: 0.5
     - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 1
@@ -171,6 +176,9 @@ Material:
     - _DoubleSidedNormalMode: 1
     - _DstBlend: 10
     - _DstBlend2: 0
+    - _EdgeMaxx: 3.2
+    - _EdgeMinx: 0
+    - _EdgePower: 1
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 1
@@ -210,7 +218,7 @@ Material:
     - _PPDPrimitiveLength: 1
     - _PPDPrimitiveWidth: 1
     - _PerPixelSorting: 0
-    - _PlayerCameraID: -27768
+    - _PlayerCameraID: -111106
     - _PlayerID: 1
     - _RayTracing: 0
     - _ReceivesSSR: 1
@@ -242,9 +250,9 @@ Material:
     - _SurfaceType: 1
     - _TexWorldScale: 1
     - _TexWorldScaleEmissive: 1
-    - _Thicknes: 1.59
+    - _Thicknes: 0.5
     - _Thickness: 1
-    - _Tolerance: 1.27
+    - _Tolerance: 0.99
     - _TransmissionEnable: 1
     - _TransmissionMask: 1
     - _TransparentBackfaceEnable: 0
@@ -261,17 +269,22 @@ Material:
     - _UseShadowThreshold: 0
     - _X_value: 0.22
     - _ZTestDepthEqualForOpaque: 4
-    - _ZTestGBuffer: 4
+    - _ZTestGBuffer: 3
     - _ZTestTransparent: 4
     - _ZWrite: 0
+    - _bias: 0.8
     - _edg1: -0.41
     - _edg1_1: -144.13
     - _edge: 30.43
+    - _edgeSteppingPower: 1
+    - _edgeSteppingPowerOffset: 0.5
     - _edgetest: 0.39
     - _edgetest_1: 0.001
     - _isVisible: 0
     - _outlineTHick: 0.19
-    - _power: 1.82
+    - _power: 1
+    - _power2: 0.1
+    - _stepPower: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 0.5613208, b: 0.5613208, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 1}
