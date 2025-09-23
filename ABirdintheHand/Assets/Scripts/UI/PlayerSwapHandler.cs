@@ -14,7 +14,7 @@ public class PlayerSwapHandler : MonoBehaviour
 
     private void Awake()
     {
-        playerInput = GetComponentInChildren<PlayerInput>();
+        playerInput = GetComponent<PlayerInput>();
         inputDevice = playerInput.devices.FirstOrDefault();
 
         if (inputDevice == null)
@@ -46,7 +46,7 @@ public class PlayerSwapHandler : MonoBehaviour
     {
 
         PickupManager.RequestDropAll();
-        var interactHandler = GetComponentInChildren<InteractionHandler>();
+        var interactHandler = GetComponent<InteractionHandler>();
         if (interactHandler != null)
         {
             var currentInteractableField = typeof(InteractionHandler)

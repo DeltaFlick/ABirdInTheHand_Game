@@ -71,8 +71,6 @@ public class PlayerMenuController : MonoBehaviour
 
         if (playerControls != null) playerControls.SetControlsEnabled(!menuOpen);
 
-        Cursor.lockState = menuOpen ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = menuOpen;
     }
 
     public void SetRoundStarted(bool started)
@@ -87,8 +85,6 @@ public class PlayerMenuController : MonoBehaviour
         if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
         if (crosshairCanvas != null) crosshairCanvas.SetActive(true);
         if (playerControls != null) playerControls.SetControlsEnabled(true);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     public void OnTitleScreenPressed()

@@ -7,39 +7,48 @@ public class PlayerManager : MonoBehaviour
 {
     private Dictionary<int, PlayerInput> players = new Dictionary<int, PlayerInput>();
 
-    [SerializeField]
-    private List<Transform> startingPoints;
-
-    [SerializeField]
-    private List<LayerMask> playerLayers;
+    [Header("Player Setup")]
+    [SerializeField] private List<Transform> startingPoints;
+    [SerializeField] private List<LayerMask> playerLayers;
 
     private PlayerInputManager playerInputManager;
 
     private void Awake()
     {
         playerInputManager = FindObjectOfType<PlayerInputManager>();
+        if (playerInputManager == null)
+        {
+            Debug.LogError("No PlayerInputManager found in the scene!");
+        }
     }
 
     private void OnEnable()
     {
-        playerInputManager.onPlayerJoined += AddPlayer;
+        if (playerInputManager != null)
+            playerInputManager.onPlayerJoined += AddPlayer;
     }
 
     private void OnDisable()
     {
-        playerInputManager.onPlayerJoined -= AddPlayer;
+        if (playerInputManager != null)
+            playerInputManager.onPlayerJoined -= AddPlayer;
     }
 
     public void AddPlayer(PlayerInput player)
     {
+        if (player == null)
+        {
+            Debug.LogError("AddPlayer called with null PlayerInput!");
+            return;
+        }
+
         int index = player.playerIndex;
 
         if (players.ContainsKey(index))
         {
             if (players[index] != null)
-            {
                 Destroy(players[index].gameObject);
-            }
+
             players[index] = player;
         }
         else
@@ -47,47 +56,65 @@ public class PlayerManager : MonoBehaviour
             players.Add(index, player);
         }
 
-        Transform playerParent = player.transform.parent;
+        Transform playerTransform = player.transform;
 
-        if (index < startingPoints.Count)
+        if (index < startingPoints.Count && startingPoints[index] != null)
         {
-            playerParent.position = startingPoints[index].position;
-            playerParent.rotation = startingPoints[index].rotation;
+            playerTransform.position = startingPoints[index].position;
+            playerTransform.rotation = startingPoints[index].rotation;
         }
         else
         {
-            playerParent.position = Vector3.zero;
-            playerParent.rotation = Quaternion.identity;
+            playerTransform.position = Vector3.zero;
+            playerTransform.rotation = Quaternion.identity;
         }
 
+        // Layer assignment
         if (index < playerLayers.Count)
         {
             int ownLayer = (int)Mathf.Log(playerLayers[index].value, 2);
 
-            foreach (Renderer renderer in playerParent.GetComponentsInChildren<Renderer>())
+            foreach (Renderer renderer in playerTransform.GetComponentsInChildren<Renderer>())
             {
                 renderer.gameObject.layer = ownLayer;
             }
 
-            var cam = playerParent.GetComponentInChildren<Camera>();
+            Camera cam = playerTransform.GetComponentInChildren<Camera>();
             if (cam != null)
             {
                 cam.cullingMask = -1;
-
                 cam.cullingMask &= ~(1 << ownLayer);
             }
 
-            var freeLook = playerParent.GetComponentInChildren<CinemachineFreeLook>();
+            CinemachineFreeLook freeLook = playerTransform.GetComponentInChildren<CinemachineFreeLook>();
             if (freeLook != null)
             {
                 freeLook.gameObject.layer = LayerMask.NameToLayer("Default");
             }
         }
 
-        var inputHandler = playerParent.GetComponentInChildren<InputHandler>();
+        InputHandler inputHandler = playerTransform.GetComponent<InputHandler>();
+        if (inputHandler == null)
+        {
+            inputHandler = playerTransform.GetComponentInChildren<InputHandler>();
+        }
+
         if (inputHandler != null)
         {
-            inputHandler.horizontal = player.actions.FindAction("Look");
+            var lookAction = player.actions.FindAction("Look");
+            if (lookAction != null)
+                inputHandler.horizontal = lookAction;
+            else
+                Debug.LogWarning($"Player {index} has no 'Look' action in InputActions.");
         }
+        else
+        {
+            Debug.LogWarning($"Player {index} has no InputHandler component.");
+        }
+    }
+
+    public Dictionary<int, PlayerInput> GetAllPlayers()
+    {
+        return players;
     }
 }

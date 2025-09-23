@@ -8,17 +8,11 @@ public class PlayerMenuUIController : MonoBehaviour
 
     public void OnHumanButtonPressed()
     {
-        if (playerSwapHandler != null)
-        {
-            playerSwapHandler.SwapToHuman();
-        }
+        playerSwapHandler?.SwapToHuman();
     }
 
     public void OnBirdButtonPressed()
     {
-        if (playerSwapHandler != null)
-        {
-            playerSwapHandler.SwapToBird();
-        }
+        playerSwapHandler?.SwapToBird();
     }
 }
