@@ -52,7 +52,25 @@ public class HumanCamera : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+        if (orientation != null)
+            orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+    }
+
+    public void SetImmediateOrientation(Quaternion cameraWorldRotation, Quaternion orientationWorldRotation)
+    {
+        if (orientation != null)
+            orientation.rotation = orientationWorldRotation;
+
+        transform.rotation = cameraWorldRotation;
+
+        Vector3 camEuler = transform.eulerAngles;
+
+        float pitch = camEuler.x;
+        if (pitch > 180f) pitch -= 360f;
+
+        xRotation = pitch;
+        yRotation = camEuler.y;
+
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
     }
 }
-

@@ -17,9 +17,7 @@ public class PlayerManager : MonoBehaviour
     {
         playerInputManager = FindObjectOfType<PlayerInputManager>();
         if (playerInputManager == null)
-        {
-            Debug.LogError("No PlayerInputManager found in the scene!");
-        }
+            Debug.LogError("No PlayerInputManager found in scene!");
     }
 
     private void OnEnable()
@@ -36,85 +34,76 @@ public class PlayerManager : MonoBehaviour
 
     public void AddPlayer(PlayerInput player)
     {
-        if (player == null)
-        {
-            Debug.LogError("AddPlayer called with null PlayerInput!");
-            return;
-        }
+        if (player == null) return;
 
         int index = player.playerIndex;
+        players[index] = player;
 
+        SetupPlayer(player, useSpawnPoint: true);
+    }
+
+    public void ReplacePlayer(int index, PlayerInput newPlayer)
+    {
         if (players.ContainsKey(index))
         {
-            if (players[index] != null)
-                Destroy(players[index].gameObject);
-
-            players[index] = player;
+            players[index] = newPlayer;
         }
         else
         {
-            players.Add(index, player);
+            players.Add(index, newPlayer);
         }
+    }
+
+    public void SetupPlayer(PlayerInput player, bool useSpawnPoint = true)
+    {
+        if (player == null) return;
 
         Transform playerTransform = player.transform;
+        int index = player.playerIndex;
 
-        if (index < startingPoints.Count && startingPoints[index] != null)
+        if (useSpawnPoint && index < startingPoints.Count && startingPoints[index] != null)
         {
             playerTransform.position = startingPoints[index].position;
             playerTransform.rotation = startingPoints[index].rotation;
         }
-        else
-        {
-            playerTransform.position = Vector3.zero;
-            playerTransform.rotation = Quaternion.identity;
-        }
 
-        // Layer assignment
         if (index < playerLayers.Count)
         {
             int ownLayer = (int)Mathf.Log(playerLayers[index].value, 2);
 
-            foreach (Renderer renderer in playerTransform.GetComponentsInChildren<Renderer>())
-            {
+            foreach (Renderer renderer in playerTransform.GetComponentsInChildren<Renderer>(true))
                 renderer.gameObject.layer = ownLayer;
-            }
 
-            Camera cam = playerTransform.GetComponentInChildren<Camera>();
+            Renderer rootRenderer = playerTransform.GetComponent<Renderer>();
+            if (rootRenderer != null)
+                rootRenderer.gameObject.layer = ownLayer;
+
+            Camera cam = GetFromRootOrChildren<Camera>(playerTransform);
             if (cam != null)
             {
                 cam.cullingMask = -1;
                 cam.cullingMask &= ~(1 << ownLayer);
             }
 
-            CinemachineFreeLook freeLook = playerTransform.GetComponentInChildren<CinemachineFreeLook>();
+            CinemachineFreeLook freeLook = GetFromRootOrChildren<CinemachineFreeLook>(playerTransform);
             if (freeLook != null)
-            {
                 freeLook.gameObject.layer = LayerMask.NameToLayer("Default");
-            }
         }
 
-        InputHandler inputHandler = playerTransform.GetComponent<InputHandler>();
-        if (inputHandler == null)
-        {
-            inputHandler = playerTransform.GetComponentInChildren<InputHandler>();
-        }
-
+        InputHandler inputHandler = GetFromRootOrChildren<InputHandler>(playerTransform);
         if (inputHandler != null)
         {
             var lookAction = player.actions.FindAction("Look");
             if (lookAction != null)
                 inputHandler.horizontal = lookAction;
-            else
-                Debug.LogWarning($"Player {index} has no 'Look' action in InputActions.");
-        }
-        else
-        {
-            Debug.LogWarning($"Player {index} has no InputHandler component.");
         }
     }
 
-    public Dictionary<int, PlayerInput> GetAllPlayers()
+    private T GetFromRootOrChildren<T>(Transform t) where T : Component
     {
-        return players;
+        T comp = t.GetComponent<T>();
+        if (comp == null)
+            comp = t.GetComponentInChildren<T>(true);
+        return comp;
     }
 }

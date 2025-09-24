@@ -17,7 +17,7 @@ public class PlayerShaderManager : MonoBehaviour
 
     private void OnPlayerJoined(PlayerInput player)
     {
-        Camera playerCamera = player.transform.parent.GetComponentInChildren<Camera>();
+        Camera playerCamera = player.GetComponentInChildren<Camera>();
         int playerIndex = player.playerIndex;
         Debug.Log($"Player Index: {playerIndex}, Camera: {playerCamera}");
 
