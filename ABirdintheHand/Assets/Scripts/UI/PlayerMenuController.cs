@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 public class PlayerMenuController : MonoBehaviour
@@ -13,6 +14,11 @@ public class PlayerMenuController : MonoBehaviour
     [Header("Other UI")]
     [SerializeField] private GameObject crosshairCanvas;
     [SerializeField] private Slider rescueTimerSlider;
+
+    [Header("First Selected")]
+    [SerializeField] private MultiplayerEventSystem eventSystem;
+    [SerializeField] private GameObject preRoundSelectedElement;
+    [SerializeField] private GameObject postRoundSelectedElement;
 
     private bool menuOpen = false;
     private bool roundHasStarted = false;
@@ -59,11 +65,13 @@ public class PlayerMenuController : MonoBehaviour
         if (roundHasStarted)
         {
             if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(menuOpen);
+            eventSystem.SetSelectedGameObject(postRoundSelectedElement);
             if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(false);
         }
         else
         {
             if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(menuOpen);
+            eventSystem.SetSelectedGameObject(preRoundSelectedElement);
             if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
         }
 
