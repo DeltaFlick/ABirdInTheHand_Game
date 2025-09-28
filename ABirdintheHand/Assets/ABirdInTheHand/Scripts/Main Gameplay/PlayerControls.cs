@@ -33,6 +33,10 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float cagedSpeedMultiplier = 0.5f;
     [SerializeField] private float cagedJumpMultiplier = 0.5f;
 
+    [Header("Ladder Settings")]
+    [SerializeField] private float climbSpeed = 3f;
+    private bool isOnLadder = false;
+
     private BirdIdentifier birdIdentifier;
 
     private void Awake()
@@ -74,12 +78,29 @@ public class PlayerControls : MonoBehaviour
         if (rb.isKinematic) return;
 
         Vector2 moveInput = move.ReadValue<Vector2>();
-        float speedMultiplier = 1f;
 
-        if (birdIdentifier != null && birdIdentifier.IsCaged)
+        if (isOnLadder)
         {
-            speedMultiplier = cagedSpeedMultiplier;
+            Vector3 climbDirection = Vector3.up * moveInput.y;
+            rb.velocity = climbDirection * climbSpeed;
+
+            Vector3 sideMove = GetCameraRight(playerCamera) * moveInput.x * (climbSpeed * 0.5f);
+            rb.velocity += sideMove;
+
+            Vector3 lookDirection = -playerCamera.transform.forward;
+            lookDirection.y = 0;
+            if (lookDirection.sqrMagnitude > 0.01f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+                rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 10f * Time.fixedDeltaTime));
+            }
+
+            return;
         }
+
+        float speedMultiplier = 1f;
+        if (birdIdentifier != null && birdIdentifier.IsCaged)
+            speedMultiplier = cagedSpeedMultiplier;
 
         isWalking = moveInput.sqrMagnitude > 0.1f && IsGrounded();
 
@@ -131,6 +152,14 @@ public class PlayerControls : MonoBehaviour
 
     private void DoJump(InputAction.CallbackContext context)
     {
+        if (isOnLadder)
+        {
+            isOnLadder = false;
+            rb.useGravity = true;
+            rb.velocity = Vector3.up * jumpForce;
+            return;
+        }
+
         if (IsGrounded() && !rb.isKinematic)
         {
             float jumpMultiplier = 1f;
@@ -144,5 +173,24 @@ public class PlayerControls : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            isOnLadder = true;
+            rb.useGravity = false;
+            rb.velocity = Vector3.zero;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            isOnLadder = false;
+            rb.useGravity = true;
+        }
     }
 }

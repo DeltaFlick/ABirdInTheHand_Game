@@ -6,19 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
+    path: Assets/ABirdInTheHand/Scenes/MainMenu.unity
     guid: 51f0f91bd02933543a95b2c9caf1cc51
   - enabled: 1
-    path: Assets/Scenes/MainLevel.unity
+    path: Assets/ABirdInTheHand/Scenes/MainLevel.unity
     guid: 09af8e253965511449ab3b301fad73b0
   - enabled: 1
-    path: Assets/Scenes/BirdsWin.unity
+    path: Assets/ABirdInTheHand/Scenes/BirdsWin.unity
     guid: 8e551673d4b83034183526e587fede00
   - enabled: 1
-    path: Assets/Scenes/Draw.unity
+    path: Assets/ABirdInTheHand/Scenes/Draw.unity
     guid: 070fa7b96c2e92c4c964cf4a1c42b661
   - enabled: 1
-    path: Assets/Scenes/HumansWin.unity
+    path: Assets/ABirdInTheHand/Scenes/HumansWin.unity
     guid: a076506caf0cc2544b9b44369b0abf04
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 3a1d2ebf9316514489939872e5736da3,
