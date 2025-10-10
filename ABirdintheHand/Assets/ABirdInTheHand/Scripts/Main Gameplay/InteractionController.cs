@@ -3,7 +3,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
-public class InteractionHandler : MonoBehaviour
+/// <Summary>
+/// Interaction system controller
+/// </Summary>
+
+public class InteractionController : MonoBehaviour
 {
     [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private LayerMask interactableMask;

@@ -4,6 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <Summary>
+/// WIP text slider for settings
+/// </Summary>
+
 public class TextSlider : MonoBehaviour
 {
     public TextMeshProUGUI numberText;

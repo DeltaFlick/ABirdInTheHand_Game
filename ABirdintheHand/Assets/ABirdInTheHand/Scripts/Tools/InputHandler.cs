@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 
+/// <Summary>
+/// Player Movement Helper
+/// </Summary>
+
 public class InputHandler : MonoBehaviour, AxisState.IInputAxisProvider
 {
     [HideInInspector]

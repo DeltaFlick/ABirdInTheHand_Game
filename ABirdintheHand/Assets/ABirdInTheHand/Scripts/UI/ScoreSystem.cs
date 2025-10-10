@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <Summary>
+/// Score system for game rounds
+/// </Summary>
+
 public class ScoreSystem : MonoBehaviour
 {
     public static float CurrentScore = 0;

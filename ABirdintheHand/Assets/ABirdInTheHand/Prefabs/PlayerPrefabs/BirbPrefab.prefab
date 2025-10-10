@@ -871,9 +871,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5448823646668613589}
-        m_TargetAssemblyTypeName: PlayerMenuUIController, Assembly-CSharp
-        m_MethodName: OnHumanButtonPressed
+      - m_Target: {fileID: 326573621319865695}
+        m_TargetAssemblyTypeName: PlayerSwapHandler, Assembly-CSharp
+        m_MethodName: SwapToHuman
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1215,7 +1215,6 @@ GameObject:
   - component: {fileID: 5448823646668613586}
   - component: {fileID: 5448823646668613591}
   - component: {fileID: 5448823646668613588}
-  - component: {fileID: 5448823646668613589}
   m_Layer: 3
   m_Name: Menu
   m_TagString: Untagged
@@ -1309,19 +1308,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &5448823646668613589
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5448823646668613584}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d29d44f7438b3f04b9cd37c88b1e200f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerSwapHandler: {fileID: 326573621319865695}
 --- !u!1 &5448823646821213216
 GameObject:
   m_ObjectHideFlags: 0
@@ -1444,9 +1430,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5448823646668613589}
-        m_TargetAssemblyTypeName: PlayerMenuUIController, Assembly-CSharp
-        m_MethodName: OnBirdButtonPressed
+      - m_Target: {fileID: 326573621319865695}
+        m_TargetAssemblyTypeName: PlayerSwapHandler, Assembly-CSharp
+        m_MethodName: SwapToBird
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1634,9 +1620,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
+  m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
-  m_DefaultActionMap: UI
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 5448823646563894997}
 --- !u!114 &5448823646955258895
@@ -1683,7 +1669,8 @@ MonoBehaviour:
   rescueTimerSlider: {fileID: 5448823647069914826}
   eventSystem: {fileID: 2786519488922452364}
   preRoundSelectedElement: {fileID: 5448823646094629881}
-  postRoundSelectedElement: {fileID: 5448823647056931005}
+  inRoundSelectedElement: {fileID: 5448823647056931007}
+  playerSwapHandler: {fileID: 326573621319865695}
 --- !u!114 &190562208304670277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2765,7 +2752,7 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
-  m_PlayerRoot: {fileID: 5448823646668613584}
+  m_PlayerRoot: {fileID: 5448823646955258887}
 --- !u!114 &4774115882093949127
 MonoBehaviour:
   m_ObjectHideFlags: 0

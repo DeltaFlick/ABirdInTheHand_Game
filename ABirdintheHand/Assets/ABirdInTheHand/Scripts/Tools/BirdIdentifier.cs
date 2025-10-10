@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <Summary>
+/// Identify Birds through script
+/// </Summary>
+
 public class BirdIdentifier : MonoBehaviour
 {
 

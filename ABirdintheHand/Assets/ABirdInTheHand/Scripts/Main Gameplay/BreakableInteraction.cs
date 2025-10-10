@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <Summary>
+/// Break objects on interact
+/// </Summary>
+
 public class BreakableInteraction : MonoBehaviour, IInteractable
 {
     [Header("UI Prompt")]
@@ -23,7 +27,7 @@ public class BreakableInteraction : MonoBehaviour, IInteractable
             promptText.text = "Press [E] to Break";
     }
 
-    public void Interact(InteractionHandler interactor)
+    public void Interact(InteractionController interactor)
     {
         Debug.Log($"{gameObject.name} has been broken by {interactor.name}");
 

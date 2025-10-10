@@ -3,6 +3,10 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
 
+/// <Summary>
+/// Dynamically add and index players
+/// </Summary>
+
 public class PlayerManager : MonoBehaviour
 {
     private Dictionary<int, PlayerInput> players = new Dictionary<int, PlayerInput>();

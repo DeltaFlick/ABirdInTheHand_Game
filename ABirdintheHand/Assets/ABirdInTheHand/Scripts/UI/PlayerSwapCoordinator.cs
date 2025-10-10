@@ -3,6 +3,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <Summary>
+/// Player swapper helper for position and rotation
+/// </Summary>
+
 public class PlayerSwapCoordinator : MonoBehaviour
 {
     public static PlayerSwapCoordinator Instance;

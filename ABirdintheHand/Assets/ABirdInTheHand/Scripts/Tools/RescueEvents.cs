@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <Summary>
+/// A collection for rescue events
+/// </Summary>
+
+
 public static class RescueEvents
 {
     public static Action<float> OnRescueStarted;

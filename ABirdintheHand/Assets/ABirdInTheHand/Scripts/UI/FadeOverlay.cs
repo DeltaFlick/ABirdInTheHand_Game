@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <Summary>
+/// Black canvas overlay for menus
+/// </Summary>
+
 public class FadeOverlay : MonoBehaviour
 {
     [SerializeField] private float fadeDuration = 2f;

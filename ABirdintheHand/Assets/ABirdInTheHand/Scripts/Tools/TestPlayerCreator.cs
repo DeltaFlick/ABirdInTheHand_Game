@@ -5,6 +5,10 @@ using System.Linq;
 using UnityEditor;
 #endif
 
+/// <Summary>
+/// Debug system for testing
+/// </Summary>
+
 public class TestPlayerCreator : MonoBehaviour
 {
     [Header("Player Setup")]

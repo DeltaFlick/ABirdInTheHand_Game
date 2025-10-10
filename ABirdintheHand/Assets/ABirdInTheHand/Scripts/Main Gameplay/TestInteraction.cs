@@ -3,13 +3,17 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
+/// <Summary>
+/// Test interaction for future scripts
+/// </Summary>
+
 public class TestInteraction : MonoBehaviour, IInteractable
 {
     [Header("UI Prompt")]
     [SerializeField] private GameObject promptUI;
     [SerializeField] private TextMeshProUGUI promptText;
 
-    public void Interact(InteractionHandler interactor)
+    public void Interact(InteractionController interactor)
     {
         Debug.Log("Interacted!");
     }

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <Summary>
+/// Break objects on falling impact
+/// </Summary>
+
 public class BreakableFalling : MonoBehaviour
 {
     public float scoreAddAmount = 10;
@@ -27,7 +31,7 @@ public class BreakableFalling : MonoBehaviour
             if (impactVelocity > impactThreshold)
             {
                 scoreSystem.AddScore(scoreAddAmount);
-                PickupManager.RequestDropAll();
+                ForceDrop.RequestDropAll();
                 Instantiate(destroyedVersion, transform.position, transform.rotation);
                 Destroy(gameObject);
             }

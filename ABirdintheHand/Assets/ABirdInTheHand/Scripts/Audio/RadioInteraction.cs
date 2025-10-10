@@ -5,6 +5,11 @@ using FMODUnity;
 using FMOD.Studio;
 using TMPro;
 
+/// <Summary>
+/// Manage radio music & interaction sequence
+/// </Summary>
+
+
 public class RadioInteraction : MonoBehaviour, IInteractable
 {
     [Header("FMOD Songs")]
@@ -29,7 +34,7 @@ public class RadioInteraction : MonoBehaviour, IInteractable
             promptUI.SetActive(false);
     }
 
-    public void Interact(InteractionHandler interactor)
+    public void Interact(InteractionController interactor)
     {
         PlayNextShuffledSong();
     }

@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <Summary>
+/// Human & Bird Player Controls
+/// </Summary>
+
+
 public class PlayerControls : MonoBehaviour
 {
     private InputActionAsset inputAsset;
@@ -98,6 +103,7 @@ public class PlayerControls : MonoBehaviour
             return;
         }
 
+        //If Caged
         float speedMultiplier = 1f;
         if (birdIdentifier != null && birdIdentifier.IsCaged)
             speedMultiplier = cagedSpeedMultiplier;
@@ -142,12 +148,12 @@ public class PlayerControls : MonoBehaviour
 
     private Vector3 GetCameraForward(Camera playerCamera)
     {
-        return playerCamera.GetComponent<HumanCamera>().orientation.forward;
+        return playerCamera.GetComponent<CameraController>().orientation.forward;
     }
 
     private Vector3 GetCameraRight(Camera playerCamera)
     {
-        return playerCamera.GetComponent<HumanCamera>().orientation.right;
+        return playerCamera.GetComponent<CameraController>().orientation.right;
     }
 
     private void DoJump(InputAction.CallbackContext context)
@@ -175,6 +181,8 @@ public class PlayerControls : MonoBehaviour
         return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
     }
 
+    #region Ladder Climbing
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ladder"))
@@ -193,4 +201,8 @@ public class PlayerControls : MonoBehaviour
             rb.useGravity = true;
         }
     }
+
+    #endregion
 }
+
+

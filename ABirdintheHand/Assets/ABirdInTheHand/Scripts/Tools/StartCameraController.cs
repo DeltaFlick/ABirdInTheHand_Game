@@ -1,7 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ToggleOnPlayerJoin : MonoBehaviour
+/// <Summary>
+/// Turn off start camera after player joins
+/// </Summary>
+
+public class StartCameraController : MonoBehaviour
 {
     private PlayerInputManager playerInputManager;
 

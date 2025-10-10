@@ -3,7 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickupManager : MonoBehaviour
+/// <Summary>
+/// Pickup system force drop
+/// </Summary>
+
+public class ForceDrop : MonoBehaviour
 {
     public static event Action ForceDropAll;
 

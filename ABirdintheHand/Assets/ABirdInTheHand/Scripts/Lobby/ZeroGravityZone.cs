@@ -1,8 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <Summary>
+/// Lobby zero gravity area
+/// </Summary>
+
+
 [RequireComponent(typeof(Collider))]
-public class GravityZone : MonoBehaviour
+public class ZeroGravityZone : MonoBehaviour
 {
     [Header("Gravity Zone Settings")]
     [SerializeField] private bool disableGravity = true;
@@ -47,7 +52,7 @@ public class GravityZone : MonoBehaviour
         }
     }
 
-
+    // Gizmo for visualisation
     private void OnDrawGizmosSelected()
     {
         Collider col = GetComponent<Collider>();

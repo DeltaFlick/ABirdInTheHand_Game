@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using Cinemachine;
 
+/// <Summary>
+/// 1st Person Camera Helper
+/// </Summary>
 
 public class CinemachineInputHandler : MonoBehaviour, AxisState.IInputAxisProvider
 {

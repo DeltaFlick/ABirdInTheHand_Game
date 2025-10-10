@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <Summary>
+/// Interact with station to swap to character
+/// </Summary>
+
+
 public class SwapStation : MonoBehaviour, IInteractable
 {
     [Header("Swap Options")]
@@ -13,7 +18,7 @@ public class SwapStation : MonoBehaviour, IInteractable
     [SerializeField] private GameObject promptUI;
     [SerializeField] private TextMeshProUGUI promptText;
 
-    public void Interact(InteractionHandler interactor)
+    public void Interact(InteractionController interactor)
     {
         Debug.Log("Interacted!");
 

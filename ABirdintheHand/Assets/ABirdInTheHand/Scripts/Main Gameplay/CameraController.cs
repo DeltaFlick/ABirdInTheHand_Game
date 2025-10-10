@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class HumanCamera : MonoBehaviour
+/// <Summary>
+/// 1st Person Camera Controller
+/// </Summary>
+
+public class CameraController : MonoBehaviour
 {
     public float mouseSensitivity = 100f;
     public float controllerSensitivity = 250f;

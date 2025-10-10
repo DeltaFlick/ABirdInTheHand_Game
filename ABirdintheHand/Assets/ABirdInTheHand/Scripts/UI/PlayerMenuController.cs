@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
+/// <summary>
+/// Handles both player menu UI (pre-round and in-round)
+/// </summary>
+
 public class PlayerMenuController : MonoBehaviour
 {
     [Header("Menu UI")]
@@ -18,25 +22,31 @@ public class PlayerMenuController : MonoBehaviour
     [Header("First Selected")]
     [SerializeField] private MultiplayerEventSystem eventSystem;
     [SerializeField] private Button preRoundSelectedElement;
-    [SerializeField] private GameObject postRoundSelectedElement;
+    [SerializeField] private Button inRoundSelectedElement;
+
+    [Header("Character Swap")]
+    [SerializeField] private PlayerSwapHandler playerSwapHandler;
 
     private bool menuOpen = false;
     private bool roundHasStarted = false;
     private PlayerControls playerControls;
     private InputAction menuAction;
 
+    public PlayerSwapHandler PlayerSwapHandler
+    {
+        get => playerSwapHandler;
+        set => playerSwapHandler = value;
+    }
+
     private void Awake()
     {
         playerControls = GetComponent<PlayerControls>();
         var inputAsset = GetComponent<PlayerInput>().actions;
-
         menuAction = inputAsset.FindActionMap("UI").FindAction("Menu");
 
         if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(false);
         if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
-
-        if (rescueTimerSlider != null)
-            rescueTimerSlider.gameObject.SetActive(false);
+        if (rescueTimerSlider != null) rescueTimerSlider.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -65,7 +75,7 @@ public class PlayerMenuController : MonoBehaviour
         if (roundHasStarted)
         {
             if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(menuOpen);
-            eventSystem.SetSelectedGameObject(postRoundSelectedElement);
+            eventSystem.SetSelectedGameObject(inRoundSelectedElement.gameObject);
             if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(false);
         }
         else
@@ -77,9 +87,7 @@ public class PlayerMenuController : MonoBehaviour
         }
 
         if (crosshairCanvas != null) crosshairCanvas.SetActive(!menuOpen);
-
         if (playerControls != null) playerControls.SetControlsEnabled(!menuOpen);
-
     }
 
     public void SetRoundStarted(bool started)
@@ -88,18 +96,12 @@ public class PlayerMenuController : MonoBehaviour
         if (menuOpen) ToggleMenu(new InputAction.CallbackContext());
     }
 
-    // public void OnResumePressed()
-    // {
-    //     menuOpen = false;
-    //     if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
-    //     if (crosshairCanvas != null) crosshairCanvas.SetActive(true);
-    //     if (playerControls != null) playerControls.SetControlsEnabled(true);
-    // }
-
     public void OnTitleScreenPressed()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
+
+    #region Rescue Timer
 
     public void ShowRescueTimer(float maxTime)
     {
@@ -123,4 +125,20 @@ public class PlayerMenuController : MonoBehaviour
 
         rescueTimerSlider.gameObject.SetActive(false);
     }
+
+    #endregion
+
+    #region Character Swap UI Buttons
+
+    public void OnHumanButtonPressed()
+    {
+        playerSwapHandler?.SwapToHuman();
+    }
+
+    public void OnBirdButtonPressed()
+    {
+        playerSwapHandler?.SwapToBird();
+    }
+
+    #endregion
 }

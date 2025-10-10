@@ -3,6 +3,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <Summary>
+/// Handle player swapping between prefabs
+/// </Summary>
+
 public class PlayerSwapHandler : MonoBehaviour
 {
     [Header("Alternate Character Prefabs")]
@@ -79,7 +83,7 @@ public class PlayerSwapHandler : MonoBehaviour
         Camera oldCam = GetComponentInChildren<Camera>(true);
         Quaternion? oldCameraRotation = oldCam != null ? (Quaternion?)oldCam.transform.rotation : null;
 
-        HumanCamera oldHumanCam = GetComponentInChildren<HumanCamera>(true);
+        CameraController oldHumanCam = GetComponentInChildren<CameraController>(true);
         Quaternion? oldHumanOrientationRotation = null;
         if (oldHumanCam != null && oldHumanCam.orientation != null)
             oldHumanOrientationRotation = oldHumanCam.orientation.rotation;
@@ -88,7 +92,7 @@ public class PlayerSwapHandler : MonoBehaviour
         Vector3? oldVelocity = oldRb != null ? (Vector3?)oldRb.velocity : null;
         Vector3? oldAngularVelocity = oldRb != null ? (Vector3?)oldRb.angularVelocity : null;
 
-        PickupManager.RequestDropAll();
+        ForceDrop.RequestDropAll();
 
         int index = playerInput.playerIndex;
 
@@ -124,7 +128,7 @@ public class PlayerSwapHandler : MonoBehaviour
 
             if (oldHumanOrientationRotation.HasValue)
             {
-                HumanCamera newHumanCam = newPlayer.GetComponentInChildren<HumanCamera>(true);
+                CameraController newHumanCam = newPlayer.GetComponentInChildren<CameraController>(true);
                 if (newHumanCam != null)
                 {
                     Quaternion camRot = oldCameraRotation ?? newPlayer.GetComponentInChildren<Camera>(true)?.transform.rotation ?? Quaternion.identity;
@@ -148,10 +152,10 @@ public class PlayerSwapHandler : MonoBehaviour
             newSwapHandler.Initialize(newPlayerInput, device, playerManager);
         }
 
-        PlayerMenuUIController uiController = FindObjectOfType<PlayerMenuUIController>();
+        PlayerMenuController uiController = FindObjectOfType<PlayerMenuController>();
         if (uiController != null && newSwapHandler != null)
         {
-            uiController.playerSwapHandler = newSwapHandler;
+            uiController.PlayerSwapHandler = newSwapHandler;
         }
     }
 
@@ -200,7 +204,7 @@ public class SwapPositionHelper : MonoBehaviour
 
         if (humanOrientationRot.HasValue)
         {
-            HumanCamera hc = GetComponentInChildren<HumanCamera>(true);
+            CameraController hc = GetComponentInChildren<CameraController>(true);
             if (hc != null)
             {
                 Quaternion camRotation = camRot ?? GetComponentInChildren<Camera>(true)?.transform.rotation ?? Quaternion.identity;

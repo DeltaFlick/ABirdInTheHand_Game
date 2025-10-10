@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class BirdCageTrigger : MonoBehaviour
+/// <Summary>
+/// Trapping & Releasing Birds
+/// </Summary>
+
+public class BirdCageController : MonoBehaviour
 {
     [Header("Cage Settings")]
     [SerializeField] private Transform cageSpawnPoint;
     [SerializeField] private Transform releasePoint;
+    [SerializeField] private float teleportDelay = 0.1f;
     [SerializeField] private float rescueTime = 10f;
 
     [Header("Win Condition")]
@@ -18,11 +23,18 @@ public class BirdCageTrigger : MonoBehaviour
     private HashSet<BirdIdentifier> freeBirdsInTrigger = new HashSet<BirdIdentifier>();
     private Coroutine rescueRoutine;
     private BirdIdentifier currentRescuer;
+    private GameObject birdToTeleport;
 
     private void OnTriggerEnter(Collider other)
     {
         BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
         if (bird == null) return;
+
+        if (bird.IsBeingHeld)
+        {
+            TeleportToCage(bird.gameObject);
+            return;
+        }
 
         if (!bird.IsCaged)
         {
@@ -34,11 +46,6 @@ public class BirdCageTrigger : MonoBehaviour
                 rescueRoutine = StartCoroutine(RescueCountdown(bird));
             }
         }
-
-        if (bird.IsBeingHeld)
-        {
-            CageBird(bird);
-        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -46,8 +53,7 @@ public class BirdCageTrigger : MonoBehaviour
         BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
         if (bird == null) return;
 
-        if (bird.IsCaged)
-            return;
+        if (bird.IsCaged) return;
 
         if (freeBirdsInTrigger.Contains(bird))
         {
@@ -63,54 +69,59 @@ public class BirdCageTrigger : MonoBehaviour
         }
     }
 
-    private void CageBird(BirdIdentifier bird)
+    private void TeleportToCage(GameObject bird)
     {
-        if (bird == null || bird.IsCaged) return;
-
-        PickupManager.RequestDropAll();
-
-        bird.IsBeingHeld = false;
-        bird.IsCaged = true;
-
-        if (!birdsInCage.Contains(bird))
+        if (cageSpawnPoint == null)
         {
-            birdsInCage.Add(bird);
+            Debug.LogWarning("[BirdCageController] Cage spawn point not assigned!");
+            return;
         }
 
-        if (cageSpawnPoint != null)
+        birdToTeleport = bird;
+        Rigidbody rb = bird.GetComponent<Rigidbody>();
+        BirdIdentifier birdId = bird.GetComponent<BirdIdentifier>();
+
+        if (rb != null) rb.isKinematic = true;
+
+        bird.transform.position = cageSpawnPoint.position;
+        bird.transform.rotation = cageSpawnPoint.rotation;
+        Physics.SyncTransforms();
+
+        if (birdId != null)
         {
-            Rigidbody rb = bird.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = true;
-            }
-
-            bird.transform.position = cageSpawnPoint.position;
-            bird.transform.rotation = cageSpawnPoint.rotation;
-            Physics.SyncTransforms();
-
-            if (rb != null)
-            {
-                rb.isKinematic = false;
-            }
+            birdId.IsCaged = true;
+            birdId.IsBeingHeld = false;
         }
 
-        CheckWinCondition();
+        Invoke(nameof(EnableBirdMovement), teleportDelay);
+        RegisterCagedBird(birdId);
     }
 
-    public void RegisterCagedBird(BirdIdentifier bird)
+    private void EnableBirdMovement()
     {
-        if (bird != null && !birdsInCage.Contains(bird))
+        if (birdToTeleport != null)
         {
-            birdsInCage.Add(bird);
-            CheckWinCondition();
+            Rigidbody rb = birdToTeleport.GetComponent<Rigidbody>();
+            if (rb != null)
+                rb.isKinematic = false;
         }
+    }
+
+    #region Rescue Mechanic
+
+    private void RegisterCagedBird(BirdIdentifier bird)
+    {
+        if (bird == null || birdsInCage.Contains(bird)) return;
+
+        ForceDrop.RequestDropAll();
+
+        birdsInCage.Add(bird);
+        CheckWinCondition();
     }
 
     private IEnumerator RescueCountdown(BirdIdentifier rescuer)
     {
         float timer = 0f;
-
         rescuer.MenuController?.ShowRescueTimer(rescueTime);
 
         while (timer < rescueTime)
@@ -159,21 +170,18 @@ public class BirdCageTrigger : MonoBehaviour
         birdsInCage.Clear();
     }
 
+    #endregion
+
     private void CheckWinCondition()
     {
-        //int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
-
-        //if (totalBirds > 0 && birdsInCage.Count == totalBirds)
-
-        int totalBirds = 5; // temporary for testing
+        // Placeholder for total bird count
+        int totalBirds = 5; // TODO: replace with BirdManager.Instance.GetBirdCount()
 
         if (birdsInCage.Count == totalBirds)
         {
-            Debug.Log("[BirdCageTrigger] All birds caged, humans win!");
+            Debug.Log("[BirdCageController] All birds caged, humans win!");
             if (!string.IsNullOrEmpty(humansWinSceneName))
-            {
                 SceneManager.LoadScene(humansWinSceneName);
-            }
         }
     }
 }

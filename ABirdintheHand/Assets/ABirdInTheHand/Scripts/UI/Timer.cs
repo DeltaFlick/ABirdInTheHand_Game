@@ -3,6 +3,10 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
+/// <Summary>
+/// Timer system for game rounds
+/// </Summary>
+
 public class Timer : MonoBehaviour
 {
     public RoundStart roundStart;

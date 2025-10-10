@@ -1794,9 +1794,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6865168175734328633}
-        m_TargetAssemblyTypeName: PlayerMenuUIController, Assembly-CSharp
-        m_MethodName: OnBirdButtonPressed
+      - m_Target: {fileID: 5118412740171248579}
+        m_TargetAssemblyTypeName: PlayerSwapHandler, Assembly-CSharp
+        m_MethodName: SwapToBird
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2352,9 +2352,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6865168175734328633}
-        m_TargetAssemblyTypeName: PlayerMenuUIController, Assembly-CSharp
-        m_MethodName: OnHumanButtonPressed
+      - m_Target: {fileID: 5118412740171248579}
+        m_TargetAssemblyTypeName: PlayerSwapHandler, Assembly-CSharp
+        m_MethodName: SwapToHuman
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3132,7 +3132,6 @@ GameObject:
   - component: {fileID: 7382722777365510326}
   - component: {fileID: 8268570649021562353}
   - component: {fileID: 904073325664267017}
-  - component: {fileID: 6865168175734328633}
   m_Layer: 3
   m_Name: Menu
   m_TagString: Untagged
@@ -3225,19 +3224,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6865168175734328633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4345639735130759007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d29d44f7438b3f04b9cd37c88b1e200f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerSwapHandler: {fileID: 5118412740171248579}
 --- !u!1 &4450699974813696464
 GameObject:
   m_ObjectHideFlags: 0
@@ -3472,7 +3458,8 @@ MonoBehaviour:
   rescueTimerSlider: {fileID: 0}
   eventSystem: {fileID: 7737896678570288967}
   preRoundSelectedElement: {fileID: 524936955350281550}
-  postRoundSelectedElement: {fileID: 5636064752130420605}
+  inRoundSelectedElement: {fileID: 3278994054752365202}
+  playerSwapHandler: {fileID: 5118412740171248579}
 --- !u!114 &4904802495099347624
 MonoBehaviour:
   m_ObjectHideFlags: 0

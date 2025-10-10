@@ -2,6 +2,10 @@ using System.Collections;
 using UnityEngine;
 using FMODUnity;
 
+/// <Summary>
+/// Manage human footstep sounds
+/// </Summary>
+
 public class HumanAudioManager : MonoBehaviour
 {
     [SerializeField] EventReference GrassFootstep;

@@ -188,22 +188,17 @@ MonoBehaviour:
   m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: -944628639613478452, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
     type: 3}
-  m_PointAction: {fileID: 1684761437747556327, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
-    type: 3}
+  m_PointAction: {fileID: 0}
   m_MoveAction: {fileID: 2071763850309084017, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
     type: 3}
   m_SubmitAction: {fileID: -7521357050791904667, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
     type: 3}
   m_CancelAction: {fileID: 4487263798835374216, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
     type: 3}
-  m_LeftClickAction: {fileID: -1842662278020977236, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
-    type: 3}
-  m_MiddleClickAction: {fileID: 5221626156496815174, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
-    type: 3}
-  m_RightClickAction: {fileID: -373946593829828392, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
-    type: 3}
-  m_ScrollWheelAction: {fileID: -2759306271796526258, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
-    type: 3}
+  m_LeftClickAction: {fileID: 0}
+  m_MiddleClickAction: {fileID: 0}
+  m_RightClickAction: {fileID: 0}
+  m_ScrollWheelAction: {fileID: 0}
   m_TrackedDevicePositionAction: {fileID: -8029413315688627529, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
     type: 3}
   m_TrackedDeviceOrientationAction: {fileID: -6704609158098292200, guid: 594f7931d6a4bc14e8463cbc6ed96c7a,
@@ -321,7 +316,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 537542599}
-  - component: {fileID: 537542598}
+  - component: {fileID: 537542600}
   m_Layer: 0
   m_Name: UIController
   m_TagString: Untagged
@@ -329,18 +324,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &537542598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 537542597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974010acac7852847a30054f2b9a87d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &537542599
 Transform:
   m_ObjectHideFlags: 0
@@ -356,6 +339,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &537542600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537542597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b987a6ff94af61d419ecdee2f119eee9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  birdWinningScore: 30
+  birdsWinScene: BirdsWin
+  mainMenuScene: MainMenu
+  mainLevelScene: MainLevel
+  scoreSystem: {fileID: 0}
 --- !u!1 &742075259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1022,8 +1022,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 537542598}
-        m_TargetAssemblyTypeName: GameOverUI, Assembly-CSharp
+      - m_Target: {fileID: 537542600}
+        m_TargetAssemblyTypeName: SceneMenuManager, Assembly-CSharp
         m_MethodName: BackToLobby
         m_Mode: 1
         m_Arguments:
@@ -1299,7 +1299,7 @@ GameObject:
   - component: {fileID: 2066928819}
   - component: {fileID: 2066928818}
   m_Layer: 5
-  m_Name: Quit
+  m_Name: TitleScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1371,9 +1371,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 537542598}
-        m_TargetAssemblyTypeName: GameOverUI, Assembly-CSharp
-        m_MethodName: TitleScreen
+      - m_Target: {fileID: 537542600}
+        m_TargetAssemblyTypeName: SceneMenuManager, Assembly-CSharp
+        m_MethodName: GoToTitleScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

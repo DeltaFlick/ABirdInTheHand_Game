@@ -3,6 +3,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+/// <Summary>
+/// Pickup system controller
+/// </Summary>
+
 public class PickupController : MonoBehaviour
 {
     [Header("Pickup Settings")]
@@ -36,12 +40,12 @@ public class PickupController : MonoBehaviour
 
     void OnEnable()
     {
-        PickupManager.ForceDropAll += DropObject;
+        ForceDrop.ForceDropAll += DropObject;
     }
 
     void OnDisable()
     {
-        PickupManager.ForceDropAll -= DropObject;
+        ForceDrop.ForceDropAll -= DropObject;
     }
 
     void Update()

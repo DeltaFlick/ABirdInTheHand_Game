@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <Summary>
+/// Dynamically count birds
+/// </Summary>
+
 public class BirdManager : MonoBehaviour
 {
     public static BirdManager Instance { get; private set; }
