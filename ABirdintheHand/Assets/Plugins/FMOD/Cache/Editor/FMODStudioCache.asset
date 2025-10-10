@@ -62,7 +62,7 @@ MonoBehaviour:
   Path: FMOD/Build/Desktop/Sound Effects.bank
   Name: Sound Effects
   StudioPath: bank:/Sound Effects
-  lastModified: 638897625878785237
+  lastModified: 638956944344867567
   FileSizes:
   - Name: Desktop
     Value: 37984
@@ -150,7 +150,7 @@ MonoBehaviour:
   Path: FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638903612797171060
+  lastModified: 638956944344867567
   FileSizes:
   - Name: Desktop
     Value: 1010
@@ -183,7 +183,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: -9946768971237807}
   cacheVersion: 131848
-  cacheTime: 638903612797171060
+  cacheTime: 638956944344867567
   SerializableEventsDict:
   - key: event:/GrassyFootsteps
     index: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
   Path: FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638903612797165980
+  lastModified: 638956944344857570
   FileSizes:
   - Name: Desktop
     Value: 1074
@@ -282,7 +282,7 @@ MonoBehaviour:
   Path: FMOD/Build/Desktop/Background Music.bank
   Name: Background Music
   StudioPath: bank:/Background Music
-  lastModified: 638903612797104716
+  lastModified: 638956944344857570
   FileSizes:
   - Name: Desktop
     Value: 3630016

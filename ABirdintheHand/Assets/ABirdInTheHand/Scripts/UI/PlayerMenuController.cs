@@ -17,7 +17,7 @@ public class PlayerMenuController : MonoBehaviour
 
     [Header("First Selected")]
     [SerializeField] private MultiplayerEventSystem eventSystem;
-    [SerializeField] private GameObject preRoundSelectedElement;
+    [SerializeField] private Button preRoundSelectedElement;
     [SerializeField] private GameObject postRoundSelectedElement;
 
     private bool menuOpen = false;
@@ -71,7 +71,8 @@ public class PlayerMenuController : MonoBehaviour
         else
         {
             if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(menuOpen);
-            eventSystem.SetSelectedGameObject(preRoundSelectedElement);
+            eventSystem.SetSelectedGameObject(preRoundSelectedElement.gameObject);
+            preRoundSelectedElement.Select();
             if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
         }
 
@@ -87,13 +88,13 @@ public class PlayerMenuController : MonoBehaviour
         if (menuOpen) ToggleMenu(new InputAction.CallbackContext());
     }
 
-    public void OnResumePressed()
-    {
-        menuOpen = false;
-        if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
-        if (crosshairCanvas != null) crosshairCanvas.SetActive(true);
-        if (playerControls != null) playerControls.SetControlsEnabled(true);
-    }
+    // public void OnResumePressed()
+    // {
+    //     menuOpen = false;
+    //     if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
+    //     if (crosshairCanvas != null) crosshairCanvas.SetActive(true);
+    //     if (playerControls != null) playerControls.SetControlsEnabled(true);
+    // }
 
     public void OnTitleScreenPressed()
     {

@@ -1321,7 +1321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d29d44f7438b3f04b9cd37c88b1e200f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSwapHandler: {fileID: 0}
+  playerSwapHandler: {fileID: 326573621319865695}
 --- !u!1 &5448823646821213216
 GameObject:
   m_ObjectHideFlags: 0
@@ -1664,6 +1664,7 @@ MonoBehaviour:
   counterSlidingForce: 0.1
   cagedSpeedMultiplier: 0.5
   cagedJumpMultiplier: 0.5
+  climbSpeed: 3
 --- !u!114 &5448823646955258892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1681,7 +1682,7 @@ MonoBehaviour:
   crosshairCanvas: {fileID: 0}
   rescueTimerSlider: {fileID: 5448823647069914826}
   eventSystem: {fileID: 2786519488922452364}
-  preRoundSelectedElement: {fileID: 5448823646094629879}
+  preRoundSelectedElement: {fileID: 5448823646094629881}
   postRoundSelectedElement: {fileID: 5448823647056931005}
 --- !u!114 &190562208304670277
 MonoBehaviour:
@@ -2764,7 +2765,7 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
-  m_PlayerRoot: {fileID: 5448823646564259457}
+  m_PlayerRoot: {fileID: 5448823646668613584}
 --- !u!114 &4774115882093949127
 MonoBehaviour:
   m_ObjectHideFlags: 0
