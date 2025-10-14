@@ -116,7 +116,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreAddAmount: 1
   impactThreshold: 3
-  destroyedVersion: {fileID: 0}
+  destroyedVersion: {fileID: 8349382962868620342, guid: 8496ee2dbc1bc354bb61fd93d5c7f87f,
+    type: 3}
 --- !u!65 &535815845811250843
 BoxCollider:
   m_ObjectHideFlags: 0

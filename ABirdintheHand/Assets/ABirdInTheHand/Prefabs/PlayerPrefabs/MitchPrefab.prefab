@@ -2703,6 +2703,7 @@ MonoBehaviour:
   taaMotionVectorRejection: 0
   taaAntiHistoryRinging: 0
   taaBaseBlendFactor: 0.875
+  taaJitterScale: 1
   physicalParameters:
     m_Iso: 200
     m_ShutterSpeed: 0.005
@@ -2994,6 +2995,7 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 0
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1 &4115445073048261860
 GameObject:
   m_ObjectHideFlags: 0
@@ -3279,7 +3281,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!95 &568733690554539946
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3296,7 +3298,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!54 &3627998778466273193
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3942,7 +3944,6 @@ GameObject:
   - component: {fileID: 4868503817697384421}
   - component: {fileID: 532827215010919287}
   - component: {fileID: 3278994054752365202}
-  - component: {fileID: 7942546623416645609}
   m_Layer: 3
   m_Name: Title Screen
   m_TagString: Untagged
@@ -4053,9 +4054,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7942546623416645609}
-        m_TargetAssemblyTypeName: GameOverUI, Assembly-CSharp
-        m_MethodName: TitleScreen
+      - m_Target: {fileID: 8260605242647504464}
+        m_TargetAssemblyTypeName: PlayerMenuController, Assembly-CSharp
+        m_MethodName: OnTitleScreenPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4065,18 +4066,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7942546623416645609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5636064752130420605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974010acac7852847a30054f2b9a87d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5759475415747073311
 GameObject:
   m_ObjectHideFlags: 0
