@@ -34,7 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3901611564189124461
 MeshFilter:
@@ -116,8 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreAddAmount: 1
   impactThreshold: 3
-  destroyedVersion: {fileID: 3130848894134696348, guid: 4abb43013ebbc634892577479fbd6f70,
-    type: 3}
+  destroyedVersion: {fileID: 0}
 --- !u!65 &7680008362080462720
 BoxCollider:
   m_ObjectHideFlags: 0

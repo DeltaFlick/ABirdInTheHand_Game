@@ -129,6 +129,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   promptUI: {fileID: 0}
   promptText: {fileID: 0}
-  brokenVersion: {fileID: 7843450613262624078, guid: d20987945dc9f6f4eae83c44af59968a,
-    type: 3}
+  brokenVersion: {fileID: 0}
   scoreAddAmount: 3
