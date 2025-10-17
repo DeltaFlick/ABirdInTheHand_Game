@@ -3393,7 +3393,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
+  m_DefaultActionMap: 
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 4497450071701274619}
 --- !u!114 &1130647643644383032
@@ -3942,7 +3942,6 @@ GameObject:
   - component: {fileID: 4868503817697384421}
   - component: {fileID: 532827215010919287}
   - component: {fileID: 3278994054752365202}
-  - component: {fileID: 7942546623416645609}
   m_Layer: 3
   m_Name: Title Screen
   m_TagString: Untagged
@@ -4053,9 +4052,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7942546623416645609}
-        m_TargetAssemblyTypeName: GameOverUI, Assembly-CSharp
-        m_MethodName: TitleScreen
+      - m_Target: {fileID: 8260605242647504464}
+        m_TargetAssemblyTypeName: PlayerMenuController, Assembly-CSharp
+        m_MethodName: OnTitleScreenPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4065,18 +4064,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7942546623416645609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5636064752130420605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974010acac7852847a30054f2b9a87d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5759475415747073311
 GameObject:
   m_ObjectHideFlags: 0
