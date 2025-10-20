@@ -73,9 +73,9 @@ public class PlayerControls : MonoBehaviour
     public void SetControlsEnabled(bool enabled)
     {
         if (enabled)
-            playerMap.Enable();
+            pi.actions.FindActionMap("Player")?.Enable();
         else
-            playerMap.Disable();
+            pi.actions.FindActionMap("Player")?.Disable();
     }
 
     private void FixedUpdate()

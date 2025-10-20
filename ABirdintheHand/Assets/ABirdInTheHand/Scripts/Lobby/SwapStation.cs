@@ -1,49 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
+//using TMPro;
 
-/// <Summary>
-/// Interact with station to swap to character
-/// </Summary>
+///// <Summary>
+///// Interact with station to swap to character
+///// </Summary>
 
 
-public class SwapStation : MonoBehaviour, IInteractable
-{
-    [Header("Swap Options")]
-    public bool swapToHuman;
-    public bool swapToBird;
+//public class SwapStation : MonoBehaviour, IInteractable
+//{
+//    [Header("Swap Options")]
+//    public bool swapToHuman;
+//    public bool swapToBird;
 
-    [Header("UI Prompt")]
-    [SerializeField] private GameObject promptUI;
-    [SerializeField] private TextMeshProUGUI promptText;
+//    [Header("UI Prompt")]
+//    [SerializeField] private GameObject promptUI;
+//    [SerializeField] private TextMeshProUGUI promptText;
 
-    public void Interact(InteractionController interactor)
-    {
-        Debug.Log("Interacted!");
+//    public void Interact(InteractionController interactor)
+//    {
+//        Debug.Log("Interacted!");
 
-        var swapHandler = interactor.GetComponentInParent<PlayerSwapHandler>();
-        if (swapHandler == null) return;
+//        var swapHandler = interactor.GetComponentInParent<PlayerSwapHandler>();
+//        if (swapHandler == null) return;
 
-        if (swapToHuman)
-            swapHandler.SwapToHuman();
-        else if (swapToBird)
-            swapHandler.SwapToBird();
-    }
+//        if (swapToHuman)
+//            swapHandler.SwapToHuman();
+//        else if (swapToBird)
+//            swapHandler.SwapToBird();
+//    }
 
-    public void ShowPrompt()
-    {
-        if (promptUI != null)
-        {
-            promptUI.SetActive(true);
-            if (promptText != null)
-                promptText.text = swapToHuman ? "Press Interact to become Human" : "Press Interact to become Bird";
-        }
-    }
+//    public void ShowPrompt()
+//    {
+//        if (promptUI != null)
+//        {
+//            promptUI.SetActive(true);
+//            if (promptText != null)
+//                promptText.text = swapToHuman ? "Press Interact to become Human" : "Press Interact to become Bird";
+//        }
+//    }
 
-    public void HidePrompt()
-    {
-        if (promptUI != null)
-            promptUI.SetActive(false);
-    }
-}
+//    public void HidePrompt()
+//    {
+//        if (promptUI != null)
+//            promptUI.SetActive(false);
+//    }
+//}

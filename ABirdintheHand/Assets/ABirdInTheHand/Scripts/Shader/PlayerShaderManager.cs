@@ -15,7 +15,7 @@ public class PlayerShaderManager : MonoBehaviour
         playerInputManager.onPlayerLeft += OnPlayerLeft;
     }
 
-    private void OnPlayerJoined(PlayerInput player)
+    public void OnPlayerJoined(PlayerInput player)
     {
         Camera playerCamera = player.GetComponentInChildren<Camera>();
         int playerIndex = player.playerIndex;

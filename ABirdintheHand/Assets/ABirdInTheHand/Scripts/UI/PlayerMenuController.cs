@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
-
-/// <summary>
-/// Handles both player menu UI (pre-round and in-round)
-/// </summary>
 
 public class PlayerMenuController : MonoBehaviour
 {
@@ -20,29 +14,23 @@ public class PlayerMenuController : MonoBehaviour
     [SerializeField] private Slider rescueTimerSlider;
 
     [Header("First Selected")]
-    [SerializeField] private MultiplayerEventSystem eventSystem;
     [SerializeField] private Button preRoundSelectedElement;
     [SerializeField] private Button inRoundSelectedElement;
 
-    [Header("Character Swap")]
-    [SerializeField] private PlayerSwapHandler playerSwapHandler;
+    private PlayerInput playerInput;
+    private InputAction menuAction;
+    private InputSystemUIInputModule uiModule;
 
     private bool menuOpen = false;
     private bool roundHasStarted = false;
-    private PlayerControls playerControls;
-    private InputAction menuAction;
-
-    public PlayerSwapHandler PlayerSwapHandler
-    {
-        get => playerSwapHandler;
-        set => playerSwapHandler = value;
-    }
 
     private void Awake()
     {
-        playerControls = GetComponent<PlayerControls>();
-        var inputAsset = GetComponent<PlayerInput>().actions;
-        menuAction = inputAsset.FindActionMap("UI").FindAction("Menu");
+        playerInput = GetComponent<PlayerInput>();
+        uiModule = GetComponentInChildren<InputSystemUIInputModule>(true);
+
+        playerInput.actions.FindActionMap("UI")?.Enable();
+        menuAction = playerInput.actions.FindAction("UI/Menu");
 
         if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(false);
         if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
@@ -51,8 +39,7 @@ public class PlayerMenuController : MonoBehaviour
 
     private void OnEnable()
     {
-        menuAction.performed += ToggleMenu;
-        menuAction.Enable();
+        if (menuAction != null) menuAction.performed += ToggleMenu;
 
         RescueEvents.OnRescueStarted += ShowRescueTimer;
         RescueEvents.OnRescueUpdated += UpdateRescueTimer;
@@ -61,7 +48,7 @@ public class PlayerMenuController : MonoBehaviour
 
     private void OnDisable()
     {
-        menuAction.performed -= ToggleMenu;
+        if (menuAction != null) menuAction.performed -= ToggleMenu;
 
         RescueEvents.OnRescueStarted -= ShowRescueTimer;
         RescueEvents.OnRescueUpdated -= UpdateRescueTimer;
@@ -75,19 +62,25 @@ public class PlayerMenuController : MonoBehaviour
         if (roundHasStarted)
         {
             if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(menuOpen);
-            eventSystem.SetSelectedGameObject(inRoundSelectedElement.gameObject);
+            SetSelected(inRoundSelectedElement);
             if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(false);
         }
         else
         {
             if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(menuOpen);
-            eventSystem.SetSelectedGameObject(preRoundSelectedElement.gameObject);
-            preRoundSelectedElement.Select();
+            SetSelected(preRoundSelectedElement);
             if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
         }
 
         if (crosshairCanvas != null) crosshairCanvas.SetActive(!menuOpen);
-        if (playerControls != null) playerControls.SetControlsEnabled(!menuOpen);
+
+        var controls = GetComponent<PlayerControls>();
+        if (controls != null) controls.SetControlsEnabled(!menuOpen);
+    }
+
+    private void SetSelected(Button button)
+    {
+        if (button != null) button.Select();
     }
 
     public void SetRoundStarted(bool started)
@@ -96,17 +89,10 @@ public class PlayerMenuController : MonoBehaviour
         if (menuOpen) ToggleMenu(new InputAction.CallbackContext());
     }
 
-    public void OnTitleScreenPressed()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
-    }
-
     #region Rescue Timer
-
     public void ShowRescueTimer(float maxTime)
     {
         if (rescueTimerSlider == null) return;
-
         rescueTimerSlider.maxValue = maxTime;
         rescueTimerSlider.value = maxTime;
         rescueTimerSlider.gameObject.SetActive(true);
@@ -115,30 +101,25 @@ public class PlayerMenuController : MonoBehaviour
     public void UpdateRescueTimer(float timeLeft)
     {
         if (rescueTimerSlider == null) return;
-
         rescueTimerSlider.value = timeLeft;
     }
 
     public void HideRescueTimer()
     {
         if (rescueTimerSlider == null) return;
-
         rescueTimerSlider.gameObject.SetActive(false);
     }
-
     #endregion
 
     #region Character Swap UI Buttons
-
-    public void OnHumanButtonPressed()
+    public void OnCharacterButtonPressed(int index)
     {
-        playerSwapHandler?.SwapToHuman();
+        GetComponent<PlayerSwapHandler>()?.SwapToCharacter(index);
     }
 
-    public void OnBirdButtonPressed()
+    public void OnCharacterButtonPressed(string characterName)
     {
-        playerSwapHandler?.SwapToBird();
+        GetComponent<PlayerSwapHandler>()?.SwapToCharacter(characterName);
     }
-
     #endregion
 }
