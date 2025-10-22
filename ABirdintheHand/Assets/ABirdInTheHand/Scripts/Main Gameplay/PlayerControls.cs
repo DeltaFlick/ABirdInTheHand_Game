@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <Summary>
+/// <summary>
 /// Human & Bird Player Controls
-/// </Summary>
+/// </summary>
 
-
+[RequireComponent(typeof(Rigidbody), typeof(PlayerInput))]
 public class PlayerControls : MonoBehaviour
 {
     private InputActionAsset inputAsset;
@@ -25,6 +25,8 @@ public class PlayerControls : MonoBehaviour
 
     public PlayerInput pi { get; private set; }
     [SerializeField] public Camera playerCamera;
+
+    private Transform currentVisual;
 
     [Header("Ground Check Settings")]
     [SerializeField] private Transform groundCheck;
@@ -56,6 +58,18 @@ public class PlayerControls : MonoBehaviour
         look = playerMap.FindAction("Look");
 
         birdIdentifier = GetComponent<BirdIdentifier>();
+
+        var swapHandler = GetComponent<OverlordSwapHandler>();
+        if (swapHandler != null)
+            swapHandler.OnVisualChanged += HandleVisualChanged;
+    }
+
+    private void HandleVisualChanged(GameObject newVisual)
+    {
+        currentVisual = newVisual != null ? newVisual.transform : null;
+
+        if (playerCamera == null)
+            playerCamera = GetComponentInChildren<Camera>(true);
     }
 
     private void OnEnable()
@@ -81,6 +95,7 @@ public class PlayerControls : MonoBehaviour
     private void FixedUpdate()
     {
         if (rb.isKinematic) return;
+        if (playerCamera == null || move == null) return;
 
         Vector2 moveInput = move.ReadValue<Vector2>();
 
@@ -103,7 +118,6 @@ public class PlayerControls : MonoBehaviour
             return;
         }
 
-        //If Caged
         float speedMultiplier = 1f;
         if (birdIdentifier != null && birdIdentifier.IsCaged)
             speedMultiplier = cagedSpeedMultiplier;
@@ -136,6 +150,8 @@ public class PlayerControls : MonoBehaviour
 
     private void LookAt()
     {
+        if (playerCamera == null || currentVisual == null) return;
+
         Vector3 lookDirection = playerCamera.transform.forward;
         lookDirection.y = 0f;
 
@@ -148,12 +164,14 @@ public class PlayerControls : MonoBehaviour
 
     private Vector3 GetCameraForward(Camera playerCamera)
     {
-        return playerCamera.GetComponent<CameraController>().orientation.forward;
+        var controller = playerCamera.GetComponent<CameraController>();
+        return controller != null ? controller.orientation.forward : playerCamera.transform.forward;
     }
 
     private Vector3 GetCameraRight(Camera playerCamera)
     {
-        return playerCamera.GetComponent<CameraController>().orientation.right;
+        var controller = playerCamera.GetComponent<CameraController>();
+        return controller != null ? controller.orientation.right : playerCamera.transform.right;
     }
 
     private void DoJump(InputAction.CallbackContext context)
@@ -178,7 +196,7 @@ public class PlayerControls : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
+        return groundCheck != null && Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
     }
 
     #region Ladder Climbing
@@ -204,5 +222,3 @@ public class PlayerControls : MonoBehaviour
 
     #endregion
 }
-
-

@@ -32,10 +32,14 @@ public class PickupController : MonoBehaviour
 
     private RigidbodyConstraints originalConstraints;
 
-    void Awake()
+    private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
         playerCamera = GetComponentInChildren<Camera>();
+
+        var swapHandler = GetComponent<OverlordSwapHandler>();
+        if (swapHandler != null)
+            swapHandler.OnVisualChanged += OnVisualChanged;
     }
 
     void OnEnable()
@@ -50,20 +54,24 @@ public class PickupController : MonoBehaviour
 
     void Update()
     {
-        if (playerInput.actions["Grab"].triggered)
+        if (playerInput == null || playerInput.actions == null)
+            return;
+
+        var grabAction = playerInput.actions.FindAction("Grab", false);
+        if (grabAction == null)
+            return;
+
+        if (grabAction.triggered)
         {
             if (heldObj == null)
-            {
                 TryPickup();
-            }
             else
-            {
                 DropObject();
-            }
         }
 
         HandleCrosshairFeedback();
     }
+
 
     void FixedUpdate()
     {
@@ -75,7 +83,8 @@ public class PickupController : MonoBehaviour
 
     void TryPickup()
     {
-        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, pickupRange))
+        if (playerCamera == null) return;
+    if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, pickupRange))
         {
             Rigidbody rb = hit.rigidbody;
             if (rb != null)
@@ -145,6 +154,19 @@ public class PickupController : MonoBehaviour
         heldObj = null;
         heldObjRB = null;
         joint = null;
+    }
+
+    private void OnDestroy()
+    {
+        var swapHandler = GetComponent<OverlordSwapHandler>();
+        if (swapHandler != null)
+            swapHandler.OnVisualChanged -= OnVisualChanged;
+    }
+
+    private void OnVisualChanged(GameObject newVisual)
+    {
+        if (newVisual == null) return;
+        playerCamera = GetComponentInChildren<Camera>();
     }
 
     void HandleCrosshairFeedback()

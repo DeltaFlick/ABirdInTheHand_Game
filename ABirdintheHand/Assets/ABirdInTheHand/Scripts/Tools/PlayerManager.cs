@@ -13,7 +13,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Player Setup")]
     [SerializeField] private List<Transform> startingPoints;
-    [SerializeField] private List<LayerMask> playerLayers;
+    [SerializeField] public List<LayerMask> playerLayers;
 
     private PlayerInputManager playerInputManager;
 

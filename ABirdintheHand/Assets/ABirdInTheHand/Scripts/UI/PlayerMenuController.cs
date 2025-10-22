@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(PlayerUIManager))]
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerMenuController : MonoBehaviour
 {
     [Header("Menu UI")]
@@ -13,21 +15,23 @@ public class PlayerMenuController : MonoBehaviour
     [SerializeField] private GameObject crosshairCanvas;
     [SerializeField] private Slider rescueTimerSlider;
 
-    [Header("First Selected")]
+    [Header("First Selected Buttons")]
     [SerializeField] private Button preRoundSelectedElement;
     [SerializeField] private Button inRoundSelectedElement;
 
     private PlayerInput playerInput;
     private InputAction menuAction;
-    private InputSystemUIInputModule uiModule;
-
+    private PlayerUIManager uiManager;
     private bool menuOpen = false;
     private bool roundHasStarted = false;
+
+    private OverlordSwapHandler swapHandler;
 
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        uiModule = GetComponentInChildren<InputSystemUIInputModule>(true);
+        swapHandler = GetComponent<OverlordSwapHandler>();
+        uiManager = GetComponent<PlayerUIManager>();
 
         playerInput.actions.FindActionMap("UI")?.Enable();
         menuAction = playerInput.actions.FindAction("UI/Menu");
@@ -62,13 +66,13 @@ public class PlayerMenuController : MonoBehaviour
         if (roundHasStarted)
         {
             if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(menuOpen);
-            SetSelected(inRoundSelectedElement);
+            if (menuOpen) SetSelected(inRoundSelectedElement);
             if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(false);
         }
         else
         {
             if (preRoundMenuPanel != null) preRoundMenuPanel.SetActive(menuOpen);
-            SetSelected(preRoundSelectedElement);
+            if (menuOpen) SetSelected(preRoundSelectedElement);
             if (inRoundMenuPanel != null) inRoundMenuPanel.SetActive(false);
         }
 
@@ -76,17 +80,31 @@ public class PlayerMenuController : MonoBehaviour
 
         var controls = GetComponent<PlayerControls>();
         if (controls != null) controls.SetControlsEnabled(!menuOpen);
+
+        if (uiManager != null) uiManager.SetUIEnabled(menuOpen);
     }
 
     private void SetSelected(Button button)
     {
-        if (button != null) button.Select();
+        if (button == null || uiManager == null || !menuOpen) return;
+
+        EventSystem es = uiManager.EventSystem;
+        if (es != null)
+        {
+            if (es.currentSelectedGameObject != button.gameObject)
+            {
+                es.SetSelectedGameObject(null);
+                es.SetSelectedGameObject(button.gameObject);
+            }
+        }
     }
 
     public void SetRoundStarted(bool started)
     {
         roundHasStarted = started;
-        if (menuOpen) ToggleMenu(new InputAction.CallbackContext());
+
+        if (menuOpen)
+            ToggleMenu(new InputAction.CallbackContext());
     }
 
     #region Rescue Timer
@@ -114,12 +132,18 @@ public class PlayerMenuController : MonoBehaviour
     #region Character Swap UI Buttons
     public void OnCharacterButtonPressed(int index)
     {
-        GetComponent<PlayerSwapHandler>()?.SwapToCharacter(index);
+        if (swapHandler != null)
+            swapHandler.SwapToCharacter(index);
+        else
+            Debug.LogWarning("No OverlordSwapHandler found on this player!");
     }
 
     public void OnCharacterButtonPressed(string characterName)
     {
-        GetComponent<PlayerSwapHandler>()?.SwapToCharacter(characterName);
+        if (swapHandler != null)
+            swapHandler.SwapToCharacter(characterName);
+        else
+            Debug.LogWarning("No OverlordSwapHandler found on this player!");
     }
     #endregion
 }

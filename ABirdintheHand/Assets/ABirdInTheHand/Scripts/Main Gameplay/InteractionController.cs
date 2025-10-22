@@ -12,46 +12,45 @@ public class InteractionController : MonoBehaviour
     [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private Camera playerCamera;
-
     [SerializeField] private ShaderSwapper shaderSwapper;
 
     private PlayerInput playerInput;
     private InputAction interactAction;
     private IInteractable currentInteractable;
 
-
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        interactAction = playerInput.actions["Interact"];
+        if (playerInput != null && playerInput.actions != null)
+            interactAction = playerInput.actions.FindAction("Interact", true);
+
+        var swapHandler = GetComponent<OverlordSwapHandler>();
+        if (swapHandler != null)
+            swapHandler.OnVisualChanged += OnVisualChanged;
 
         if (playerCamera == null)
-        {
-            PlayerControls pc = GetComponent<PlayerControls>();
-            if (pc != null)
-                playerCamera = pc.playerCamera;
-        }
+            playerCamera = GetComponentInChildren<Camera>(true);
+
         if (shaderSwapper == null)
-        {
-
             shaderSwapper = GetComponent<ShaderSwapper>();
-        }
-
     }
 
     private void OnEnable()
     {
-        interactAction.performed += TryInteract;
+        if (interactAction != null)
+            interactAction.performed += TryInteract;
     }
 
     private void OnDisable()
     {
-        interactAction.performed -= TryInteract;
+        if (interactAction != null)
+            interactAction.performed -= TryInteract;
     }
 
     private void Update()
     {
-        
+        if (playerCamera == null) return;
+
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance, interactableMask))
@@ -65,13 +64,11 @@ public class InteractionController : MonoBehaviour
                     if (currentInteractable != null)
                     {
                         currentInteractable.HidePrompt();
-
                         shaderSwapper.RevertShader();
                     }
                     currentInteractable = interactable;
                     currentInteractable.ShowPrompt();
                     shaderSwapper.ChangeShader(hit.collider.gameObject, playerCamera);
-
                 }
                 return;
             }
@@ -85,11 +82,28 @@ public class InteractionController : MonoBehaviour
         }
     }
 
-   
-
     private void TryInteract(InputAction.CallbackContext context)
     {
         if (currentInteractable != null)
             currentInteractable.Interact(this);
+    }
+
+    private void OnDestroy()
+    {
+        var swapHandler = GetComponent<OverlordSwapHandler>();
+        if (swapHandler != null)
+            swapHandler.OnVisualChanged -= OnVisualChanged;
+    }
+
+    private void OnVisualChanged(GameObject newVisual)
+    {
+        if (newVisual == null) return;
+
+        CameraHolder holder = newVisual.GetComponentInChildren<CameraHolder>(true);
+        if (holder != null)
+            playerCamera = GetComponentInChildren<Camera>(true);
+
+        if (shaderSwapper != null)
+            shaderSwapper.ResetVisualReference(newVisual);
     }
 }

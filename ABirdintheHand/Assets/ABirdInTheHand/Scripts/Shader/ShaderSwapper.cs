@@ -37,7 +37,7 @@ public class ShaderSwapper : MonoBehaviour
             {
                 RevertShader();
             }
-            
+
             currentTargetObject = targetObject;
         }
 
@@ -55,6 +55,12 @@ public class ShaderSwapper : MonoBehaviour
         {
             Debug.LogWarning($"Player {playerID} ShaderSwapper: PlayerCustomPass is null!");
         }
+    }
+
+    public void ResetVisualReference(GameObject newVisual)
+    {
+        if (newVisual != null)
+            currentTargetObject = newVisual;
     }
 
     public void RemoveCamera(Camera targetCamera)
