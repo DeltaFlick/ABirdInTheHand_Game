@@ -4017,6 +4017,8 @@ MonoBehaviour:
   - {fileID: 8604302888432055130, guid: cf3fc209196a64149b85ab28592a59fd, type: 3}
   - {fileID: 6382745944688607442, guid: 343bdef64e15a014298b2fb3bb574380, type: 3}
   - {fileID: 2817075431763434969, guid: a786cd8715f418747970a2a985556355, type: 3}
+  playerRoot: {fileID: 0}
+  playerCamera: {fileID: 0}
 --- !u!114 &5617147185944329464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4087,7 +4089,7 @@ MonoBehaviour:
   movementForce: 1
   jumpForce: 5
   maxSpeed: 5
-  playerCamera: {fileID: 4497450071701274619}
+  playerCamera: {fileID: 0}
   groundCheck: {fileID: 1241174829988506803}
   groundCheckRadius: 0.2
   groundMask:
