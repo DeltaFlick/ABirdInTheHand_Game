@@ -3,10 +3,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-/// <Summary>
-/// Pickup system controller
-/// </Summary>
-
+/// <summary>
+/// Pickup system controller — works from the Overlord and follows the active player camera.
+/// Automatically enables when the current visual has a HumanIdentifier.
+/// </summary>
 public class PickupController : MonoBehaviour
 {
     [Header("Pickup Settings")]
@@ -29,32 +29,51 @@ public class PickupController : MonoBehaviour
     private SpringJoint joint;
     private PlayerInput playerInput;
     private Camera playerCamera;
-
     private RigidbodyConstraints originalConstraints;
+    private bool canPickup = false;
+    private GameObject currentVisual;
 
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        playerCamera = GetComponentInChildren<Camera>();
 
         var swapHandler = GetComponent<OverlordSwapHandler>();
         if (swapHandler != null)
+        {
             swapHandler.OnVisualChanged += OnVisualChanged;
+
+            if (swapHandler.CurrentVisual != null)
+                OnVisualChanged(swapHandler.CurrentVisual);
+        }
     }
 
-    void OnEnable()
+    private void Start()
+    {
+        if (holdArea == null)
+        {
+            playerCamera = GetComponentInChildren<Camera>(true);
+            if (playerCamera != null)
+            {
+                Transform found = playerCamera.transform.Find("HoldArea");
+                if (found != null)
+                    holdArea = found;
+            }
+        }
+    }
+
+    private void OnEnable()
     {
         ForceDrop.ForceDropAll += DropObject;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         ForceDrop.ForceDropAll -= DropObject;
     }
 
-    void Update()
+    private void Update()
     {
-        if (playerInput == null || playerInput.actions == null)
+        if (!canPickup || playerInput == null || playerInput.actions == null)
             return;
 
         var grabAction = playerInput.actions.FindAction("Grab", false);
@@ -72,19 +91,19 @@ public class PickupController : MonoBehaviour
         HandleCrosshairFeedback();
     }
 
-
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (joint != null)
+        if (joint != null && holdArea != null)
         {
             joint.connectedAnchor = holdArea.position;
         }
     }
 
-    void TryPickup()
+    private void TryPickup()
     {
         if (playerCamera == null) return;
-    if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, pickupRange))
+
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, pickupRange))
         {
             Rigidbody rb = hit.rigidbody;
             if (rb != null)
@@ -94,9 +113,7 @@ public class PickupController : MonoBehaviour
 
                 BirdIdentifier bird = heldObj.GetComponent<BirdIdentifier>();
                 if (bird != null)
-                {
                     bird.IsBeingHeld = true;
-                }
 
                 heldObjRB.useGravity = true;
                 heldObjRB.drag = 4f;
@@ -123,32 +140,23 @@ public class PickupController : MonoBehaviour
         }
     }
 
-    void DropObject()
+    public void DropObject()
     {
         if (joint != null)
-        {
             Destroy(joint);
-        }
 
         if (heldObjRB != null)
         {
-
             BirdIdentifier bird = heldObj.GetComponent<BirdIdentifier>();
             if (bird != null)
-            {
                 bird.IsBeingHeld = false;
-            }
 
             heldObjRB.drag = 1f;
 
             if (heldObj.CompareTag("Player"))
-            {
                 heldObjRB.constraints = originalConstraints;
-            }
             else
-            {
                 heldObjRB.constraints = RigidbodyConstraints.None;
-            }
         }
 
         heldObj = null;
@@ -165,14 +173,44 @@ public class PickupController : MonoBehaviour
 
     private void OnVisualChanged(GameObject newVisual)
     {
-        if (newVisual == null) return;
-        playerCamera = GetComponentInChildren<Camera>();
+        currentVisual = newVisual;
+        playerCamera = GetComponentInChildren<Camera>(true);
+
+        if (playerCamera != null)
+        {
+            Transform foundHoldArea = playerCamera.transform.Find("HoldArea");
+
+            if (foundHoldArea != null)
+            {
+                holdArea = foundHoldArea;
+                Debug.Log($"[PickupController] Found hold area on {playerCamera.name}");
+            }
+            else
+            {
+                Debug.LogWarning($"[PickupController] No HoldArea found under {playerCamera.name}! Please create one.");
+            }
+        }
+
+        bool isHuman = newVisual != null && newVisual.GetComponent<HumanIdentifier>() != null;
+        canPickup = isHuman;
+
+        if (!isHuman)
+            DropObject();
+
+        Debug.Log($"[PickupController] {(isHuman ? "Enabled" : "Disabled")} for {newVisual.name}");
     }
 
-    void HandleCrosshairFeedback()
+    private void HandleCrosshairFeedback()
     {
-        if (crosshair == null)
+        if (crosshair == null || playerCamera == null)
             return;
+
+        if (!canPickup)
+        {
+            crosshair.sprite = defaultSprite;
+            crosshair.color = defaultColor;
+            return;
+        }
 
         if (heldObj != null)
         {
