@@ -2338,6 +2338,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 0
+  isJumping: 0
+  walkingAnim: 0
+  jumpingAnim: 0
   movementForce: 1
   jumpForce: 5
   maxSpeed: 5
@@ -3635,6 +3638,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 261823b5660e1df4bb689b8909facd19,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: bc43906e51657724a8bf710524e76b88, type: 2}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 261823b5660e1df4bb689b8909facd19, type: 3}
@@ -3644,3 +3652,21 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4659978217602223930}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5506486921514201707 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 261823b5660e1df4bb689b8909facd19,
+    type: 3}
+  m_PrefabInstance: {fileID: 4659978217602223930}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8481551870856316346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5506486921514201707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b6d23ae90497e4ea525ff9bf7afaa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

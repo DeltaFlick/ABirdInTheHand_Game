@@ -16,6 +16,13 @@ public class PlayerControls : MonoBehaviour
     private InputAction move;
     private InputAction look;
     public bool isWalking = false;
+    public bool isJumping = false; 
+    //public bool isWiggling = false;
+
+    //outgoing animation variables
+    public bool walkingAnim = false;
+    public bool jumpingAnim = false;
+    //public bool wigglingAnim = false; 
 
     private Rigidbody rb;
     [SerializeField] private float movementForce = 1f;
@@ -92,13 +99,53 @@ public class PlayerControls : MonoBehaviour
             pi.actions.FindActionMap("Player")?.Disable();
     }
 
+    private void UpdateAnimationBools()
+    {
+        //dunno if this is the best way but, it does work
+        switch (isWalking)
+        {
+            case true:
+                walkingAnim = true;
+                break;
+            case false:
+                walkingAnim = false;
+                break;
+        }
+
+        switch (isJumping)
+        {
+            case true:
+                jumpingAnim = true;
+                break;
+            case false:
+                jumpingAnim = false;
+                break;
+        }
+
+        // Uncomment when wiggling is implemented
+        /*
+        switch (isWiggling)
+        {
+            case true:
+                wigglingAnim = true;
+                break;
+            case false:
+                wigglingAnim = false;
+                break;
+        }
+        */
+    }
+
     private void FixedUpdate()
     {
+        UpdateAnimationBools();
+        
         if (rb.isKinematic) return;
         if (playerCamera == null || move == null) return;
 
         Vector2 moveInput = move.ReadValue<Vector2>();
 
+        
         if (isOnLadder)
         {
             Vector3 climbDirection = Vector3.up * moveInput.y;
@@ -144,8 +191,10 @@ public class PlayerControls : MonoBehaviour
             counterForce.y = 0f;
             rb.AddForce(counterForce * counterSlidingForce, ForceMode.Impulse);
         }
-
+        isJumping = !IsGrounded() && rb.velocity.y > 0.1f;
         LookAt();
+        UpdateAnimationBools();
+
     }
 
     private void LookAt()

@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: 6557d85543c8e6246b8ff1fa881ccb06
+guid: 3225eecb2917cce40a95e345668f4899
 ModelImporter:
   serializedVersion: 22103
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BirdUV
+    second: {fileID: 2100000, guid: f7a9dc3317752aa43a1622686be4cca2, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -90,7 +95,7 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     globalScale: 1
-    rootMotionBoneName: Central_Body
+    rootMotionBoneName: Root
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
