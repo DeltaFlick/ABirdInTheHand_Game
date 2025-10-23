@@ -930,6 +930,7 @@ GameObject:
   - component: {fileID: 4979947854572047704}
   - component: {fileID: 4738466204387075972}
   - component: {fileID: 4841773789029727810}
+  - component: {fileID: 837200082910624855}
   m_Layer: 0
   m_Name: BudgieBluePrefab
   m_TagString: Player
@@ -1045,6 +1046,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 0
+  isJumping: 0
+  walkingAnim: 0
+  jumpingAnim: 0
   movementForce: 1
   jumpForce: 5
   maxSpeed: 5
@@ -1126,6 +1130,20 @@ MonoBehaviour:
   - {fileID: 8604302888432055130, guid: cf3fc209196a64149b85ab28592a59fd, type: 3}
   - {fileID: 6382745944688607442, guid: 343bdef64e15a014298b2fb3bb574380, type: 3}
   - {fileID: 2817075431763434969, guid: a786cd8715f418747970a2a985556355, type: 3}
+--- !u!114 &837200082910624855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 875751516066361114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d094e837da716d9458fb0c3d47964c6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiModule: {fileID: 0}
+  eventSystem: {fileID: 0}
 --- !u!1 &875751516100805536
 GameObject:
   m_ObjectHideFlags: 0

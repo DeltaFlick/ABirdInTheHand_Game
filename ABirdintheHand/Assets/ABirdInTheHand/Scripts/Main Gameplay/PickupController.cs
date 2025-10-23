@@ -4,8 +4,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// Pickup system controller — works from the Overlord and follows the active player camera.
-/// Automatically enables when the current visual has a HumanIdentifier.
+/// Pickup system controller — works with Overlord characters
+/// Automatically enables when the current visual has a HumanIdentifier
 /// </summary>
 public class PickupController : MonoBehaviour
 {
@@ -49,43 +49,31 @@ public class PickupController : MonoBehaviour
 
     private void Start()
     {
-        if (holdArea == null)
-        {
+        if (holdArea == null && playerCamera == null)
             playerCamera = GetComponentInChildren<Camera>(true);
-            if (playerCamera != null)
-            {
-                Transform found = playerCamera.transform.Find("HoldArea");
-                if (found != null)
-                    holdArea = found;
-            }
+
+        if (holdArea == null && playerCamera != null)
+        {
+            Transform found = playerCamera.transform.Find("HoldArea");
+            if (found != null)
+                holdArea = found;
         }
     }
 
-    private void OnEnable()
-    {
-        ForceDrop.ForceDropAll += DropObject;
-    }
-
-    private void OnDisable()
-    {
-        ForceDrop.ForceDropAll -= DropObject;
-    }
+    private void OnEnable() => ForceDrop.ForceDropAll += DropObject;
+    private void OnDisable() => ForceDrop.ForceDropAll -= DropObject;
 
     private void Update()
     {
-        if (!canPickup || playerInput == null || playerInput.actions == null)
-            return;
+        if (!canPickup || playerInput == null || playerInput.actions == null) return;
 
         var grabAction = playerInput.actions.FindAction("Grab", false);
-        if (grabAction == null)
-            return;
+        if (grabAction == null) return;
 
         if (grabAction.triggered)
         {
-            if (heldObj == null)
-                TryPickup();
-            else
-                DropObject();
+            if (heldObj == null) TryPickup();
+            else DropObject();
         }
 
         HandleCrosshairFeedback();
@@ -94,9 +82,7 @@ public class PickupController : MonoBehaviour
     private void FixedUpdate()
     {
         if (joint != null && holdArea != null)
-        {
             joint.connectedAnchor = holdArea.position;
-        }
     }
 
     private void TryPickup()
@@ -108,12 +94,12 @@ public class PickupController : MonoBehaviour
             Rigidbody rb = hit.rigidbody;
             if (rb != null)
             {
-                heldObj = rb.gameObject;
-                heldObjRB = rb;
+                heldObj = rb.transform.root.gameObject;
+                heldObjRB = rb.transform.root.GetComponent<Rigidbody>();
+                if (heldObjRB == null) heldObjRB = rb;
 
-                BirdIdentifier bird = heldObj.GetComponent<BirdIdentifier>();
-                if (bird != null)
-                    bird.IsBeingHeld = true;
+                BirdIdentifier bird = heldObj.GetComponentInChildren<BirdIdentifier>();
+                if (bird != null) bird.IsBeingHeld = true;
 
                 heldObjRB.useGravity = true;
                 heldObjRB.drag = 4f;
@@ -142,14 +128,12 @@ public class PickupController : MonoBehaviour
 
     public void DropObject()
     {
-        if (joint != null)
-            Destroy(joint);
+        if (joint != null) Destroy(joint);
 
         if (heldObjRB != null)
         {
-            BirdIdentifier bird = heldObj.GetComponent<BirdIdentifier>();
-            if (bird != null)
-                bird.IsBeingHeld = false;
+            BirdIdentifier bird = heldObj.GetComponentInChildren<BirdIdentifier>();
+            if (bird != null) bird.IsBeingHeld = false;
 
             heldObjRB.drag = 1f;
 
@@ -179,31 +163,23 @@ public class PickupController : MonoBehaviour
         if (playerCamera != null)
         {
             Transform foundHoldArea = playerCamera.transform.Find("HoldArea");
-
             if (foundHoldArea != null)
-            {
                 holdArea = foundHoldArea;
-                Debug.Log($"[PickupController] Found hold area on {playerCamera.name}");
-            }
             else
-            {
                 Debug.LogWarning($"[PickupController] No HoldArea found under {playerCamera.name}! Please create one.");
-            }
         }
 
         bool isHuman = newVisual != null && newVisual.GetComponent<HumanIdentifier>() != null;
         canPickup = isHuman;
 
-        if (!isHuman)
-            DropObject();
+        if (!isHuman) DropObject();
 
-        Debug.Log($"[PickupController] {(isHuman ? "Enabled" : "Disabled")} for {newVisual.name}");
+        Debug.Log($"[PickupController] {(isHuman ? "Enabled" : "Disabled")} for {newVisual?.name}");
     }
 
     private void HandleCrosshairFeedback()
     {
-        if (crosshair == null || playerCamera == null)
-            return;
+        if (crosshair == null || playerCamera == null) return;
 
         if (!canPickup)
         {

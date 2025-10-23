@@ -935,9 +935,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4142149638786449945}
   - component: {fileID: 4142149638786449932}
-  - component: {fileID: 4142149638786449935}
   - component: {fileID: 4142149638786449934}
   - component: {fileID: 8403432766354180742}
+  - component: {fileID: 7497374528005484956}
   m_Layer: 0
   m_Name: BudgieBluePrefab
   m_TagString: Player
@@ -979,20 +979,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!136 &4142149638786449935
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4142149638786449944}
-  m_Material: {fileID: 13400000, guid: 8dca026a47054cb41ae0d13655997c6a, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.06
-  m_Height: 0.12
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.06, z: 0}
 --- !u!114 &4142149638786449934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1018,6 +1004,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerID: 1
+--- !u!135 &7497374528005484956
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4142149638786449944}
+  m_Material: {fileID: 13400000, guid: 8dca026a47054cb41ae0d13655997c6a, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.21
+  m_Center: {x: 0, y: 0.21, z: 0}
 --- !u!1 &4142149639222558133
 GameObject:
   m_ObjectHideFlags: 0

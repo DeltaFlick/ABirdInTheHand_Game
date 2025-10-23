@@ -1,49 +1,70 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using TMPro;
+using UnityEngine;
+using TMPro;
 
-///// <Summary>
-///// Interact with station to swap to character
-///// </Summary>
+/// <summary>
+/// Interact with a station to swap to a character prefab
+/// Compatible with OverlordSwapHandler
+/// </summary>
+public class SwapStation : MonoBehaviour, IInteractable
+{
+    [Header("Swap Options")]
+    [Tooltip("Prefab to swap to when interacting")]
+    [SerializeField] private GameObject swapPrefab;
 
+    [Header("UI Prompt")]
+    [SerializeField] private GameObject promptUI;
+    [SerializeField] private TextMeshProUGUI promptText;
 
-//public class SwapStation : MonoBehaviour, IInteractable
-//{
-//    [Header("Swap Options")]
-//    public bool swapToHuman;
-//    public bool swapToBird;
+    /// <summary>
+    /// Returns the prompt text based on prefab type
+    /// </summary>
+    private string GetPromptText()
+    {
+        if (swapPrefab == null) return "Swap Unavailable";
 
-//    [Header("UI Prompt")]
-//    [SerializeField] private GameObject promptUI;
-//    [SerializeField] private TextMeshProUGUI promptText;
+        string type = swapPrefab.GetComponent<HumanIdentifier>() != null ? "Human" :
+                      swapPrefab.GetComponent<BirdIdentifier>() != null ? "Bird" : "Character";
 
-//    public void Interact(InteractionController interactor)
-//    {
-//        Debug.Log("Interacted!");
+        return $"Press Interact to become {type}";
+    }
 
-//        var swapHandler = interactor.GetComponentInParent<PlayerSwapHandler>();
-//        if (swapHandler == null) return;
+    /// <summary>
+    /// Called when a player interacts with the station
+    /// </summary>
+    public void Interact(InteractionController interactor)
+    {
+        if (swapPrefab == null || interactor == null) return;
 
-//        if (swapToHuman)
-//            swapHandler.SwapToHuman();
-//        else if (swapToBird)
-//            swapHandler.SwapToBird();
-//    }
+        // Get OverlordSwapHandler from root
+        var swapHandler = interactor.GetComponentInParent<OverlordSwapHandler>();
+        if (swapHandler == null) return;
 
-//    public void ShowPrompt()
-//    {
-//        if (promptUI != null)
-//        {
-//            promptUI.SetActive(true);
-//            if (promptText != null)
-//                promptText.text = swapToHuman ? "Press Interact to become Human" : "Press Interact to become Bird";
-//        }
-//    }
+        // Find matching prefab in handler's characterPrefabs list
+        GameObject targetPrefab = swapHandler.GetPrefabByReference(swapPrefab);
+        if (targetPrefab != null)
+        {
+            swapHandler.SwapToCharacter(targetPrefab.name);
+            Debug.Log($"[SwapStation] {interactor.name} swapped to {swapPrefab.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"[SwapStation] SwapPrefab {swapPrefab.name} not found in OverlordSwapHandler's characterPrefabs list.");
+        }
+    }
 
-//    public void HidePrompt()
-//    {
-//        if (promptUI != null)
-//            promptUI.SetActive(false);
-//    }
-//}
+    public void ShowPrompt()
+    {
+        if (promptUI != null)
+        {
+            promptUI.SetActive(true);
+            if (promptText != null)
+                promptText.text = GetPromptText();
+        }
+    }
+
+    public void HidePrompt()
+    {
+        if (promptUI != null)
+            promptUI.SetActive(false);
+    }
+}

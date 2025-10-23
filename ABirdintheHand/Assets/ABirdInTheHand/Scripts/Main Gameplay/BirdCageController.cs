@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <Summary>
+/// <summary>
 /// Trapping & Releasing Birds
-/// </Summary>
+/// </summary>
 
 public class BirdCageController : MonoBehaviour
 {
@@ -23,16 +23,17 @@ public class BirdCageController : MonoBehaviour
     private HashSet<BirdIdentifier> freeBirdsInTrigger = new HashSet<BirdIdentifier>();
     private Coroutine rescueRoutine;
     private BirdIdentifier currentRescuer;
-    private GameObject birdToTeleport;
 
     private void OnTriggerEnter(Collider other)
     {
-        BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
+        BirdIdentifier bird = BirdIdentifier.GetFromOverlord(other.gameObject);
         if (bird == null) return;
+
+        GameObject birdRoot = bird.transform.root.gameObject;
 
         if (bird.IsBeingHeld)
         {
-            TeleportToCage(bird.gameObject);
+            TeleportToCage(birdRoot, bird);
             return;
         }
 
@@ -50,10 +51,8 @@ public class BirdCageController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        BirdIdentifier bird = other.GetComponent<BirdIdentifier>();
-        if (bird == null) return;
-
-        if (bird.IsCaged) return;
+        BirdIdentifier bird = BirdIdentifier.GetFromOverlord(other.gameObject);
+        if (bird == null || bird.IsCaged) return;
 
         if (freeBirdsInTrigger.Contains(bird))
         {
@@ -69,7 +68,7 @@ public class BirdCageController : MonoBehaviour
         }
     }
 
-    private void TeleportToCage(GameObject bird)
+    private void TeleportToCage(GameObject birdRoot, BirdIdentifier bird)
     {
         if (cageSpawnPoint == null)
         {
@@ -77,34 +76,26 @@ public class BirdCageController : MonoBehaviour
             return;
         }
 
-        birdToTeleport = bird;
-        Rigidbody rb = bird.GetComponent<Rigidbody>();
-        BirdIdentifier birdId = bird.GetComponent<BirdIdentifier>();
+        foreach (var rb in birdRoot.GetComponentsInChildren<Rigidbody>())
+            rb.isKinematic = true;
 
-        if (rb != null) rb.isKinematic = true;
-
-        bird.transform.position = cageSpawnPoint.position;
-        bird.transform.rotation = cageSpawnPoint.rotation;
+        birdRoot.transform.position = cageSpawnPoint.position;
+        birdRoot.transform.rotation = cageSpawnPoint.rotation;
         Physics.SyncTransforms();
 
-        if (birdId != null)
-        {
-            birdId.IsCaged = true;
-            birdId.IsBeingHeld = false;
-        }
+        bird.IsCaged = true;
+        bird.IsBeingHeld = false;
 
-        Invoke(nameof(EnableBirdMovement), teleportDelay);
-        RegisterCagedBird(birdId);
+        StartCoroutine(ReenablePhysics(birdRoot));
+
+        RegisterCagedBird(bird);
     }
 
-    private void EnableBirdMovement()
+    private IEnumerator ReenablePhysics(GameObject birdRoot)
     {
-        if (birdToTeleport != null)
-        {
-            Rigidbody rb = birdToTeleport.GetComponent<Rigidbody>();
-            if (rb != null)
-                rb.isKinematic = false;
-        }
+        yield return new WaitForSeconds(teleportDelay);
+        foreach (var rb in birdRoot.GetComponentsInChildren<Rigidbody>())
+            rb.isKinematic = false;
     }
 
     #region Rescue Mechanic
@@ -154,13 +145,15 @@ public class BirdCageController : MonoBehaviour
         {
             if (bird == null) continue;
 
-            Rigidbody rb = bird.GetComponent<Rigidbody>();
-            if (rb != null) rb.isKinematic = false;
+            GameObject birdRoot = bird.transform.root.gameObject;
+
+            foreach (var rb in birdRoot.GetComponentsInChildren<Rigidbody>())
+                rb.isKinematic = false;
 
             if (releasePoint != null)
             {
-                bird.transform.position = releasePoint.position;
-                bird.transform.rotation = releasePoint.rotation;
+                birdRoot.transform.position = releasePoint.position;
+                birdRoot.transform.rotation = releasePoint.rotation;
             }
 
             bird.IsCaged = false;
@@ -178,6 +171,10 @@ public class BirdCageController : MonoBehaviour
         int totalBirds = 5; // TODO: replace with BirdManager.Instance.GetBirdCount()
 
         if (birdsInCage.Count == totalBirds)
+
+        //int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
+
+        //if (birdsInCage.Count == totalBirds && totalBirds > 0)
         {
             Debug.Log("[BirdCageController] All birds caged, humans win!");
             if (!string.IsNullOrEmpty(humansWinSceneName))

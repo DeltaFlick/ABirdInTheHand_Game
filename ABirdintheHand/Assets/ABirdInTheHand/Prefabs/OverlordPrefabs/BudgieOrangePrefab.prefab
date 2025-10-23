@@ -41,9 +41,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7002530323402394029}
   - component: {fileID: 7002530323402394040}
-  - component: {fileID: 7002530323402394043}
   - component: {fileID: 7002530323402394042}
   - component: {fileID: 3227073838794096946}
+  - component: {fileID: 3289354115295266702}
   m_Layer: 0
   m_Name: BudgieOrangePrefab
   m_TagString: Player
@@ -85,20 +85,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!136 &7002530323402394043
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7002530323402394028}
-  m_Material: {fileID: 13400000, guid: 8dca026a47054cb41ae0d13655997c6a, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.06
-  m_Height: 0.12
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.06, z: 0}
 --- !u!114 &7002530323402394042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,6 +110,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerID: 1
+--- !u!135 &3289354115295266702
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002530323402394028}
+  m_Material: {fileID: 13400000, guid: 8dca026a47054cb41ae0d13655997c6a, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.21
+  m_Center: {x: 0, y: 0.21, z: 0}
 --- !u!1 &7002530323706902017
 GameObject:
   m_ObjectHideFlags: 0

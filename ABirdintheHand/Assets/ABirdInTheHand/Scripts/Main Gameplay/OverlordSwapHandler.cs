@@ -65,6 +65,12 @@ public class OverlordSwapHandler : MonoBehaviour
         if (prefab != null) Swap(prefab);
     }
 
+    public GameObject GetPrefabByReference(GameObject prefab)
+    {
+        if (characterPrefabs == null || prefab == null) return null;
+        return characterPrefabs.Find(p => p == prefab);
+    }
+
     private void Swap(GameObject newPrefab)
     {
         if (newPrefab == null) return;
