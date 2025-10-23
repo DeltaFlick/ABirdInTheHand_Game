@@ -3,21 +3,17 @@ using TMPro;
 
 /// <summary>
 /// Interact with a station to swap to a character prefab
-/// Compatible with OverlordSwapHandler
 /// </summary>
+
 public class SwapStation : MonoBehaviour, IInteractable
 {
     [Header("Swap Options")]
-    [Tooltip("Prefab to swap to when interacting")]
     [SerializeField] private GameObject swapPrefab;
 
     [Header("UI Prompt")]
     [SerializeField] private GameObject promptUI;
     [SerializeField] private TextMeshProUGUI promptText;
 
-    /// <summary>
-    /// Returns the prompt text based on prefab type
-    /// </summary>
     private string GetPromptText()
     {
         if (swapPrefab == null) return "Swap Unavailable";
@@ -28,18 +24,13 @@ public class SwapStation : MonoBehaviour, IInteractable
         return $"Press Interact to become {type}";
     }
 
-    /// <summary>
-    /// Called when a player interacts with the station
-    /// </summary>
     public void Interact(InteractionController interactor)
     {
         if (swapPrefab == null || interactor == null) return;
 
-        // Get OverlordSwapHandler from root
         var swapHandler = interactor.GetComponentInParent<OverlordSwapHandler>();
         if (swapHandler == null) return;
 
-        // Find matching prefab in handler's characterPrefabs list
         GameObject targetPrefab = swapHandler.GetPrefabByReference(swapPrefab);
         if (targetPrefab != null)
         {

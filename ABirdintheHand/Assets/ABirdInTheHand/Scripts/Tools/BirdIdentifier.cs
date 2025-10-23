@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Identify Birds through script
 /// </summary>
+
 public class BirdIdentifier : MonoBehaviour
 {
     public bool IsBeingHeld { get; set; }

@@ -4,9 +4,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// Pickup system controller — works with Overlord characters
-/// Automatically enables when the current visual has a HumanIdentifier
+/// Pickup system controller
 /// </summary>
+
 public class PickupController : MonoBehaviour
 {
     [Header("Pickup Settings")]

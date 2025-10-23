@@ -5,20 +5,20 @@ using FMODUnity;
 [Serializable]
 public class AudioProfile
 {
-    public string profileName;       // Name of the visual prefab
-    public EventReference footstep;  // Footstep sound
-    public float footstepRate = 0.5f; // Seconds between footsteps
-    // Add more sounds here if needed, e.g., jump, landing, attack
+    public string profileName;
+    public EventReference footstep;
+    public float footstepRate = 0.5f;
 }
 
 /// <summary>
-/// Modular audio manager compatible with Overlord characters
+/// Modular audio manager
 /// </summary>
+
 [RequireComponent(typeof(OverlordSwapHandler))]
 [RequireComponent(typeof(PlayerControls))]
 public class OverlordAudioManager : MonoBehaviour
 {
-    [Header("Audio Profiles for Each Visual")]
+    [Header("Audio Profiles")]
     [SerializeField] private AudioProfile[] audioProfiles;
 
     private OverlordSwapHandler swapHandler;
@@ -54,19 +54,15 @@ public class OverlordAudioManager : MonoBehaviour
             return;
         }
 
-        // Use the identifiers to determine which profile to use
         if (currentVisual.GetComponent<HumanIdentifier>() != null)
         {
-            // Use the first AudioProfile with "Human" in the profileName (or assign manually)
             currentProfile = Array.Find(audioProfiles, p => p.profileName.Contains("Human"));
         }
         else if (currentVisual.GetComponent<BirdIdentifier>() != null)
         {
-            // Use the first AudioProfile with "Bird" in the profileName
             currentProfile = Array.Find(audioProfiles, p => p.profileName.Contains("Bird"));
         }
 
-        // Fallback if nothing matched
         if (currentProfile == null)
             currentProfile = audioProfiles[0];
 
@@ -80,7 +76,6 @@ public class OverlordAudioManager : MonoBehaviour
 
         footstepTimer += Time.deltaTime;
 
-        // Play footstep if character is walking and timer reached
         if (playerControls.isWalking && footstepTimer >= currentProfile.footstepRate)
         {
             PlayFootstep();
@@ -88,7 +83,6 @@ public class OverlordAudioManager : MonoBehaviour
         }
         else if (!playerControls.isWalking)
         {
-            // Reset timer to prevent instant footsteps when resuming movement
             footstepTimer = currentProfile.footstepRate;
         }
     }

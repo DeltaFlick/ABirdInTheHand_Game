@@ -3,6 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Automatically adjusts the Overlord's collider to match the current visual's collider
 /// </summary>
+
 [RequireComponent(typeof(OverlordSwapHandler))]
 public class OverlordColliderAdjuster : MonoBehaviour
 {
