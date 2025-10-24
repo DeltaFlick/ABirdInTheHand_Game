@@ -44,6 +44,8 @@ GameObject:
   - component: {fileID: 7002530323402394042}
   - component: {fileID: 3227073838794096946}
   - component: {fileID: 3289354115295266702}
+  - component: {fileID: -4224099562202168902}
+  - component: {fileID: 3646069193495982934}
   m_Layer: 0
   m_Name: BudgieOrangePrefab
   m_TagString: Player
@@ -123,6 +125,38 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.21
   m_Center: {x: 0, y: 0.21, z: 0}
+--- !u!95 &-4224099562202168902
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002530323402394028}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: cbf5d71d9bf733e4c974df4af74fd9c6, type: 3}
+  m_Controller: {fileID: 9100000, guid: a3a415cf042171440abbca1dd6e6c990, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3646069193495982934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002530323402394028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b6d23ae90497e4ea525ff9bf7afaa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7002530323706902017
 GameObject:
   m_ObjectHideFlags: 0

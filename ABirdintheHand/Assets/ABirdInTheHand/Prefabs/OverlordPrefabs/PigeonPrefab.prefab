@@ -58,6 +58,8 @@ GameObject:
   - component: {fileID: 813489183582213205}
   - component: {fileID: 5093354228450073821}
   - component: {fileID: 6185494051953675827}
+  - component: {fileID: 7266764901976176536}
+  - component: {fileID: -3655016160142808749}
   m_Layer: 0
   m_Name: PigeonPrefab
   m_TagString: Player
@@ -137,6 +139,38 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.28
   m_Center: {x: 0, y: 0.28, z: 0.09}
+--- !u!95 &7266764901976176536
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813489183582213187}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 8795ea9a7246e3849b025368d0dee614, type: 3}
+  m_Controller: {fileID: 9100000, guid: c03985f2de9cfca41a09fba486bd63d8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-3655016160142808749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813489183582213187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b6d23ae90497e4ea525ff9bf7afaa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &813489184718159786
 GameObject:
   m_ObjectHideFlags: 0

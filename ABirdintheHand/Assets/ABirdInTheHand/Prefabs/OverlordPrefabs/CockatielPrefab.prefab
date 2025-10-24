@@ -58,6 +58,8 @@ GameObject:
   - component: {fileID: 4008442143146930209}
   - component: {fileID: 8810723473345231017}
   - component: {fileID: 3884554223734273555}
+  - component: {fileID: 8689204029415134359}
+  - component: {fileID: 3294431757538019423}
   m_Layer: 0
   m_Name: CockatielPrefab
   m_TagString: Player
@@ -137,6 +139,38 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.2556174
   m_Center: {x: 0.02087569, y: 0.2577831, z: 0.03}
+--- !u!95 &8689204029415134359
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4008442143146930231}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 261823b5660e1df4bb689b8909facd19, type: 3}
+  m_Controller: {fileID: 9100000, guid: bc43906e51657724a8bf710524e76b88, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3294431757538019423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4008442143146930231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b6d23ae90497e4ea525ff9bf7afaa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4008442144259791838
 GameObject:
   m_ObjectHideFlags: 0

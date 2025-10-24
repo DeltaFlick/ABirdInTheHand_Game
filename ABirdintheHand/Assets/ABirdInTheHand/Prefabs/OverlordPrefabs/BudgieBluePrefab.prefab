@@ -938,6 +938,8 @@ GameObject:
   - component: {fileID: 4142149638786449934}
   - component: {fileID: 8403432766354180742}
   - component: {fileID: 7497374528005484956}
+  - component: {fileID: -1667967094467799183}
+  - component: {fileID: 2786924314786780336}
   m_Layer: 0
   m_Name: BudgieBluePrefab
   m_TagString: Player
@@ -1017,6 +1019,38 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.21
   m_Center: {x: 0, y: 0.21, z: 0}
+--- !u!95 &-1667967094467799183
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4142149638786449944}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 6557d85543c8e6246b8ff1fa881ccb06, type: 3}
+  m_Controller: {fileID: 9100000, guid: b2b531f10279dfb45969d8c998f7af5b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2786924314786780336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4142149638786449944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b6d23ae90497e4ea525ff9bf7afaa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4142149639222558133
 GameObject:
   m_ObjectHideFlags: 0
