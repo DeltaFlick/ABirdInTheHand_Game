@@ -45,18 +45,18 @@ public class PlayerMenuController : MonoBehaviour
     {
         if (menuAction != null) menuAction.performed += ToggleMenu;
 
-        RescueEvents.OnRescueStarted += ShowRescueTimer;
-        RescueEvents.OnRescueUpdated += UpdateRescueTimer;
-        RescueEvents.OnRescueEnded += HideRescueTimer;
+        RescueEvents.OnRescueStarted += (menu, time) => { if (menu == this) ShowRescueTimer(time); };
+        RescueEvents.OnRescueUpdated += (menu, time) => { if (menu == this) UpdateRescueTimer(time); };
+        RescueEvents.OnRescueEnded += menu => { if (menu == this) HideRescueTimer(); };
     }
 
     private void OnDisable()
     {
         if (menuAction != null) menuAction.performed -= ToggleMenu;
 
-        RescueEvents.OnRescueStarted -= ShowRescueTimer;
-        RescueEvents.OnRescueUpdated -= UpdateRescueTimer;
-        RescueEvents.OnRescueEnded -= HideRescueTimer;
+        RescueEvents.OnRescueStarted -= (menu, time) => { if (menu == this) ShowRescueTimer(time); };
+        RescueEvents.OnRescueUpdated -= (menu, time) => { if (menu == this) UpdateRescueTimer(time); };
+        RescueEvents.OnRescueEnded -= menu => { if (menu == this) HideRescueTimer(); };
     }
 
     private void ToggleMenu(InputAction.CallbackContext ctx)
@@ -110,10 +110,17 @@ public class PlayerMenuController : MonoBehaviour
     #region Rescue Timer
     public void ShowRescueTimer(float maxTime)
     {
-        if (rescueTimerSlider == null) return;
+        if (rescueTimerSlider == null)
+        {
+            Debug.LogWarning($"[PlayerMenuController] RescueSlider not assigned on {name}");
+            return;
+        }
+
         rescueTimerSlider.maxValue = maxTime;
         rescueTimerSlider.value = maxTime;
         rescueTimerSlider.gameObject.SetActive(true);
+
+        Debug.Log($"[PlayerMenuController] Showing rescue timer for {name}");
     }
 
     public void UpdateRescueTimer(float timeLeft)

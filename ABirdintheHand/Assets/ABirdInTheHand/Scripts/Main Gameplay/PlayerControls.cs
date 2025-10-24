@@ -52,6 +52,7 @@ public class PlayerControls : MonoBehaviour
     private bool isOnLadder = false;
 
     private BirdIdentifier birdIdentifier;
+    private Vector3 lastLookDir = Vector3.forward;
 
     private void Awake()
     {
@@ -201,15 +202,16 @@ public class PlayerControls : MonoBehaviour
     {
         if (playerCamera == null || currentVisual == null) return;
 
-        Vector3 lookDirection = playerCamera.transform.forward;
-        lookDirection.y = 0f;
+        Vector3 camDir = playerCamera.transform.forward;
+        camDir.y = 0f;
 
-        if (lookDirection.sqrMagnitude > 0.01f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 10f * Time.fixedDeltaTime));
-        }
+        if (camDir.sqrMagnitude > 0.01f)
+            lastLookDir = camDir.normalized;
+
+        Quaternion targetRotation = Quaternion.LookRotation(lastLookDir, Vector3.up);
+        rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 10f * Time.fixedDeltaTime));
     }
+
 
     private Vector3 GetCameraForward(Camera playerCamera)
     {

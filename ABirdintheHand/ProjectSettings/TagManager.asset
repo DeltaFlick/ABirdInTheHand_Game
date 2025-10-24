@@ -7,6 +7,7 @@ TagManager:
   - whatisGround
   - BirdPlayer
   - PlayerCursor
+  - Ladder
   layers:
   - Default
   - TransparentFX

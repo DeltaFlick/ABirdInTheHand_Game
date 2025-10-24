@@ -21,6 +21,7 @@ public class OverlordSwapHandler : MonoBehaviour
     private PlayerInput playerInput;
     private Camera playerCamera;
     private int playerLayer;
+    private PlayerMenuController menuController;
 
     public GameObject CurrentVisual => currentVisual;
 
@@ -31,6 +32,10 @@ public class OverlordSwapHandler : MonoBehaviour
 
         playerInput = GetComponent<PlayerInput>();
         playerCamera = GetComponentInChildren<Camera>(true);
+        menuController = GetComponent<PlayerMenuController>();
+
+        if (menuController == null)
+            Debug.LogWarning("[OverlordSwapHandler] No PlayerMenuController found on this overlord prefab!");
 
         playerLayer = 9 + playerInput.playerIndex;
     }
@@ -100,6 +105,12 @@ public class OverlordSwapHandler : MonoBehaviour
         foreach (var anim in currentVisual.GetComponentsInChildren<Animator>(true))
         {
             anim.applyRootMotion = false;
+        }
+
+        BirdIdentifier[] birds = currentVisual.GetComponentsInChildren<BirdIdentifier>(true);
+        foreach (var bird in birds)
+        {
+            bird.MenuController = menuController;
         }
 
         if (playerCamera != null)

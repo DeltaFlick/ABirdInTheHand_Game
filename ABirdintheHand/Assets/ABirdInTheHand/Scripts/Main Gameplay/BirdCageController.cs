@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Trapping & Releasing Birds
+/// Handles trapping and releasing birds with per-player rescue timers
 /// </summary>
 
 public class BirdCageController : MonoBehaviour
@@ -61,7 +61,7 @@ public class BirdCageController : MonoBehaviour
             if (bird == currentRescuer && rescueRoutine != null)
             {
                 StopCoroutine(rescueRoutine);
-                bird.MenuController?.HideRescueTimer();
+                RescueEvents.OnRescueEnded?.Invoke(currentRescuer.MenuController);
                 rescueRoutine = null;
                 currentRescuer = null;
             }
@@ -113,13 +113,14 @@ public class BirdCageController : MonoBehaviour
     private IEnumerator RescueCountdown(BirdIdentifier rescuer)
     {
         float timer = 0f;
-        rescuer.MenuController?.ShowRescueTimer(rescueTime);
+
+        RescueEvents.OnRescueStarted?.Invoke(rescuer.MenuController, rescueTime);
 
         while (timer < rescueTime)
         {
             if (freeBirdsInTrigger.Count == 0 || birdsInCage.Count == 0)
             {
-                rescuer.MenuController?.HideRescueTimer();
+                RescueEvents.OnRescueEnded?.Invoke(rescuer.MenuController);
                 rescueRoutine = null;
                 currentRescuer = null;
                 yield break;
@@ -127,14 +128,15 @@ public class BirdCageController : MonoBehaviour
 
             timer += Time.deltaTime;
             float timeLeft = rescueTime - timer;
-            rescuer.MenuController?.UpdateRescueTimer(timeLeft);
+
+            RescueEvents.OnRescueUpdated?.Invoke(rescuer.MenuController, timeLeft);
 
             yield return null;
         }
 
         ReleaseAllBirds();
 
-        rescuer.MenuController?.HideRescueTimer();
+        RescueEvents.OnRescueEnded?.Invoke(rescuer.MenuController);
         rescueRoutine = null;
         currentRescuer = null;
     }
@@ -165,7 +167,7 @@ public class BirdCageController : MonoBehaviour
 
     #endregion
 
-    private void CheckWinCondition()
+private void CheckWinCondition()
     {
         // Placeholder for total bird count
         int totalBirds = 5; // TODO: replace with BirdManager.Instance.GetBirdCount()

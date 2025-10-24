@@ -1,22 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-/// <summary>
-/// Identify Birds through script
-/// </summary>
 
 public class BirdIdentifier : MonoBehaviour
 {
     public bool IsBeingHeld { get; set; }
     public bool IsCaged { get; set; }
-    public PlayerMenuController MenuController { get; private set; }
+
+    public PlayerMenuController MenuController { get; set; }
 
     void Awake()
     {
-        MenuController = GetComponent<PlayerMenuController>();
         if (MenuController == null)
-            MenuController = GetComponentInChildren<PlayerMenuController>();
+        {
+            MenuController = GetComponentInParent<PlayerMenuController>();
+        }
     }
 
     void Start()
@@ -32,9 +28,11 @@ public class BirdIdentifier : MonoBehaviour
     public static BirdIdentifier GetFromOverlord(GameObject root)
     {
         if (root == null) return null;
+
         OverlordSwapHandler swapHandler = root.GetComponent<OverlordSwapHandler>();
         if (swapHandler != null && swapHandler.CurrentVisual != null)
-            return swapHandler.CurrentVisual.GetComponent<BirdIdentifier>();
-        return root.GetComponent<BirdIdentifier>();
+            return swapHandler.CurrentVisual.GetComponentInChildren<BirdIdentifier>();
+
+        return root.GetComponentInChildren<BirdIdentifier>();
     }
 }

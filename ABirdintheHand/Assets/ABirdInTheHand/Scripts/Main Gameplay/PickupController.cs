@@ -92,39 +92,50 @@ public class PickupController : MonoBehaviour
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, pickupRange))
         {
             Rigidbody rb = hit.rigidbody;
-            if (rb != null)
+            if (rb == null) return;
+
+            bool isPlayer = rb.transform.root.CompareTag("Player") || rb.transform.root.GetComponent<OverlordSwapHandler>() != null;
+
+            if (isPlayer)
             {
                 heldObj = rb.transform.root.gameObject;
                 heldObjRB = rb.transform.root.GetComponent<Rigidbody>();
-                if (heldObjRB == null) heldObjRB = rb;
+            }
+            else
+            {
+                heldObj = rb.gameObject;
+                heldObjRB = rb;
+            }
 
-                BirdIdentifier bird = heldObj.GetComponentInChildren<BirdIdentifier>();
-                if (bird != null) bird.IsBeingHeld = true;
+            if (heldObjRB == null) return;
 
-                heldObjRB.useGravity = true;
-                heldObjRB.drag = 4f;
-                heldObjRB.interpolation = RigidbodyInterpolation.Interpolate;
-                heldObjRB.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            BirdIdentifier bird = heldObj.GetComponentInChildren<BirdIdentifier>();
+            if (bird != null) bird.IsBeingHeld = true;
 
-                joint = heldObj.AddComponent<SpringJoint>();
-                joint.autoConfigureConnectedAnchor = false;
-                joint.connectedAnchor = holdArea.position;
-                joint.spring = spring;
-                joint.damper = damper;
-                joint.maxDistance = 0.1f;
-                joint.minDistance = 0f;
+            heldObjRB.useGravity = true;
+            heldObjRB.drag = 4f;
+            heldObjRB.interpolation = RigidbodyInterpolation.Interpolate;
+            heldObjRB.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-                Vector3 localHitPoint = heldObj.transform.InverseTransformPoint(hit.point);
-                joint.anchor = localHitPoint;
+            joint = heldObj.AddComponent<SpringJoint>();
+            joint.autoConfigureConnectedAnchor = false;
+            joint.connectedAnchor = holdArea.position;
+            joint.spring = spring;
+            joint.damper = damper;
+            joint.maxDistance = 0.1f;
+            joint.minDistance = 0f;
 
-                if (heldObj.CompareTag("Player"))
-                {
-                    originalConstraints = heldObjRB.constraints;
-                    heldObjRB.constraints = RigidbodyConstraints.FreezeRotation;
-                }
+            Vector3 localHitPoint = heldObj.transform.InverseTransformPoint(hit.point);
+            joint.anchor = localHitPoint;
+
+            if (isPlayer)
+            {
+                originalConstraints = heldObjRB.constraints;
+                heldObjRB.constraints = RigidbodyConstraints.FreezeRotation;
             }
         }
     }
+
 
     public void DropObject()
     {
