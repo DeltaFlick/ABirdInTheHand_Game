@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5573.551, g: 3944.7422, b: 3943.2734, a: 1}
+  m_IndirectSpecularColor: {r: 5574.4277, g: 3941.9062, b: 3934.7422, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -35314,6 +35314,7 @@ GameObject:
   - component: {fileID: 1019509958}
   - component: {fileID: 1019509961}
   - component: {fileID: 1019509954}
+  - component: {fileID: 1019509962}
   m_Layer: 0
   m_Name: Overlord
   m_TagString: Player
@@ -35582,6 +35583,18 @@ MonoBehaviour:
         Data4: 600553811
       Path: event:/GrassyFootsteps
     footstepRate: 0.2
+--- !u!114 &1019509962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1019509945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c6e477845064554599ea6277fa50acb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1021752959 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 97531c73c8e533e44aa3e8dc8728ee54,
@@ -46915,6 +46928,7 @@ MonoBehaviour:
   teleportDelay: 0.1
   rescueTime: 10
   humansWinSceneName: 0
+  verboseLogging: 1
 --- !u!1001 &1355281947
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67477,6 +67491,7 @@ MonoBehaviour:
   teleportDelay: 0.1
   rescueTime: 10
   humansWinSceneName: HumansWin
+  verboseLogging: 1
 --- !u!1 &1921103742
 GameObject:
   m_ObjectHideFlags: 0
