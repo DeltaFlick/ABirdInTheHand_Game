@@ -1310,7 +1310,7 @@ RectTransform:
   m_GameObject: {fileID: 814459415}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 8, y: 8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1145486977}
@@ -1454,7 +1454,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 151.4}
-  m_SizeDelta: {x: 780, y: 50}
+  m_SizeDelta: {x: 767.87, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &819794474
 MonoBehaviour:
@@ -1478,16 +1478,16 @@ MonoBehaviour:
       m_Calls: []
   m_text: A Bird In The Hand
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ca62c02e4fe1ead43adb13473e9f7634, type: 2}
-  m_sharedMaterial: {fileID: 8341279251075619987, guid: ca62c02e4fe1ead43adb13473e9f7634,
+  m_fontAsset: {fileID: 11400000, guid: 1e33ac9839aaeaa41bcff0fd80bd75a3, type: 2}
+  m_sharedMaterial: {fileID: -3774881313937936129, guid: 1e33ac9839aaeaa41bcff0fd80bd75a3,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4294952704
+  m_fontColor: {r: 0, g: 0.78039217, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1511,7 +1511,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2012,7 +2012,7 @@ RectTransform:
   m_GameObject: {fileID: 1145486976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 814459416}
@@ -2022,7 +2022,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: 300, y: 60}
+  m_SizeDelta: {x: 2048, y: 926}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1145486978
 MonoBehaviour:
@@ -2100,8 +2100,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: fe39c3659e3512c40a9cbd1e211425e9, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
