@@ -13,11 +13,9 @@ public class BirdCageController : MonoBehaviour
     [Header("Cage Settings")]
     [SerializeField] private Transform cageSpawnPoint;
     [SerializeField] private Transform releasePoint;
-    [SerializeField] private float teleportDelay = 0.1f;
     [SerializeField] private float rescueTime = 10f;
 
     [Header("Win Condition")]
-    [Tooltip("Scene to load when all birds are caged")]
     [SerializeField] private string humansWinSceneName = "HumansWin";
 
     [Header("Debug")]
@@ -35,7 +33,6 @@ public class BirdCageController : MonoBehaviour
         BirdIdentifier bird = BirdIdentifier.GetFromOverlord(other.gameObject);
         if (bird == null) return;
 
-        // Get the root object for tracking
         GameObject birdRoot = bird.transform.root.gameObject;
 
         if (verboseLogging)
@@ -154,12 +151,53 @@ public class BirdCageController : MonoBehaviour
         if (verboseLogging)
             Debug.Log($"[BirdCage] Teleporting {birdRoot.name} to cage");
 
+        StartCoroutine(TeleportSequence(birdRoot, bird));
+    }
+
+    private IEnumerator TeleportSequence(GameObject birdRoot, BirdIdentifier bird)
+    {
+        Rigidbody rootRb = birdRoot.GetComponent<Rigidbody>();
+        RigidbodyInterpolation originalInterpolation = RigidbodyInterpolation.None;
+
+        if (rootRb != null)
+        {
+            originalInterpolation = rootRb.interpolation;
+            rootRb.interpolation = RigidbodyInterpolation.None;
+            rootRb.velocity = Vector3.zero;
+            rootRb.angularVelocity = Vector3.zero;
+        }
+
         foreach (var rb in birdRoot.GetComponentsInChildren<Rigidbody>())
-            rb.isKinematic = true;
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
 
         birdRoot.transform.position = cageSpawnPoint.position;
         birdRoot.transform.rotation = cageSpawnPoint.rotation;
         Physics.SyncTransforms();
+
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+
+        if (rootRb != null)
+        {
+            rootRb.velocity = Vector3.zero;
+            rootRb.angularVelocity = Vector3.zero;
+        }
+
+        foreach (var rb in birdRoot.GetComponentsInChildren<Rigidbody>())
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        yield return new WaitForFixedUpdate();
+
+        if (rootRb != null)
+        {
+            rootRb.interpolation = originalInterpolation;
+        }
 
         bird.IsCaged = true;
         bird.IsBeingHeld = false;
@@ -179,16 +217,7 @@ public class BirdCageController : MonoBehaviour
             CancelRescue();
         }
 
-        StartCoroutine(ReenablePhysics(birdRoot));
-
         RegisterCagedBird(bird);
-    }
-
-    private IEnumerator ReenablePhysics(GameObject birdRoot)
-    {
-        yield return new WaitForSeconds(teleportDelay);
-        foreach (var rb in birdRoot.GetComponentsInChildren<Rigidbody>())
-            rb.isKinematic = false;
     }
 
     #region Rescue Mechanic
@@ -304,8 +333,18 @@ public class BirdCageController : MonoBehaviour
 
             GameObject birdRoot = bird.transform.root.gameObject;
 
+            Rigidbody rootRb = birdRoot.GetComponent<Rigidbody>();
+            if (rootRb != null)
+            {
+                rootRb.velocity = Vector3.zero;
+                rootRb.angularVelocity = Vector3.zero;
+            }
+
             foreach (var rb in birdRoot.GetComponentsInChildren<Rigidbody>())
-                rb.isKinematic = false;
+            {
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
 
             if (releasePoint != null)
             {
@@ -330,26 +369,33 @@ public class BirdCageController : MonoBehaviour
 
     private void CheckWinCondition()
     {
-        // Placeholder for total bird count
-        int totalBirds = 5; // TODO: replace with BirdManager.Instance.GetBirdCount()
+        // If testing
+        //int totalBirds = 5;
 
-        if (birdsInCage.Count == totalBirds)
+        //if (birdsInCage.Count == totalBirds)
 
-        //int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
+        int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
 
-        //if (birdsInCage.Count == totalBirds && totalBirds > 0)
+        if (totalBirds <= 0)
         {
             Debug.LogWarning("[BirdCageController] No birds registered in BirdManager!");
             return;
         }
 
-        if (birdsInCage.Count == totalBirds)
+        if (birdsInCage.Count >= totalBirds)
         {
             Debug.Log("[BirdCageController] All birds caged, humans win!");
             if (!string.IsNullOrEmpty(humansWinSceneName))
+            {
                 SceneManager.LoadScene(humansWinSceneName);
+            }
+            else
+            {
+                Debug.LogWarning("[BirdCageController] Humans win scene name not set!");
+            }
         }
     }
+
 
     private void OnDrawGizmos()
     {

@@ -36,7 +36,12 @@ public class BreakableFalling : MonoBehaviour
             if (impactVelocity > impactThreshold)
             {
                 hasBroken = true;
-                scoreSystem?.AddScore(scoreAddAmount);
+
+                if (ScoreSystem.Instance != null)
+                    ScoreSystem.Instance.AddScore(scoreAddAmount);
+                else
+                    Debug.LogWarning("[BreakableFalling] ScoreSystem.Instance is null; score not added.");
+
                 ForceDrop.RequestDropAll();
 
                 Instantiate(destroyedVersion, transform.position, transform.rotation);

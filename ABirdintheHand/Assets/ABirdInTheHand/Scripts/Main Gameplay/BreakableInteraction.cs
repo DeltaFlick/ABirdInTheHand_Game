@@ -31,8 +31,10 @@ public class BreakableInteraction : MonoBehaviour, IInteractable
     {
         Debug.Log($"{gameObject.name} has been broken by {interactor.name}");
 
-        if (scoreSystem != null)
-            scoreSystem.AddScore(scoreAddAmount);
+        if (ScoreSystem.Instance != null)
+            ScoreSystem.Instance.AddScore(scoreAddAmount);
+        else
+            Debug.LogWarning("[BreakableInteraction] ScoreSystem.Instance is null; score not added.");
 
         if (brokenVersion != null)
             Instantiate(brokenVersion, transform.position, transform.rotation);
