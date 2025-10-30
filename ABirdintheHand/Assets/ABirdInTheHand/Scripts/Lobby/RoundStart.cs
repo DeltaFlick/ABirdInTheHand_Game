@@ -170,7 +170,9 @@ public class RoundStart : MonoBehaviour
 
         playersInTrigger = 0;
 
-        if (scoreTextObject != null) scoreTextObject.SetActive(true);
+        if (ScoreSystem.Instance != null)
+            ScoreSystem.Instance.SetScoreUIVisible(true);
+
         if (timerTextObject != null) timerTextObject.SetActive(true);
 
         if (ScoreSystem.Instance != null)
@@ -207,7 +209,9 @@ public class RoundStart : MonoBehaviour
 
     public void EndRound()
     {
-        if (scoreTextObject != null) scoreTextObject.SetActive(false);
+        if (ScoreSystem.Instance != null)
+            ScoreSystem.Instance.SetScoreUIVisible(false);
+
         if (timerTextObject != null) timerTextObject.SetActive(false);
 
         if (ScoreSystem.Instance != null)

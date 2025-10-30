@@ -12,9 +12,11 @@ public class ScoreSystem : MonoBehaviour
 
     public static float CurrentScoreInternal = 0f;
 
+    [Header("Game Settings")]
     public int winningScore = 10;
 
-    [Header("UI")]
+    [Header("UI References")]
+    [SerializeField] private GameObject scoreUIRoot;
     [SerializeField] private TextMeshProUGUI scoreAmount;
 
     public static event Action<float> OnScoreChanged;
@@ -47,6 +49,10 @@ public class ScoreSystem : MonoBehaviour
                 Debug.LogWarning("[ScoreSystem] scoreAmount not assigned and no TMP found in scene. UI won't update.");
             }
         }
+
+        if (scoreUIRoot != null)
+            scoreUIRoot.SetActive(false);
+
         CurrentScoreInternal = 0f;
         PublishScore();
     }
@@ -64,6 +70,12 @@ public class ScoreSystem : MonoBehaviour
     }
 
     public float GetScore() => CurrentScoreInternal;
+
+    public void SetScoreUIVisible(bool visible)
+    {
+        if (scoreUIRoot != null)
+            scoreUIRoot.SetActive(visible);
+    }
 
     private void PublishScore()
     {
