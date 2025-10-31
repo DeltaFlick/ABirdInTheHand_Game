@@ -99,7 +99,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &4008442143146930209
 MonoBehaviour:
@@ -171,6 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9b6d23ae90497e4ea525ff9bf7afaa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  walkSpeedMultiplier: 1
+  flySpeedMultiplier: 1
 --- !u!1 &4008442144259791838
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,7 +297,13 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 5866666021909216657, guid: 261823b5660e1df4bb689b8909facd19,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: bc43906e51657724a8bf710524e76b88, type: 2}
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: 261823b5660e1df4bb689b8909facd19, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 261823b5660e1df4bb689b8909facd19, type: 3}
 --- !u!4 &2888462641670445108 stripped

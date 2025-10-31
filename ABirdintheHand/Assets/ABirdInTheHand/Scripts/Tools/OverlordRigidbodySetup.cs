@@ -28,7 +28,7 @@ public class OverlordRigidbodySetup : MonoBehaviour
 
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
 
         Debug.Log($"[OverlordRigidbody] Set interpolation and collision detection for {gameObject.name}");
     }

@@ -139,7 +139,6 @@ public class PlayerControls : MonoBehaviour
 
     private void FixedUpdate()
     {
-        UpdateAnimationBools();
         
         if (rb.isKinematic) return;
         if (playerCamera == null || move == null) return;
@@ -171,10 +170,11 @@ public class PlayerControls : MonoBehaviour
             speedMultiplier = cagedSpeedMultiplier;
 
         isWalking = moveInput.sqrMagnitude > 0.1f && IsGrounded();
-
-        forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce * speedMultiplier;
-        forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce * speedMultiplier;
-
+       
+       
+            forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce * speedMultiplier;
+            forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce * speedMultiplier;
+      
         rb.AddForce(forceDirection, ForceMode.Impulse);
         forceDirection = Vector3.zero;
 
@@ -186,11 +186,11 @@ public class PlayerControls : MonoBehaviour
         if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
             rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
 
-        if (IsGrounded() && moveInput.sqrMagnitude < 0.1f)
+        if (IsGrounded())
         {
             Vector3 counterForce = -rb.velocity;
             counterForce.y = 0f;
-            rb.AddForce(counterForce * counterSlidingForce, ForceMode.Impulse);
+            rb.AddForce(counterForce * counterSlidingForce, ForceMode.Acceleration);
         }
         isJumping = !IsGrounded() && rb.velocity.y > 0.1f;
         LookAt();

@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 3227073838794096946}
   - component: {fileID: 3289354115295266702}
   - component: {fileID: -4224099562202168902}
-  - component: {fileID: 3646069193495982934}
+  - component: {fileID: -1241166715532144612}
   m_Layer: 0
   m_Name: BudgieOrangePrefab
   m_TagString: Player
@@ -60,7 +60,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7002530323402394028}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -70,7 +70,7 @@ Transform:
   - {fileID: 7002530322289533530}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &7002530323402394040
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -85,7 +85,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &7002530323402394042
 MonoBehaviour:
@@ -145,7 +145,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3646069193495982934
+--- !u!114 &-1241166715532144612
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -157,6 +157,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9b6d23ae90497e4ea525ff9bf7afaa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  walkSpeedMultiplier: 1
+  flySpeedMultiplier: 1
 --- !u!1 &7002530323706902017
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +292,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: BudgieV1G
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 5866666021909216657, guid: cbf5d71d9bf733e4c974df4af74fd9c6,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a3a415cf042171440abbca1dd6e6c990, type: 2}
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: cbf5d71d9bf733e4c974df4af74fd9c6, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: cbf5d71d9bf733e4c974df4af74fd9c6, type: 3}
 --- !u!4 &4408094267709352028 stripped

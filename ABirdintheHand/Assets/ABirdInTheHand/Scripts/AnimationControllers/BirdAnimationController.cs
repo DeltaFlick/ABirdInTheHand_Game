@@ -15,6 +15,14 @@ public class BirdAnimationController : MonoBehaviour
     private string wiggleParameterName = "IsWiggling";
 
 
+    private string walkSpeedParameterName = "WalkSpeed";
+   [SerializeField] private float walkSpeedMultiplier = 1.0f;
+
+    private string flySpeedParameterName = "FlySpeed";
+   
+   [SerializeField] private float flySpeedMultiplier = 1.0f;
+
+
     void Start()
     {
         animator = GetComponent<Animator>();
