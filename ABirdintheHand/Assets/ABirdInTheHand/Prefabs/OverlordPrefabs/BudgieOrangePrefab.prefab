@@ -124,7 +124,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.21
-  m_Center: {x: 0, y: 0.21, z: 0}
+  m_Center: {x: 0, y: 0.21, z: 0.06}
 --- !u!95 &-4224099562202168902
 Animator:
   serializedVersion: 4

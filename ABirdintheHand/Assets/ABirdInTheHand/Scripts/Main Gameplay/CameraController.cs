@@ -6,17 +6,13 @@ using UnityEngine.InputSystem;
 /// <Summary>
 /// 1st Person Camera Controller
 /// </Summary>
-
 public class CameraController : MonoBehaviour
 {
     public float mouseSensitivity = 100f;
     public float controllerSensitivity = 250f;
-
     public Transform orientation;
-
     private float xRotation;
     private float yRotation;
-
     private PlayerInput playerInput;
     private InputAction lookAction;
     private InputDevice lastUsedDevice;
@@ -41,8 +37,8 @@ public class CameraController : MonoBehaviour
         }
 
         Vector2 lookInput = lookAction.ReadValue<Vector2>();
-
         float sensitivity = mouseSensitivity;
+
         if (lastUsedDevice != null && lastUsedDevice is Gamepad)
         {
             sensitivity = controllerSensitivity;
@@ -56,6 +52,7 @@ public class CameraController : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+
         if (orientation != null)
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
@@ -68,13 +65,11 @@ public class CameraController : MonoBehaviour
         transform.rotation = cameraWorldRotation;
 
         Vector3 camEuler = transform.eulerAngles;
-
         float pitch = camEuler.x;
         if (pitch > 180f) pitch -= 360f;
 
         xRotation = pitch;
         yRotation = camEuler.y;
-
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
     }
 }

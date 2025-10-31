@@ -4,6 +4,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
+/// <summary>
+/// Controls the round start process
+/// </summary>
+
 public class RoundStart : MonoBehaviour
 {
     [Header("Teleport Settings (one per player, ordered by index)")]
@@ -14,7 +18,7 @@ public class RoundStart : MonoBehaviour
 
     [Header("Round Control")]
     private int playersInTrigger = 0;
-    public bool startRoundActive = false;
+    private bool startRoundActive = false;
     private Coroutine countdownCoroutine;
     private HashSet<GameObject> teleportedPlayers = new HashSet<GameObject>();
 
@@ -82,6 +86,8 @@ public class RoundStart : MonoBehaviour
             countdownText.text = "";
             countdownText.gameObject.SetActive(false);
         }
+
+        Debug.Log("[RoundStart] Countdown cancelled — not all players are in trigger.");
     }
 
     private IEnumerator StartRound()
@@ -121,7 +127,6 @@ public class RoundStart : MonoBehaviour
         }
 
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-
         foreach (GameObject player in players)
         {
             if (teleportedPlayers.Contains(player)) continue;
@@ -165,14 +170,18 @@ public class RoundStart : MonoBehaviour
 
         playersInTrigger = 0;
 
-        if (scoreTextObject != null) scoreTextObject.SetActive(true);
+        if (ScoreSystem.Instance != null)
+            ScoreSystem.Instance.SetScoreUIVisible(true);
+
         if (timerTextObject != null) timerTextObject.SetActive(true);
 
-        ScoreSystem.CurrentScore = 0;
-        ScoreSystem scoreSystem = FindObjectOfType<ScoreSystem>();
-        if (scoreSystem != null)
+        if (ScoreSystem.Instance != null)
         {
-            scoreSystem.AddScore(0);
+            ScoreSystem.Instance.SetScore(0f);
+        }
+        else
+        {
+            Debug.LogWarning("[RoundStart] No ScoreSystem instance found at round start!");
         }
 
         if (timer != null)
@@ -188,6 +197,8 @@ public class RoundStart : MonoBehaviour
         teleportedPlayers.Clear();
         startRoundActive = false;
         countdownCoroutine = null;
+
+        Debug.Log("[RoundStart] Round successfully started!");
     }
 
     private IEnumerator ReenableControls(PlayerControls pc, float delay)
@@ -198,19 +209,19 @@ public class RoundStart : MonoBehaviour
 
     public void EndRound()
     {
-        if (scoreTextObject != null) scoreTextObject.SetActive(false);
+        if (ScoreSystem.Instance != null)
+            ScoreSystem.Instance.SetScoreUIVisible(false);
+
         if (timerTextObject != null) timerTextObject.SetActive(false);
 
-        ScoreSystem.CurrentScore = 0;
-        ScoreSystem scoreSystem = FindObjectOfType<ScoreSystem>();
-        if (scoreSystem != null)
-        {
-            scoreSystem.AddScore(0);
-        }
+        if (ScoreSystem.Instance != null)
+            ScoreSystem.Instance.SetScore(0f);
 
         if (playerInputManager != null)
         {
             playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
         }
+
+        Debug.Log("[RoundStart] Round ended and UI hidden.");
     }
 }

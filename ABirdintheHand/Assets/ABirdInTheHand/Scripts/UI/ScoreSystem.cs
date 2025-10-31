@@ -1,44 +1,87 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using TMPro;
 
-/// <Summary>
-/// Score system for game rounds
-/// </Summary>
+/// <summary>
+/// Central score system
+/// </summary>
 
 public class ScoreSystem : MonoBehaviour
 {
-    public static float CurrentScore = 0;
+    public static ScoreSystem Instance { get; private set; }
+
+    public static float CurrentScoreInternal = 0f;
+
+    [Header("Game Settings")]
     public int winningScore = 10;
 
-    [SerializeField] TextMeshProUGUI scoreAmount;
+    [Header("UI References")]
+    [SerializeField] private GameObject scoreUIRoot;
+    [SerializeField] private TextMeshProUGUI scoreAmount;
+
+    public static event Action<float> OnScoreChanged;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning("[ScoreSystem] Another instance exists — destroying this one.");
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void Start()
     {
-        CurrentScore = 0;
-
-        if (scoreAmount != null && scoreAmount.transform.parent != null)
+        if (scoreAmount == null)
         {
-            scoreAmount.transform.parent.gameObject.SetActive(false);
+            TextMeshProUGUI found = GameObject.FindObjectOfType<TextMeshProUGUI>();
+            if (found != null)
+            {
+                scoreAmount = found;
+                Debug.Log($"[ScoreSystem] Auto-assigned scoreAmount to {found.name}");
+            }
+            else
+            {
+                Debug.LogWarning("[ScoreSystem] scoreAmount not assigned and no TMP found in scene. UI won't update.");
+            }
         }
 
-        UpdateScoreUI();
+        if (scoreUIRoot != null)
+            scoreUIRoot.SetActive(false);
+
+        CurrentScoreInternal = 0f;
+        PublishScore();
     }
 
     public void AddScore(float amount)
     {
-        CurrentScore += amount;
-        UpdateScoreUI();
+        CurrentScoreInternal += amount;
+        PublishScore();
     }
 
-    private void UpdateScoreUI()
+    public void SetScore(float value)
     {
-        scoreAmount.text = CurrentScore.ToString("0");
+        CurrentScoreInternal = value;
+        PublishScore();
     }
 
-    public float GetScore()
+    public float GetScore() => CurrentScoreInternal;
+
+    public void SetScoreUIVisible(bool visible)
     {
-        return CurrentScore;
+        if (scoreUIRoot != null)
+            scoreUIRoot.SetActive(visible);
+    }
+
+    private void PublishScore()
+    {
+        if (scoreAmount != null)
+            scoreAmount.text = CurrentScoreInternal.ToString("0");
+
+        OnScoreChanged?.Invoke(CurrentScoreInternal);
     }
 }
