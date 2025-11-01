@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Triangle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-linecap: round;
+        stroke-width: 10px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: none;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        stroke-width: 12px;
+      }
+    </style>
+  </defs>
+  <circle class="cls-2" cx="200.68" cy="201.75" r="92.86"/>
+  <line class="cls-1" x1="138.48" y1="175.71" x2="263.82" y2="175.71"/>
+  <line class="cls-1" x1="138.48" y1="202.05" x2="263.82" y2="202.05"/>
+  <line class="cls-1" x1="138.48" y1="228.39" x2="263.82" y2="228.39"/>
+</svg>

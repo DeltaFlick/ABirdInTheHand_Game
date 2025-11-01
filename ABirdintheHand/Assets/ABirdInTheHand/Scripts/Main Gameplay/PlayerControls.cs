@@ -16,7 +16,7 @@ public class PlayerControls : MonoBehaviour
     private InputAction move;
     private InputAction look;
     public bool isWalking = false;
-    public bool isJumping = false; 
+    public bool isJumping = false;
     //public bool isWiggling = false;
 
     //outgoing animation variables
@@ -42,6 +42,9 @@ public class PlayerControls : MonoBehaviour
 
     [Header("Friction Settings")]
     [SerializeField] private float counterSlidingForce = 0.1f;
+
+    [Header("Air Control Settings")]
+    [SerializeField] private float airControlMultiplier = 0.2f;
 
     [Header("Caged Movement Settings")]
     [SerializeField] private float cagedSpeedMultiplier = 0.5f;
@@ -139,12 +142,10 @@ public class PlayerControls : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         if (rb.isKinematic) return;
         if (playerCamera == null || move == null) return;
 
         Vector2 moveInput = move.ReadValue<Vector2>();
-
 
         if (isOnLadder)
         {
@@ -169,27 +170,13 @@ public class PlayerControls : MonoBehaviour
         if (birdIdentifier != null && birdIdentifier.IsCaged)
             speedMultiplier = cagedSpeedMultiplier;
 
+        float controlMultiplier = IsGrounded() ? speedMultiplier : (speedMultiplier * airControlMultiplier);
+
         isWalking = moveInput.sqrMagnitude > 0.1f && IsGrounded();
-        Vector3 horizontalVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 
-        if (!IsGrounded() && horizontalVel.magnitude < 0.1f)
-        {           
-             float airControlMultiplier = 0.2f;
+        forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce * controlMultiplier;
+        forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce * controlMultiplier;
 
-            if (isMovingIntoWall(moveInput))
-            {
-                forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce * speedMultiplier * airControlMultiplier;
-            }
-            else
-            {
-                forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce * speedMultiplier * airControlMultiplier;
-            }
-        }
-        else
-        {
-            forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce * speedMultiplier;
-            forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce * speedMultiplier;
-        }
         rb.AddForce(forceDirection, ForceMode.Impulse);
         forceDirection = Vector3.zero;
 
@@ -207,26 +194,13 @@ public class PlayerControls : MonoBehaviour
             counterForce.y = 0f;
             rb.AddForce(counterForce * counterSlidingForce, ForceMode.Acceleration);
         }
+
         isJumping = !IsGrounded() && rb.velocity.y > 0.1f;
+
         LookAt();
         UpdateAnimationBools();
-
     }
 
-    private bool isMovingIntoWall(Vector2 moveInput)
-    {
-       
-        Vector3 horizontalVelocity = rb.velocity.normalized;
-        horizontalVelocity.y = 0;
-        if (moveInput.x > horizontalVelocity.x + 0.1f)
-            return true;
-
-        if (moveInput.y > horizontalVelocity.y + 0.1f)
-            return true;
-
-        return false;
-    }
-    
     private void LookAt()
     {
         if (playerCamera == null || currentVisual == null) return;
@@ -240,7 +214,6 @@ public class PlayerControls : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(lastLookDir, Vector3.up);
         rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 10f * Time.fixedDeltaTime));
     }
-
 
     private Vector3 GetCameraForward(Camera playerCamera)
     {
@@ -280,13 +253,13 @@ public class PlayerControls : MonoBehaviour
     }
 
     private void OnDrawGizmos()
-{
-    if (groundCheck != null)
     {
-        Gizmos.color = IsGrounded() ? Color.green : Color.red;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        if (groundCheck != null)
+        {
+            Gizmos.color = IsGrounded() ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
     }
-}
 
     #region Ladder Climbing
 
@@ -308,6 +281,5 @@ public class PlayerControls : MonoBehaviour
             rb.useGravity = true;
         }
     }
-
     #endregion
 }
