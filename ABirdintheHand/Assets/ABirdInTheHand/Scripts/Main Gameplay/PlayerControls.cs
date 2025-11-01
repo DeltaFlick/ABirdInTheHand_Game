@@ -139,13 +139,13 @@ public class PlayerControls : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+
         if (rb.isKinematic) return;
         if (playerCamera == null || move == null) return;
 
         Vector2 moveInput = move.ReadValue<Vector2>();
 
-        
+
         if (isOnLadder)
         {
             Vector3 climbDirection = Vector3.up * moveInput.y;
@@ -170,11 +170,26 @@ public class PlayerControls : MonoBehaviour
             speedMultiplier = cagedSpeedMultiplier;
 
         isWalking = moveInput.sqrMagnitude > 0.1f && IsGrounded();
-       
-       
+        Vector3 horizontalVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+
+        if (!IsGrounded() && horizontalVel.magnitude < 0.1f)
+        {           
+             float airControlMultiplier = 0.2f;
+
+            if (isMovingIntoWall(moveInput))
+            {
+                forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce * speedMultiplier * airControlMultiplier;
+            }
+            else
+            {
+                forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce * speedMultiplier * airControlMultiplier;
+            }
+        }
+        else
+        {
             forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce * speedMultiplier;
             forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce * speedMultiplier;
-      
+        }
         rb.AddForce(forceDirection, ForceMode.Impulse);
         forceDirection = Vector3.zero;
 
@@ -198,6 +213,20 @@ public class PlayerControls : MonoBehaviour
 
     }
 
+    private bool isMovingIntoWall(Vector2 moveInput)
+    {
+       
+        Vector3 horizontalVelocity = rb.velocity.normalized;
+        horizontalVelocity.y = 0;
+        if (moveInput.x > horizontalVelocity.x + 0.1f)
+            return true;
+
+        if (moveInput.y > horizontalVelocity.y + 0.1f)
+            return true;
+
+        return false;
+    }
+    
     private void LookAt()
     {
         if (playerCamera == null || currentVisual == null) return;
@@ -249,6 +278,15 @@ public class PlayerControls : MonoBehaviour
     {
         return groundCheck != null && Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
     }
+
+    private void OnDrawGizmos()
+{
+    if (groundCheck != null)
+    {
+        Gizmos.color = IsGrounded() ? Color.green : Color.red;
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+    }
+}
 
     #region Ladder Climbing
 
