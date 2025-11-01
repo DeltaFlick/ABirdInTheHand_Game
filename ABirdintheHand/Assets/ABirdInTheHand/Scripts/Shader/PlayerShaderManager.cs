@@ -28,15 +28,11 @@ public class PlayerShaderManager : MonoBehaviour
             volume.enabled = true;
             volume.targetCamera = playerCamera;
 
-            if (volume.customPasses.Count > 0 && volume.customPasses[0] is PlayerCustomPass playerPass)
-            {
-                playerPass.SetPlayerData(playerIndex + 1, playerCamera);
-            }
-
             ShaderSwapper shaderSwapper = player.GetComponent<ShaderSwapper>();
             if (shaderSwapper != null)
             {
                 shaderSwapper.playerID = playerIndex + 1;
+                Debug.Log(playerIndex);
                 shaderSwapper.SetCustomPassVolume(volume);
             }
         }

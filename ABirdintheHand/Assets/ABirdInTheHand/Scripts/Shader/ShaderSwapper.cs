@@ -5,7 +5,7 @@ public class ShaderSwapper : MonoBehaviour
 {
     private GameObject currentTargetObject;
     private CustomPassVolume assignedVolume;
-    private PlayerCustomPass playerCustomPass;
+    private OutlineEffect outlineEffect;
 
     public int playerID = 1;
 
@@ -15,15 +15,15 @@ public class ShaderSwapper : MonoBehaviour
         
         if (volume != null && volume.customPasses.Count > 0)
         {
-            playerCustomPass = volume.customPasses[0] as PlayerCustomPass;
+            outlineEffect = volume.customPasses[0] as OutlineEffect;
         }
     }
 
     public void RevertShader()
     {
-        if (playerCustomPass != null)
+        if (outlineEffect != null)
         {
-            playerCustomPass.ClearTarget();
+            outlineEffect.ClearTarget();
         }
         
         currentTargetObject = null;
@@ -41,19 +41,19 @@ public class ShaderSwapper : MonoBehaviour
             currentTargetObject = targetObject;
         }
 
-        if (playerCustomPass != null && targetObject != null)
+        if (outlineEffect != null && targetObject != null)
         {
             Debug.Log($"Player {playerID} applying shader to {targetObject.name}");
-            playerCustomPass.SetTargetObject(targetObject);
+            outlineEffect.SetTargetObject(targetObject);
         }
-        else if (playerCustomPass != null && targetObject == null)
+        else if (outlineEffect != null && targetObject == null)
         {
             Debug.Log($"Player {playerID} clearing shader target");
-            playerCustomPass.ClearTarget();
+            outlineEffect.ClearTarget();
         }
-        else if (playerCustomPass == null)
+        else if (outlineEffect == null)
         {
-            Debug.LogWarning($"Player {playerID} ShaderSwapper: PlayerCustomPass is null!");
+            Debug.LogWarning($"Player {playerID} ShaderSwapper: OutlineEffect is null!");
         }
     }
 
