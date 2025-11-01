@@ -351,7 +351,7 @@ public partial class @ThirdPersonActionsAsset : IInputActionCollection2, IDispos
                 {
                     ""name"": """",
                     ""id"": ""a3708724-c908-4fc2-bf60-5dbba5e7db2f"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse & Keyboard"",

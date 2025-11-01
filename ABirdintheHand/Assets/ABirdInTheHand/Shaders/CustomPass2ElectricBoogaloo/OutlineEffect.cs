@@ -1,22 +1,40 @@
-using UnityEngine;  
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Experimental.Rendering;
 
 public class OutlineEffect : CustomPass
 {
-    public LayerMask outlineLayer;       
+    public LayerMask outlineLayer;
     public Color outlineColor = Color.cyan;
     public float thickness = 1.5f;
+
+    [SerializeField] private Shader outlineShader;
+
     private Material outlineMaterial;
-    private GameObject targetObject;     
+    private GameObject targetObject;
+
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
-    {   
-        outlineMaterial = new Material(Shader.Find("Renderers/OutlineEffect1"));
+    {
+        if (outlineShader != null)
+        {
+            outlineMaterial = new Material(outlineShader);
+            Debug.Log("OutlineEffect: Material created successfully");
+        }
+        else
+        {
+            Debug.LogError("OutlineEffect: Outline shader is not assigned! Please assign 'Renderers/OutlineEffect1' shader in the Custom Pass Volume inspector.");
+        }
     }
 
     protected override void Execute(CustomPassContext ctx)
     {
+        if (outlineMaterial == null)
+        {
+            Debug.LogWarning("OutlineEffect: Material is null, skipping render");
+            return;
+        }
+
         var camera = ctx.hdCamera.camera;
         var cmd = ctx.cmd;
 
@@ -28,6 +46,7 @@ public class OutlineEffect : CustomPass
             Debug.LogWarning("OutlineEffect: Target object is not on the specified outline layer.");
             return;
         }
+
         var viewport = camera.pixelRect;
         int viewportWidth = Mathf.RoundToInt(viewport.width);
         int viewportHeight = Mathf.RoundToInt(viewport.height);
@@ -38,10 +57,10 @@ public class OutlineEffect : CustomPass
             useDynamicScale: true, name: "OutlineMask");
 
         CoreUtils.SetRenderTarget(cmd, tempRT, ClearFlag.Color, Color.black);
-        
+
         cmd.SetViewport(new Rect(0, 0, viewportWidth, viewportHeight));
         cmd.SetViewProjectionMatrices(camera.worldToCameraMatrix, camera.projectionMatrix);
-        
+
         Material maskMaterial = new Material(Shader.Find("Hidden/InternalErrorShader"));
         if (maskMaterial.shader.name == "Hidden/InternalErrorShader")
         {
@@ -52,7 +71,7 @@ public class OutlineEffect : CustomPass
         {
             maskMaterial.color = Color.white;
         }
-        
+
         Renderer[] renderers = targetObject.GetComponentsInChildren<Renderer>();
         foreach (var renderer in renderers)
         {
@@ -68,7 +87,7 @@ public class OutlineEffect : CustomPass
         outlineMaterial.SetColor("_OutlineColor", outlineColor);
         outlineMaterial.SetFloat("_Thickness", thickness);
         outlineMaterial.SetTexture("_ObjectMask", tempRT);
-        
+
         outlineMaterial.SetVector("_ViewportParams", new Vector4(viewportWidth, viewportHeight, 1.0f / viewportWidth, 1.0f / viewportHeight));
 
         CoreUtils.SetRenderTarget(cmd, ctx.cameraColorBuffer);
