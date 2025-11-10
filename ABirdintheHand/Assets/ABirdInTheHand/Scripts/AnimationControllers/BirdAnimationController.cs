@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //should be useable for the human aswell. clean up later
@@ -10,49 +8,62 @@ public class BirdAnimationController : MonoBehaviour
     private Animator animator;
     private PlayerControls playerControls;
 
-    private string walkParameterName = "IsWalking";
-    private string flyParameterName = "IsFlying";
-    private string wiggleParameterName = "IsWiggling";
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
+    private static readonly int IsFlyingHash = Animator.StringToHash("IsFlying");
+    private static readonly int WalkSpeedHash = Animator.StringToHash("WalkSpeed");
+    private static readonly int FlySpeedHash = Animator.StringToHash("FlySpeed");
 
+    [SerializeField] private float walkSpeedMultiplier = 1.0f;
+    [SerializeField] private float flySpeedMultiplier = 1.0f;
 
-    private string walkSpeedParameterName = "WalkSpeed";
-   [SerializeField] private float walkSpeedMultiplier = 1.0f;
+    private bool wasWalking;
+    private bool wasFlying;
 
-    private string flySpeedParameterName = "FlySpeed";
-   
-   [SerializeField] private float flySpeedMultiplier = 1.0f;
-
-
-    void Start()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         playerControls = GetComponentInParent<PlayerControls>();
+
+        if (animator == null)
+        {
+            Debug.LogError($"[BirdAnimationController] Animator component missing on {gameObject.name}", this);
+            enabled = false;
+            return;
+        }
+
         if (playerControls == null)
         {
-            Debug.LogError("PlayerControls component not found on Bird.");
+            Debug.LogError($"[BirdAnimationController] PlayerControls component not found in parent of {gameObject.name}", this);
+            enabled = false;
         }
     }
 
-    void Update()
+    private void Update()
     {
-        if (playerControls != null)
-        {
-            UpdateWalkAnimation();
-            UpdateFlyAnimation();
-            //  UpdateWiggleAnimation();
-        }
+        UpdateWalkAnimation();
+        UpdateFlyAnimation();
     }
 
     private void UpdateWalkAnimation()
     {
         bool isWalking = playerControls.walkingAnim;
-        animator.SetBool(walkParameterName, isWalking);
+
+        if (isWalking != wasWalking)
+        {
+            animator.SetBool(IsWalkingHash, isWalking);
+            wasWalking = isWalking;
+        }
     }
 
     private void UpdateFlyAnimation()
     {
         bool isFlying = playerControls.jumpingAnim;
-        animator.SetBool(flyParameterName, isFlying);
+
+        if (isFlying != wasFlying)
+        {
+            animator.SetBool(IsFlyingHash, isFlying);
+            wasFlying = isFlying;
+        }
     }
 
     // private void UpdateWiggleAnimation()

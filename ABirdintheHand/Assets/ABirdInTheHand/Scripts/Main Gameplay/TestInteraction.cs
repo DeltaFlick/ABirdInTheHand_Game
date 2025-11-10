@@ -1,12 +1,9 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using TMPro;
 
-/// <Summary>
+/// <summary>
 /// Test interaction for future scripts
-/// </Summary>
-
+/// </summary>
 public class TestInteraction : MonoBehaviour, IInteractable
 {
     [Header("UI Prompt")]
@@ -15,16 +12,22 @@ public class TestInteraction : MonoBehaviour, IInteractable
 
     public void Interact(InteractionController interactor)
     {
-        Debug.Log("Interacted!");
+        Debug.Log($"[TestInteraction] Interacted by {(interactor != null ? interactor.name : "Unknown")}", this);
     }
 
     public void ShowPrompt()
     {
-        if (promptUI != null) promptUI.SetActive(true);
+        if (promptUI != null)
+        {
+            promptUI.SetActive(true);
+        }
     }
 
     public void HidePrompt()
     {
-        if (promptUI != null) promptUI.SetActive(false);
+        if (promptUI != null)
+        {
+            promptUI.SetActive(false);
+        }
     }
 }

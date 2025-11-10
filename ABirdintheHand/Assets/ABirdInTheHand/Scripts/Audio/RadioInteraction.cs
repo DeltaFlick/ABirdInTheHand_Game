@@ -1,15 +1,12 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 using FMOD.Studio;
 using TMPro;
 
-/// <Summary>
+/// <summary>
 /// Manage radio music & interaction sequence
-/// </Summary>
-
-
+/// </summary>
 public class RadioInteraction : MonoBehaviour, IInteractable
 {
     [Header("FMOD Songs")]
@@ -24,14 +21,31 @@ public class RadioInteraction : MonoBehaviour, IInteractable
     private EventInstance musicInstance;
     private List<EventReference> shufflePool;
     private EventReference currentSong;
+    private bool isInitialized;
+
+    private void Awake()
+    {
+        if (radio == null)
+        {
+            radio = gameObject;
+        }
+    }
 
     private void Start()
     {
-        PlaySong(happyDays);
+        if (!happyDays.IsNull)
+        {
+            PlaySong(happyDays);
+        }
+
         shufflePool = new List<EventReference>(otherSongs);
 
         if (promptUI != null)
+        {
             promptUI.SetActive(false);
+        }
+
+        isInitialized = true;
     }
 
     public void Interact(InteractionController interactor)
@@ -41,21 +55,32 @@ public class RadioInteraction : MonoBehaviour, IInteractable
 
     public void ShowPrompt()
     {
-        if (promptUI != null) promptUI.SetActive(true);
+        if (promptUI != null)
+        {
+            promptUI.SetActive(true);
+        }
     }
 
     public void HidePrompt()
     {
-        if (promptUI != null) promptUI.SetActive(false);
+        if (promptUI != null)
+        {
+            promptUI.SetActive(false);
+        }
     }
 
     private void PlayNextShuffledSong()
     {
         if (shufflePool.Count == 0)
+        {
             shufflePool = new List<EventReference>(otherSongs);
+        }
 
         if (shufflePool.Count == 0)
+        {
+            Debug.LogWarning("[RadioInteraction] No songs available to play", this);
             return;
+        }
 
         int index = Random.Range(0, shufflePool.Count);
         EventReference nextSong = shufflePool[index];
@@ -66,24 +91,49 @@ public class RadioInteraction : MonoBehaviour, IInteractable
 
     private void PlaySong(EventReference song)
     {
-        if (musicInstance.isValid())
+        if (song.IsNull)
         {
-            musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            musicInstance.release();
+            Debug.LogWarning("[RadioInteraction] Attempted to play null song reference", this);
+            return;
         }
 
+        StopCurrentMusic();
+
         currentSong = song;
-        musicInstance = RuntimeManager.CreateInstance(song);
-        RuntimeManager.AttachInstanceToGameObject(musicInstance, radio);
-        musicInstance.start();
+
+        try
+        {
+            musicInstance = RuntimeManager.CreateInstance(song);
+
+            if (radio != null)
+            {
+                RuntimeManager.AttachInstanceToGameObject(musicInstance, radio.transform);
+            }
+
+            musicInstance.start();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[RadioInteraction] Failed to play song: {e.Message}", this);
+        }
     }
 
-    private void OnDestroy()
+    private void StopCurrentMusic()
     {
         if (musicInstance.isValid())
         {
             musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             musicInstance.release();
         }
+    }
+
+    private void OnDisable()
+    {
+        StopCurrentMusic();
+    }
+
+    private void OnDestroy()
+    {
+        StopCurrentMusic();
     }
 }

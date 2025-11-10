@@ -5,58 +5,66 @@ using UnityEngine.InputSystem;
 using TMPro;
 
 /// <summary>
-/// Controls the round start process
+/// Controls the round start process with player teleportation and countdown
 /// </summary>
-
 public class RoundStart : MonoBehaviour
 {
     [Header("Teleport Settings (one per player, ordered by index)")]
-    public GameObject[] teleportDestinations;
+    [SerializeField] private GameObject[] teleportDestinations;
 
     [Header("Timer Reference")]
-    public Timer timer;
+    [SerializeField] private Timer timer;
 
-    [Header("Round Control")]
+    [Header("UI Elements")]
+    [SerializeField] private GameObject scoreTextObject;
+    [SerializeField] private GameObject timerTextObject;
+    [SerializeField] private TextMeshProUGUI countdownText;
+
+    [Header("Countdown Settings")]
+    [SerializeField] private float countdownDuration = 3f;
+
+    // Round state
     private int playersInTrigger = 0;
     private bool startRoundActive = false;
     private Coroutine countdownCoroutine;
     private HashSet<GameObject> teleportedPlayers = new HashSet<GameObject>();
-
-    [Header("UI Elements")]
-    public GameObject scoreTextObject;
-    public GameObject timerTextObject;
-    public TextMeshProUGUI countdownText;
-
-    [Header("Countdown Settings")]
-    public float countdownDuration = 3f;
-
     private PlayerInputManager playerInputManager;
+
+    // Cached values
+    private WaitForSeconds oneSecondWait;
+    private WaitForSeconds shortDelayWait;
 
     private void Awake()
     {
         playerInputManager = FindObjectOfType<PlayerInputManager>();
+
+        if (playerInputManager == null)
+        {
+            Debug.LogWarning("[RoundStart] PlayerInputManager not found in scene", this);
+        }
+
+        oneSecondWait = new WaitForSeconds(1f);
+        shortDelayWait = new WaitForSeconds(0.1f);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            playersInTrigger++;
-            CheckStartCondition();
-        }
+        if (!other.CompareTag("Player")) return;
+
+        playersInTrigger++;
+        CheckStartCondition();
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            playersInTrigger = Mathf.Max(0, playersInTrigger - 1);
+        if (!other.CompareTag("Player")) return;
 
-            int totalPlayers = PlayerInput.all.Count;
-            if (startRoundActive && playersInTrigger < totalPlayers)
-            {
-                CancelCountdown();
-            }
+        playersInTrigger = Mathf.Max(0, playersInTrigger - 1);
+
+        int totalPlayers = PlayerInput.all.Count;
+        if (startRoundActive && playersInTrigger < totalPlayers)
+        {
+            CancelCountdown();
         }
     }
 
@@ -83,11 +91,11 @@ public class RoundStart : MonoBehaviour
 
         if (countdownText != null)
         {
-            countdownText.text = "";
+            countdownText.text = string.Empty;
             countdownText.gameObject.SetActive(false);
         }
 
-        Debug.Log("[RoundStart] Countdown cancelled — not all players are in trigger.");
+        Debug.Log("[RoundStart] Countdown cancelled — not all players in trigger.");
     }
 
     private IEnumerator StartRound()
@@ -109,7 +117,7 @@ public class RoundStart : MonoBehaviour
                 countdownText.text = Mathf.Ceil(countdown).ToString();
             }
 
-            yield return new WaitForSeconds(1f);
+            yield return oneSecondWait;
             countdown -= 1f;
 
             if (playersInTrigger < totalPlayers)
@@ -122,20 +130,64 @@ public class RoundStart : MonoBehaviour
         if (countdownText != null)
         {
             countdownText.text = "GO!";
-            yield return new WaitForSeconds(1f);
+            yield return oneSecondWait;
             countdownText.gameObject.SetActive(false);
         }
 
+        TeleportPlayers();
+
+        playersInTrigger = 0;
+
+        if (ScoreSystem.Instance != null)
+        {
+            ScoreSystem.Instance.SetScoreUIVisible(true);
+            ScoreSystem.Instance.SetScore(0f);
+        }
+        else
+        {
+            Debug.LogWarning("[RoundStart] ScoreSystem instance not found", this);
+        }
+
+        if (timerTextObject != null)
+        {
+            timerTextObject.SetActive(true);
+        }
+
+        if (timer != null)
+        {
+            timer.ResetTimer(300f);
+        }
+
+        if (playerInputManager != null)
+        {
+            playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+        }
+
+        teleportedPlayers.Clear();
+        startRoundActive = false;
+        countdownCoroutine = null;
+
+        Debug.Log("[RoundStart] Round successfully started!");
+    }
+
+    private void TeleportPlayers()
+    {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
         foreach (GameObject player in players)
         {
-            if (teleportedPlayers.Contains(player)) continue;
+            if (player == null || teleportedPlayers.Contains(player))
+                continue;
 
             PlayerInput input = player.GetComponent<PlayerInput>();
             if (input == null) continue;
 
             int index = input.playerIndex;
-            if (index >= teleportDestinations.Length) continue;
+            if (index >= teleportDestinations.Length)
+            {
+                Debug.LogWarning($"[RoundStart] No teleport destination for player index {index}", this);
+                continue;
+            }
 
             Transform destination = teleportDestinations[index].transform;
 
@@ -158,7 +210,7 @@ public class RoundStart : MonoBehaviour
             if (pc != null)
             {
                 pc.enabled = false;
-                StartCoroutine(ReenableControls(pc, 0.1f));
+                StartCoroutine(ReenableControls(pc));
             }
 
             PlayerMenuController menuController = player.GetComponent<PlayerMenuController>();
@@ -167,55 +219,30 @@ public class RoundStart : MonoBehaviour
                 menuController.SetRoundStarted(true);
             }
         }
-
-        playersInTrigger = 0;
-
-        if (ScoreSystem.Instance != null)
-            ScoreSystem.Instance.SetScoreUIVisible(true);
-
-        if (timerTextObject != null) timerTextObject.SetActive(true);
-
-        if (ScoreSystem.Instance != null)
-        {
-            ScoreSystem.Instance.SetScore(0f);
-        }
-        else
-        {
-            Debug.LogWarning("[RoundStart] No ScoreSystem instance found at round start!");
-        }
-
-        if (timer != null)
-        {
-            timer.ResetTimer(300f);
-        }
-
-        if (playerInputManager != null)
-        {
-            playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
-        }
-
-        teleportedPlayers.Clear();
-        startRoundActive = false;
-        countdownCoroutine = null;
-
-        Debug.Log("[RoundStart] Round successfully started!");
     }
 
-    private IEnumerator ReenableControls(PlayerControls pc, float delay)
+    private IEnumerator ReenableControls(PlayerControls pc)
     {
-        yield return new WaitForSeconds(delay);
-        pc.enabled = true;
+        yield return shortDelayWait;
+
+        if (pc != null)
+        {
+            pc.enabled = true;
+        }
     }
 
     public void EndRound()
     {
         if (ScoreSystem.Instance != null)
+        {
             ScoreSystem.Instance.SetScoreUIVisible(false);
-
-        if (timerTextObject != null) timerTextObject.SetActive(false);
-
-        if (ScoreSystem.Instance != null)
             ScoreSystem.Instance.SetScore(0f);
+        }
+
+        if (timerTextObject != null)
+        {
+            timerTextObject.SetActive(false);
+        }
 
         if (playerInputManager != null)
         {
@@ -223,5 +250,14 @@ public class RoundStart : MonoBehaviour
         }
 
         Debug.Log("[RoundStart] Round ended and UI hidden.");
+    }
+
+    private void OnDestroy()
+    {
+        if (countdownCoroutine != null)
+        {
+            StopCoroutine(countdownCoroutine);
+            countdownCoroutine = null;
+        }
     }
 }
