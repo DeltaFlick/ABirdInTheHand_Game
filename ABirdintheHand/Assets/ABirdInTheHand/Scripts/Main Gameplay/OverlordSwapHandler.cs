@@ -113,6 +113,20 @@ public class OverlordSwapHandler : MonoBehaviour
             bird.MenuController = menuController;
         }
 
+        var playerControls = GetComponent<PlayerControls>();
+        if (playerControls != null)
+        {
+            var animControllers = currentVisual.GetComponentsInChildren<BirdAnimationController>(true);
+            foreach (var animController in animControllers)
+            {
+                animController.SetPlayerControls(playerControls);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[OverlordSwapHandler] PlayerControls component not found on overlord!");
+        }
+
         if (playerCamera != null)
         {
             CameraHolder holder = currentVisual.GetComponentInChildren<CameraHolder>(true);

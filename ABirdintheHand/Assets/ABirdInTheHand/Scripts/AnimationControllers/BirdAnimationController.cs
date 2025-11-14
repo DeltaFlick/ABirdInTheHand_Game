@@ -1,8 +1,7 @@
 using UnityEngine;
 
-//should be useable for the human aswell. clean up later
+// Should be useable for the human as well. Clean up later
 // fly = jump
-
 public class BirdAnimationController : MonoBehaviour
 {
     private Animator animator;
@@ -22,24 +21,35 @@ public class BirdAnimationController : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        playerControls = GetComponentInParent<PlayerControls>();
 
         if (animator == null)
         {
             Debug.LogError($"[BirdAnimationController] Animator component missing on {gameObject.name}", this);
             enabled = false;
-            return;
         }
+
+    }
+
+    public void SetPlayerControls(PlayerControls controls)
+    {
+        playerControls = controls;
 
         if (playerControls == null)
         {
-            Debug.LogError($"[BirdAnimationController] PlayerControls component not found in parent of {gameObject.name}", this);
+            Debug.LogError($"[BirdAnimationController] PlayerControls reference is null on {gameObject.name}", this);
             enabled = false;
+        }
+        else
+        {
+            Debug.Log($"[BirdAnimationController] PlayerControls successfully set for {gameObject.name}");
         }
     }
 
     private void Update()
     {
+        if (playerControls == null)
+            return;
+
         UpdateWalkAnimation();
         UpdateFlyAnimation();
     }
@@ -47,7 +57,6 @@ public class BirdAnimationController : MonoBehaviour
     private void UpdateWalkAnimation()
     {
         bool isWalking = playerControls.walkingAnim;
-
         if (isWalking != wasWalking)
         {
             animator.SetBool(IsWalkingHash, isWalking);
@@ -58,7 +67,6 @@ public class BirdAnimationController : MonoBehaviour
     private void UpdateFlyAnimation()
     {
         bool isFlying = playerControls.jumpingAnim;
-
         if (isFlying != wasFlying)
         {
             animator.SetBool(IsFlyingHash, isFlying);
@@ -71,5 +79,4 @@ public class BirdAnimationController : MonoBehaviour
     //     bool isWiggling = playerControls.isWiggling; // Add this property to PlayerControls
     //     animator.SetBool(wiggleParameterName, isWiggling);
     // }
-
 }
