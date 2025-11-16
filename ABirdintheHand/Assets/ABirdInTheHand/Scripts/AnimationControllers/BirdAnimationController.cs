@@ -1,7 +1,5 @@
 using UnityEngine;
 
-// Should be useable for the human as well. Clean up later
-// fly = jump
 public class BirdAnimationController : MonoBehaviour
 {
     private Animator animator;
@@ -26,8 +24,22 @@ public class BirdAnimationController : MonoBehaviour
         {
             Debug.LogError($"[BirdAnimationController] Animator component missing on {gameObject.name}", this);
             enabled = false;
+            return;
         }
 
+        playerControls = GetComponentInParent<PlayerControls>();
+
+        if (playerControls == null)
+        {
+            Transform root = transform.root;
+            playerControls = root.GetComponent<PlayerControls>();
+        }
+
+        if (playerControls == null)
+        {
+            Debug.LogWarning($"[BirdAnimationController] PlayerControls component not found for {gameObject.name} - waiting for SetPlayerControls()", this);
+            enabled = false;
+        }
     }
 
     public void SetPlayerControls(PlayerControls controls)
@@ -41,13 +53,14 @@ public class BirdAnimationController : MonoBehaviour
         }
         else
         {
-            Debug.Log($"[BirdAnimationController] PlayerControls successfully set for {gameObject.name}");
+            enabled = true;
+            Debug.Log($"[BirdAnimationController] PlayerControls successfully set for {gameObject.name}", this);
         }
     }
 
     private void Update()
     {
-        if (playerControls == null)
+        if (playerControls == null || animator == null)
             return;
 
         UpdateWalkAnimation();
@@ -57,6 +70,7 @@ public class BirdAnimationController : MonoBehaviour
     private void UpdateWalkAnimation()
     {
         bool isWalking = playerControls.walkingAnim;
+
         if (isWalking != wasWalking)
         {
             animator.SetBool(IsWalkingHash, isWalking);
@@ -67,6 +81,7 @@ public class BirdAnimationController : MonoBehaviour
     private void UpdateFlyAnimation()
     {
         bool isFlying = playerControls.jumpingAnim;
+
         if (isFlying != wasFlying)
         {
             animator.SetBool(IsFlyingHash, isFlying);

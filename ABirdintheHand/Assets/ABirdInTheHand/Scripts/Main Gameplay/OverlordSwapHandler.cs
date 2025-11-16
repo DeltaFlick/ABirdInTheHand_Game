@@ -171,11 +171,7 @@ public class OverlordSwapHandler : MonoBehaviour
             BirdAnimationController[] animControllers = currentVisual.GetComponentsInChildren<BirdAnimationController>(true);
             foreach (var animController in animControllers)
             {
-                if (animController != null)
-                {
-                    // The BirdAnimationController already gets PlayerControls from parent
-                    // So this may not be necessary (still testing)
-                }
+                animController.SetPlayerControls(playerControls);
             }
         }
         else
