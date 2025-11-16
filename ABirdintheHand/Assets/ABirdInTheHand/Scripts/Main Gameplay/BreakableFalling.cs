@@ -1,52 +1,69 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-/// <Summary>
-/// Break objects on falling impact
-/// </Summary>
-
+/// <summary>
+/// Break objects on falling impact and award score
+/// </summary>
+[RequireComponent(typeof(Rigidbody))]
 public class BreakableFalling : MonoBehaviour
 {
-    public float scoreAddAmount = 10;
-    public float impactThreshold = 5f;
-    public GameObject destroyedVersion;
+    [Header("Impact Settings")]
+    [SerializeField] private float impactThreshold = 5f;
+    [SerializeField] private float scoreAddAmount = 10f;
+    [SerializeField] private GameObject destroyedVersion;
+
+    [Header("Ground Detection")]
+    [SerializeField] private string groundTag = "whatisGround";
 
     private Rigidbody rb;
-    private ScoreSystem scoreSystem;
     private bool hasBroken = false;
 
-    void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
 
-        GameObject controllerObj = GameObject.FindGameObjectWithTag("GameController");
-        if (controllerObj != null)
-            scoreSystem = controllerObj.GetComponent<ScoreSystem>();
+        if (rb == null)
+        {
+            Debug.LogError("[BreakableFalling] Rigidbody component required!", this);
+            enabled = false;
+        }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (hasBroken) return;
+        if (hasBroken)
+            return;
 
-        if (collision.gameObject.CompareTag("whatisGround"))
+        if (collision.gameObject.CompareTag(groundTag))
         {
             float impactVelocity = collision.relativeVelocity.magnitude;
 
             if (impactVelocity > impactThreshold)
             {
-                hasBroken = true;
-
-                if (ScoreSystem.Instance != null)
-                    ScoreSystem.Instance.AddScore(scoreAddAmount);
-                else
-                    Debug.LogWarning("[BreakableFalling] ScoreSystem.Instance is null; score not added.");
-
-                ForceDrop.RequestDropAll();
-
-                Instantiate(destroyedVersion, transform.position, transform.rotation);
-                Destroy(gameObject);
+                Break();
             }
         }
+    }
+
+    private void Break()
+    {
+        hasBroken = true;
+
+        if (ScoreSystem.Instance != null)
+        {
+            ScoreSystem.Instance.AddScore(scoreAddAmount);
+        }
+        else
+        {
+            Debug.LogWarning("[BreakableFalling] ScoreSystem.Instance is null; score not added.", this);
+        }
+
+        ForceDrop.RequestDropAll();
+
+        if (destroyedVersion != null)
+        {
+            Instantiate(destroyedVersion, transform.position, transform.rotation);
+        }
+
+        Destroy(gameObject);
     }
 }

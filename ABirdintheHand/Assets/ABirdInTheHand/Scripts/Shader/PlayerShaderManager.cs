@@ -21,21 +21,21 @@ public class PlayerShaderManager : MonoBehaviour
         int playerIndex = player.playerIndex;
         Debug.Log($"Player Index: {playerIndex}, Camera: {playerCamera}");
 
-        if (playerIndex < customPassVolumes.Length && customPassVolumes[playerIndex] != null)
-        {
-            CustomPassVolume volume = customPassVolumes[playerIndex];
+        //if (playerIndex < customPassVolumes.Length && customPassVolumes[playerIndex] != null)
+        //{
+        //    CustomPassVolume volume = customPassVolumes[playerIndex];
             
-            volume.enabled = true;
-            volume.targetCamera = playerCamera;
+        //    volume.enabled = true;
+        //    volume.targetCamera = playerCamera;
 
-            ShaderSwapper shaderSwapper = player.GetComponent<ShaderSwapper>();
-            if (shaderSwapper != null)
-            {
-                shaderSwapper.playerID = playerIndex + 1;
-                Debug.Log(playerIndex);
-                shaderSwapper.SetCustomPassVolume(volume);
-            }
-        }
+        //    ShaderSwapper shaderSwapper = player.GetComponent<ShaderSwapper>();
+        //    if (shaderSwapper != null)
+        //    {
+        //        shaderSwapper.playerID = playerIndex + 1;
+        //        Debug.Log(playerIndex);
+        //        shaderSwapper.SetCustomPassVolume(volume);
+        //    }
+        //}
     }
 
     private void OnPlayerLeft(PlayerInput player)

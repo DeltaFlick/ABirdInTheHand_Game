@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-/// <Summary>
-/// Break objects on interact
-/// </Summary>
-
+/// <summary>
+/// Break objects on interact and award score
+/// </summary>
 public class BreakableInteraction : MonoBehaviour, IInteractable
 {
     [Header("UI Prompt")]
@@ -17,39 +14,55 @@ public class BreakableInteraction : MonoBehaviour, IInteractable
     [SerializeField] private GameObject brokenVersion;
     [SerializeField] private float scoreAddAmount = 10f;
 
-    private ScoreSystem scoreSystem;
+    private bool hasBeenBroken = false;
 
     private void Start()
     {
-        scoreSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<ScoreSystem>();
-
         if (promptText != null)
+        {
             promptText.text = "Press [E] to Break";
+        }
     }
 
     public void Interact(InteractionController interactor)
     {
-        Debug.Log($"{gameObject.name} has been broken by {interactor.name}");
+        if (hasBeenBroken)
+            return;
+
+        hasBeenBroken = true;
+
+        Debug.Log($"[BreakableInteraction] {gameObject.name} broken by {interactor?.name}", this);
 
         if (ScoreSystem.Instance != null)
+        {
             ScoreSystem.Instance.AddScore(scoreAddAmount);
+        }
         else
-            Debug.LogWarning("[BreakableInteraction] ScoreSystem.Instance is null; score not added.");
+        {
+            Debug.LogWarning("[BreakableInteraction] ScoreSystem.Instance is null; score not added.", this);
+        }
 
         if (brokenVersion != null)
+        {
             Instantiate(brokenVersion, transform.position, transform.rotation);
+        }
 
         Destroy(gameObject);
     }
 
     public void ShowPrompt()
     {
-        if (promptUI != null) promptUI.SetActive(true);
+        if (promptUI != null)
+        {
+            promptUI.SetActive(true);
+        }
     }
 
     public void HidePrompt()
     {
-        if (promptUI != null) promptUI.SetActive(false);
+        if (promptUI != null)
+        {
+            promptUI.SetActive(false);
+        }
     }
 }
-

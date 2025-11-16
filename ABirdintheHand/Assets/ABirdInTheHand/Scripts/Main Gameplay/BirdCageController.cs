@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Handles trapping and releasing birds with per-player rescue timers
 /// </summary>
-
 public class BirdCageController : MonoBehaviour
 {
     [Header("Cage Settings")]
@@ -19,7 +18,7 @@ public class BirdCageController : MonoBehaviour
     [SerializeField] private string humansWinSceneName = "HumansWin";
 
     [Header("Debug")]
-    [SerializeField] private bool verboseLogging = true;
+    [SerializeField] private bool verboseLogging = false;
 
     private List<BirdIdentifier> birdsInCage = new List<BirdIdentifier>();
     private Dictionary<GameObject, BirdIdentifier> freeBirdsInTrigger = new Dictionary<GameObject, BirdIdentifier>();
@@ -27,6 +26,14 @@ public class BirdCageController : MonoBehaviour
     private BirdIdentifier currentRescuer;
     private bool isRescuing = false;
     private float rescueStartTime;
+
+    private WaitForFixedUpdate waitForFixedUpdate;
+    private int cachedTotalBirds = -1;
+
+    private void Awake()
+    {
+        waitForFixedUpdate = new WaitForFixedUpdate();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -36,7 +43,7 @@ public class BirdCageController : MonoBehaviour
         GameObject birdRoot = bird.transform.root.gameObject;
 
         if (verboseLogging)
-            Debug.Log($"[BirdCage] OnTriggerEnter: {birdRoot.name}, IsBeingHeld: {bird.IsBeingHeld}, IsCaged: {bird.IsCaged}");
+            Debug.Log($"[BirdCage] OnTriggerEnter: {birdRoot.name}, IsBeingHeld: {bird.IsBeingHeld}, IsCaged: {bird.IsCaged}", this);
 
         if (bird.IsBeingHeld)
         {
@@ -52,7 +59,7 @@ public class BirdCageController : MonoBehaviour
             freeBirdsInTrigger.Add(birdRoot, bird);
 
             if (verboseLogging)
-                Debug.Log($"[BirdCage] Added free bird. Total free: {freeBirdsInTrigger.Count}, Caged: {birdsInCage.Count}");
+                Debug.Log($"[BirdCage] Added free bird. Total free: {freeBirdsInTrigger.Count}, Caged: {birdsInCage.Count}", this);
         }
 
         TryStartRescue();
@@ -66,7 +73,7 @@ public class BirdCageController : MonoBehaviour
         GameObject birdRoot = bird.transform.root.gameObject;
 
         if (verboseLogging)
-            Debug.Log($"[BirdCage] OnTriggerExit: {birdRoot.name}, IsCaged: {bird.IsCaged}");
+            Debug.Log($"[BirdCage] OnTriggerExit: {birdRoot.name}, IsCaged: {bird.IsCaged}", this);
 
         if (bird.IsCaged)
             return;
@@ -76,12 +83,12 @@ public class BirdCageController : MonoBehaviour
             freeBirdsInTrigger.Remove(birdRoot);
 
             if (verboseLogging)
-                Debug.Log($"[BirdCage] Removed free bird. Total free: {freeBirdsInTrigger.Count}");
+                Debug.Log($"[BirdCage] Removed free bird. Total free: {freeBirdsInTrigger.Count}", this);
 
             if (bird == currentRescuer && isRescuing)
             {
                 if (verboseLogging)
-                    Debug.Log($"[BirdCage] Current rescuer left trigger, canceling rescue");
+                    Debug.Log("[BirdCage] Current rescuer left trigger, canceling rescue", this);
                 CancelRescue();
             }
         }
@@ -101,22 +108,22 @@ public class BirdCageController : MonoBehaviour
                 freeBirdsInTrigger.Remove(birdRoot);
 
                 if (verboseLogging)
-                    Debug.Log($"[BirdCage] Removed {birdRoot.name} from free birds (Stay check). Total free: {freeBirdsInTrigger.Count}");
+                    Debug.Log($"[BirdCage] Removed {birdRoot.name} from free birds (Stay check). Total free: {freeBirdsInTrigger.Count}", this);
 
                 if (bird == currentRescuer && isRescuing)
                 {
                     if (verboseLogging)
-                        Debug.Log($"[BirdCage] Current rescuer became invalid (Stay), canceling rescue");
+                        Debug.Log("[BirdCage] Current rescuer became invalid (Stay), canceling rescue", this);
                     CancelRescue();
                 }
             }
         }
-        else if (!bird.IsCaged && !bird.IsBeingHeld && !freeBirdsInTrigger.ContainsKey(birdRoot))
+        else if (!freeBirdsInTrigger.ContainsKey(birdRoot))
         {
             freeBirdsInTrigger.Add(birdRoot, bird);
 
             if (verboseLogging)
-                Debug.Log($"[BirdCage] Re-added {birdRoot.name} to free birds (Stay check). Total free: {freeBirdsInTrigger.Count}");
+                Debug.Log($"[BirdCage] Re-added {birdRoot.name} to free birds (Stay check). Total free: {freeBirdsInTrigger.Count}", this);
 
             TryStartRescue();
         }
@@ -124,19 +131,19 @@ public class BirdCageController : MonoBehaviour
 
     private void TryStartRescue()
     {
-        if (!isRescuing && freeBirdsInTrigger.Count > 0 && birdsInCage.Count > 0)
+        if (isRescuing || freeBirdsInTrigger.Count == 0 || birdsInCage.Count == 0)
+            return;
+
+        currentRescuer = freeBirdsInTrigger.Values.FirstOrDefault();
+
+        if (currentRescuer != null)
         {
-            currentRescuer = freeBirdsInTrigger.Values.FirstOrDefault();
+            isRescuing = true;
+            rescueStartTime = Time.time;
+            rescueRoutine = StartCoroutine(RescueCountdown(currentRescuer));
 
-            if (currentRescuer != null)
-            {
-                isRescuing = true;
-                rescueStartTime = Time.time;
-                rescueRoutine = StartCoroutine(RescueCountdown(currentRescuer));
-
-                if (verboseLogging)
-                    Debug.Log($"[BirdCage] Started rescue with {currentRescuer.transform.root.name}");
-            }
+            if (verboseLogging)
+                Debug.Log($"[BirdCage] Started rescue with {currentRescuer.transform.root.name}", this);
         }
     }
 
@@ -144,12 +151,12 @@ public class BirdCageController : MonoBehaviour
     {
         if (cageSpawnPoint == null)
         {
-            Debug.LogWarning("[BirdCageController] Cage spawn point not assigned!");
+            Debug.LogWarning("[BirdCageController] Cage spawn point not assigned!", this);
             return;
         }
 
         if (verboseLogging)
-            Debug.Log($"[BirdCage] Teleporting {birdRoot.name} to cage");
+            Debug.Log($"[BirdCage] Teleporting {birdRoot.name} to cage", this);
 
         StartCoroutine(TeleportSequence(birdRoot, bird));
     }
@@ -167,7 +174,8 @@ public class BirdCageController : MonoBehaviour
             rootRb.angularVelocity = Vector3.zero;
         }
 
-        foreach (var rb in birdRoot.GetComponentsInChildren<Rigidbody>())
+        Rigidbody[] allRigidbodies = birdRoot.GetComponentsInChildren<Rigidbody>();
+        foreach (var rb in allRigidbodies)
         {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
@@ -177,8 +185,8 @@ public class BirdCageController : MonoBehaviour
         birdRoot.transform.rotation = cageSpawnPoint.rotation;
         Physics.SyncTransforms();
 
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
+        yield return waitForFixedUpdate;
+        yield return waitForFixedUpdate;
 
         if (rootRb != null)
         {
@@ -186,13 +194,13 @@ public class BirdCageController : MonoBehaviour
             rootRb.angularVelocity = Vector3.zero;
         }
 
-        foreach (var rb in birdRoot.GetComponentsInChildren<Rigidbody>())
+        foreach (var rb in allRigidbodies)
         {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
 
-        yield return new WaitForFixedUpdate();
+        yield return waitForFixedUpdate;
 
         if (rootRb != null)
         {
@@ -202,18 +210,19 @@ public class BirdCageController : MonoBehaviour
         bird.IsCaged = true;
         bird.IsBeingHeld = false;
 
+        // Remove from free birds list
         if (freeBirdsInTrigger.ContainsKey(birdRoot))
         {
             freeBirdsInTrigger.Remove(birdRoot);
 
             if (verboseLogging)
-                Debug.Log($"[BirdCage] Removed caged bird from free list");
+                Debug.Log("[BirdCage] Removed caged bird from free list", this);
         }
 
         if (bird == currentRescuer && isRescuing)
         {
             if (verboseLogging)
-                Debug.Log($"[BirdCage] Caged bird was rescuer, canceling rescue");
+                Debug.Log("[BirdCage] Caged bird was rescuer, canceling rescue", this);
             CancelRescue();
         }
 
@@ -224,20 +233,27 @@ public class BirdCageController : MonoBehaviour
 
     private void RegisterCagedBird(BirdIdentifier bird)
     {
-        if (bird == null || birdsInCage.Contains(bird)) return;
+        if (bird == null || birdsInCage.Contains(bird))
+            return;
 
         ForceDrop.RequestDropAll();
 
         birdsInCage.Add(bird);
 
         if (verboseLogging)
-            Debug.Log($"[BirdCage] Registered caged bird. Total caged: {birdsInCage.Count}");
+            Debug.Log($"[BirdCage] Registered caged bird. Total caged: {birdsInCage.Count}", this);
 
         CheckWinCondition();
     }
 
     private IEnumerator RescueCountdown(BirdIdentifier rescuer)
     {
+        if (rescuer == null)
+        {
+            CancelRescue();
+            yield break;
+        }
+
         float timer = 0f;
         GameObject rescuerRoot = rescuer.transform.root.gameObject;
 
@@ -248,7 +264,7 @@ public class BirdCageController : MonoBehaviour
             if (rescuer == null || !freeBirdsInTrigger.ContainsKey(rescuerRoot))
             {
                 if (verboseLogging)
-                    Debug.Log($"[BirdCage] Rescue failed: rescuer no longer in trigger (elapsed: {timer:F1}s)");
+                    Debug.Log($"[BirdCage] Rescue failed: rescuer no longer in trigger (elapsed: {timer:F1}s)", this);
                 CancelRescue();
                 yield break;
             }
@@ -256,7 +272,7 @@ public class BirdCageController : MonoBehaviour
             if (rescuer.IsCaged || rescuer.IsBeingHeld)
             {
                 if (verboseLogging)
-                    Debug.Log($"[BirdCage] Rescue failed: rescuer state changed (elapsed: {timer:F1}s)");
+                    Debug.Log($"[BirdCage] Rescue failed: rescuer state changed (elapsed: {timer:F1}s)", this);
                 CancelRescue();
                 yield break;
             }
@@ -264,7 +280,7 @@ public class BirdCageController : MonoBehaviour
             if (birdsInCage.Count == 0)
             {
                 if (verboseLogging)
-                    Debug.Log($"[BirdCage] Rescue failed: no birds left to rescue (elapsed: {timer:F1}s)");
+                    Debug.Log($"[BirdCage] Rescue failed: no birds left to rescue (elapsed: {timer:F1}s)", this);
                 CancelRescue();
                 yield break;
             }
@@ -278,7 +294,7 @@ public class BirdCageController : MonoBehaviour
         }
 
         if (verboseLogging)
-            Debug.Log($"[BirdCage] *** RESCUE COMPLETED *** by {rescuerRoot.name}. Releasing {birdsInCage.Count} birds.");
+            Debug.Log($"[BirdCage] *** RESCUE COMPLETED *** by {rescuerRoot.name}. Releasing {birdsInCage.Count} birds.", this);
 
         ReleaseAllBirds();
 
@@ -300,8 +316,9 @@ public class BirdCageController : MonoBehaviour
         if (currentRescuer != null)
         {
             float elapsed = Time.time - rescueStartTime;
+
             if (verboseLogging)
-                Debug.Log($"[BirdCage] Rescue canceled after {elapsed:F1}s");
+                Debug.Log($"[BirdCage] Rescue canceled after {elapsed:F1}s", this);
 
             RescueEvents.OnRescueEnded?.Invoke(currentRescuer.MenuController);
         }
@@ -312,7 +329,7 @@ public class BirdCageController : MonoBehaviour
         if (freeBirdsInTrigger.Count > 0 && birdsInCage.Count > 0)
         {
             if (verboseLogging)
-                Debug.Log($"[BirdCage] Attempting to restart rescue with {freeBirdsInTrigger.Count} free bird(s)");
+                Debug.Log($"[BirdCage] Attempting to restart rescue with {freeBirdsInTrigger.Count} free bird(s)", this);
 
             TryStartRescue();
         }
@@ -320,6 +337,12 @@ public class BirdCageController : MonoBehaviour
 
     private void ReleaseAllBirds()
     {
+        if (releasePoint == null)
+        {
+            Debug.LogWarning("[BirdCageController] Release point not assigned!", this);
+            return;
+        }
+
         int releaseCount = birdsInCage.Count;
         List<BirdIdentifier> birdsToRelease = new List<BirdIdentifier>(birdsInCage);
 
@@ -327,7 +350,7 @@ public class BirdCageController : MonoBehaviour
         {
             if (bird == null)
             {
-                Debug.LogWarning("[BirdCage] Null bird in cage list during release!");
+                Debug.LogWarning("[BirdCage] Null bird in cage list during release!", this);
                 continue;
             }
 
@@ -346,56 +369,60 @@ public class BirdCageController : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
             }
 
-            if (releasePoint != null)
-            {
-                birdRoot.transform.position = releasePoint.position;
-                birdRoot.transform.rotation = releasePoint.rotation;
-                Physics.SyncTransforms();
-            }
+            birdRoot.transform.position = releasePoint.position;
+            birdRoot.transform.rotation = releasePoint.rotation;
+            Physics.SyncTransforms();
 
             bird.IsCaged = false;
             bird.IsBeingHeld = false;
 
             if (verboseLogging)
-                Debug.Log($"[BirdCage] Released {birdRoot.name}");
+                Debug.Log($"[BirdCage] Released {birdRoot.name}", this);
         }
 
         birdsInCage.Clear();
 
-        Debug.Log($"[BirdCage] *** RELEASED {releaseCount} BIRDS ***");
+        Debug.Log($"[BirdCage] *** RELEASED {releaseCount} BIRDS ***", this);
     }
 
     #endregion
 
     private void CheckWinCondition()
     {
-        // If testing
-        //int totalBirds = 5;
-
-        //if (birdsInCage.Count == totalBirds)
-
-        int totalBirds = BirdManager.Instance?.GetBirdCount() ?? 0;
-
-        if (totalBirds <= 0)
+        if (cachedTotalBirds < 0 && BirdManager.Instance != null)
         {
-            Debug.LogWarning("[BirdCageController] No birds registered in BirdManager!");
+            cachedTotalBirds = BirdManager.Instance.GetBirdCount();
+        }
+
+        if (cachedTotalBirds <= 0)
+        {
+            Debug.LogWarning("[BirdCageController] No birds registered in BirdManager!", this);
             return;
         }
 
-        if (birdsInCage.Count >= totalBirds)
+        if (birdsInCage.Count >= cachedTotalBirds)
         {
-            Debug.Log("[BirdCageController] All birds caged, humans win!");
+            Debug.Log("[BirdCageController] All birds caged, humans win!", this);
+
             if (!string.IsNullOrEmpty(humansWinSceneName))
             {
                 SceneManager.LoadScene(humansWinSceneName);
             }
             else
             {
-                Debug.LogWarning("[BirdCageController] Humans win scene name not set!");
+                Debug.LogWarning("[BirdCageController] Humans win scene name not set!", this);
             }
         }
     }
 
+    private void OnDestroy()
+    {
+        if (rescueRoutine != null)
+        {
+            StopCoroutine(rescueRoutine);
+            rescueRoutine = null;
+        }
+    }
 
     private void OnDrawGizmos()
     {
@@ -415,7 +442,7 @@ public class BirdCageController : MonoBehaviour
     [ContextMenu("Debug: Print Cage Status")]
     private void DebugPrintStatus()
     {
-        Debug.Log($"=== CAGE STATUS ===");
+        Debug.Log("=== CAGE STATUS ===");
         Debug.Log($"Free birds in trigger: {freeBirdsInTrigger.Count}");
         Debug.Log($"Caged birds: {birdsInCage.Count}");
         Debug.Log($"Is rescuing: {isRescuing}");

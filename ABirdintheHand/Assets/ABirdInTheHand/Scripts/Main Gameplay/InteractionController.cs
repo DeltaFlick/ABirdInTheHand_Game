@@ -1,12 +1,9 @@
 using UnityEngine;
-using System;
-using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
-/// <Summary>
-/// Interaction system controller
-/// </Summary>
-
+/// <summary>
+/// Interaction system controller with raycast-based object detection
+/// </summary>
 public class InteractionController : MonoBehaviour
 {
     [SerializeField] private float interactionDistance = 3f;
@@ -14,46 +11,80 @@ public class InteractionController : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField] private ShaderSwapper shaderSwapper;
 
+    [Header("Performance Settings")]
+    [SerializeField] private bool enableRaycastThrottling = false;
+    [SerializeField] private float raycastInterval = 0.05f;
+
     private PlayerInput playerInput;
     private InputAction interactAction;
     private IInteractable currentInteractable;
+    private GameObject currentHighlightedObject;
+    private float lastRaycastTime;
+    private OverlordSwapHandler swapHandler;
+
+    private Ray interactionRay;
 
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        if (playerInput != null && playerInput.actions != null)
-            interactAction = playerInput.actions.FindAction("Interact", true);
 
-        var swapHandler = GetComponent<OverlordSwapHandler>();
+        if (playerInput?.actions != null)
+        {
+            interactAction = playerInput.actions.FindAction("Interact", true);
+        }
+
+        swapHandler = GetComponent<OverlordSwapHandler>();
         if (swapHandler != null)
+        {
             swapHandler.OnVisualChanged += OnVisualChanged;
+        }
 
         if (playerCamera == null)
+        {
             playerCamera = GetComponentInChildren<Camera>(true);
+        }
 
         if (shaderSwapper == null)
+        {
             shaderSwapper = GetComponent<ShaderSwapper>();
+        }
     }
 
     private void OnEnable()
     {
         if (interactAction != null)
+        {
             interactAction.performed += TryInteract;
+        }
     }
 
     private void OnDisable()
     {
         if (interactAction != null)
+        {
             interactAction.performed -= TryInteract;
+        }
+
+        ClearCurrentInteractable();
     }
 
     private void Update()
     {
-        if (playerCamera == null) return;
+        if (playerCamera == null)
+            return;
 
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        if (enableRaycastThrottling)
+        {
+            if (Time.time - lastRaycastTime < raycastInterval)
+                return;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance, interactableMask))
+            lastRaycastTime = Time.time;
+        }
+
+        interactionRay.origin = playerCamera.transform.position;
+        interactionRay.direction = playerCamera.transform.forward;
+
+        if (Physics.Raycast(interactionRay, out RaycastHit hit, interactionDistance, interactableMask))
         {
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();
 
@@ -61,14 +92,17 @@ public class InteractionController : MonoBehaviour
             {
                 if (currentInteractable != interactable)
                 {
-                    if (currentInteractable != null)
-                    {
-                        currentInteractable.HidePrompt();
-                        shaderSwapper.RevertShader();
-                    }
+                    ClearCurrentInteractable();
+
                     currentInteractable = interactable;
+                    currentHighlightedObject = hit.collider.gameObject;
+
                     currentInteractable.ShowPrompt();
-                    shaderSwapper.ChangeShader(hit.collider.gameObject, playerCamera);
+
+                    if (shaderSwapper != null)
+                    {
+                        shaderSwapper.ChangeShader(currentHighlightedObject, playerCamera);
+                    }
                 }
                 return;
             }
@@ -76,34 +110,68 @@ public class InteractionController : MonoBehaviour
 
         if (currentInteractable != null)
         {
-            currentInteractable.HidePrompt();
-            shaderSwapper.RemoveCamera(playerCamera);
-            currentInteractable = null;
+            ClearCurrentInteractable();
         }
     }
 
     private void TryInteract(InputAction.CallbackContext context)
     {
         if (currentInteractable != null)
+        {
             currentInteractable.Interact(this);
+        }
     }
 
-    private void OnDestroy()
+    private void ClearCurrentInteractable()
     {
-        var swapHandler = GetComponent<OverlordSwapHandler>();
-        if (swapHandler != null)
-            swapHandler.OnVisualChanged -= OnVisualChanged;
+        if (currentInteractable != null)
+        {
+            currentInteractable.HidePrompt();
+            currentInteractable = null;
+        }
+
+        if (shaderSwapper != null)
+        {
+            if (currentHighlightedObject != null)
+            {
+                shaderSwapper.RevertShader();
+            }
+
+            if (playerCamera != null)
+            {
+                shaderSwapper.RemoveCamera(playerCamera);
+            }
+        }
+
+        currentHighlightedObject = null;
     }
 
     private void OnVisualChanged(GameObject newVisual)
     {
-        if (newVisual == null) return;
+        if (newVisual == null)
+            return;
 
         CameraHolder holder = newVisual.GetComponentInChildren<CameraHolder>(true);
         if (holder != null)
+        {
             playerCamera = GetComponentInChildren<Camera>(true);
+        }
 
         if (shaderSwapper != null)
+        {
             shaderSwapper.ResetVisualReference(newVisual);
+        }
+
+        ClearCurrentInteractable();
+    }
+
+    private void OnDestroy()
+    {
+        ClearCurrentInteractable();
+
+        if (swapHandler != null)
+        {
+            swapHandler.OnVisualChanged -= OnVisualChanged;
+        }
     }
 }

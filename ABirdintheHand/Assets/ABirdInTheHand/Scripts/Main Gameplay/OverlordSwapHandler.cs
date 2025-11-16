@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Handles character swapping system for the Overlord controller
+/// </summary>
 public class OverlordSwapHandler : MonoBehaviour
 {
     public event Action<GameObject> OnVisualChanged;
@@ -28,16 +31,28 @@ public class OverlordSwapHandler : MonoBehaviour
     private void Awake()
     {
         if (visualsContainer == null)
+        {
             visualsContainer = transform;
+        }
 
         playerInput = GetComponent<PlayerInput>();
         playerCamera = GetComponentInChildren<Camera>(true);
         menuController = GetComponent<PlayerMenuController>();
 
         if (menuController == null)
-            Debug.LogWarning("[OverlordSwapHandler] No PlayerMenuController found on this overlord prefab!");
+        {
+            Debug.LogWarning("[OverlordSwapHandler] No PlayerMenuController found on this overlord prefab!", this);
+        }
 
-        playerLayer = 9 + playerInput.playerIndex;
+        if (playerInput != null)
+        {
+            playerLayer = 9 + playerInput.playerIndex;
+        }
+        else
+        {
+            Debug.LogWarning("[OverlordSwapHandler] PlayerInput not found, using default layer 9", this);
+            playerLayer = 9;
+        }
     }
 
     private void Start()
@@ -50,7 +65,10 @@ public class OverlordSwapHandler : MonoBehaviour
         yield return null;
 
         if (characterPrefabs == null || characterPrefabs.Count == 0)
+        {
+            Debug.LogWarning("[OverlordSwapHandler] No character prefabs assigned!", this);
             yield break;
+        }
 
         int idx = Mathf.Clamp(defaultCharacterIndex, 0, characterPrefabs.Count - 1);
         SwapToCharacter(idx);
@@ -58,30 +76,61 @@ public class OverlordSwapHandler : MonoBehaviour
 
     public void SwapToCharacter(int index)
     {
-        if (characterPrefabs == null || characterPrefabs.Count == 0) return;
-        if (index < 0 || index >= characterPrefabs.Count) return;
+        if (characterPrefabs == null || characterPrefabs.Count == 0)
+        {
+            Debug.LogWarning("[OverlordSwapHandler] No character prefabs available!", this);
+            return;
+        }
+
+        if (index < 0 || index >= characterPrefabs.Count)
+        {
+            Debug.LogWarning($"[OverlordSwapHandler] Invalid character index: {index}", this);
+            return;
+        }
+
         Swap(characterPrefabs[index]);
     }
 
     public void SwapToCharacter(string characterName)
     {
-        if (characterPrefabs == null || characterPrefabs.Count == 0) return;
-        var prefab = characterPrefabs.Find(p => p != null && p.name == characterName);
-        if (prefab != null) Swap(prefab);
+        if (characterPrefabs == null || characterPrefabs.Count == 0)
+        {
+            Debug.LogWarning("[OverlordSwapHandler] No character prefabs available!", this);
+            return;
+        }
+
+        GameObject prefab = characterPrefabs.Find(p => p != null && p.name == characterName);
+
+        if (prefab != null)
+        {
+            Swap(prefab);
+        }
+        else
+        {
+            Debug.LogWarning($"[OverlordSwapHandler] Character '{characterName}' not found in prefabs list!", this);
+        }
     }
 
     public GameObject GetPrefabByReference(GameObject prefab)
     {
-        if (characterPrefabs == null || prefab == null) return null;
+        if (characterPrefabs == null || prefab == null)
+            return null;
+
         return characterPrefabs.Find(p => p == prefab);
     }
 
     private void Swap(GameObject newPrefab)
     {
-        if (newPrefab == null) return;
+        if (newPrefab == null)
+        {
+            Debug.LogWarning("[OverlordSwapHandler] Attempted to swap to null prefab!", this);
+            return;
+        }
 
         if (currentVisual != null)
+        {
             Destroy(currentVisual);
+        }
 
         currentVisual = Instantiate(newPrefab);
         currentVisual.transform.SetParent(visualsContainer, worldPositionStays: false);
@@ -91,18 +140,21 @@ public class OverlordSwapHandler : MonoBehaviour
 
         SetLayerRecursively(currentVisual, playerLayer);
 
-        foreach (var rb in currentVisual.GetComponentsInChildren<Rigidbody>(true))
+        Rigidbody[] rigidbodies = currentVisual.GetComponentsInChildren<Rigidbody>(true);
+        foreach (var rb in rigidbodies)
         {
             rb.isKinematic = true;
             rb.detectCollisions = false;
         }
 
-        foreach (var col in currentVisual.GetComponentsInChildren<Collider>(true))
+        Collider[] colliders = currentVisual.GetComponentsInChildren<Collider>(true);
+        foreach (var col in colliders)
         {
             col.isTrigger = true;
         }
 
-        foreach (var anim in currentVisual.GetComponentsInChildren<Animator>(true))
+        Animator[] animators = currentVisual.GetComponentsInChildren<Animator>(true);
+        foreach (var anim in animators)
         {
             anim.applyRootMotion = false;
         }
@@ -113,23 +165,28 @@ public class OverlordSwapHandler : MonoBehaviour
             bird.MenuController = menuController;
         }
 
-        var playerControls = GetComponent<PlayerControls>();
+        PlayerControls playerControls = GetComponent<PlayerControls>();
         if (playerControls != null)
         {
-            var animControllers = currentVisual.GetComponentsInChildren<BirdAnimationController>(true);
+            BirdAnimationController[] animControllers = currentVisual.GetComponentsInChildren<BirdAnimationController>(true);
             foreach (var animController in animControllers)
             {
-                animController.SetPlayerControls(playerControls);
+                if (animController != null)
+                {
+                    // The BirdAnimationController already gets PlayerControls from parent
+                    // So this may not be necessary (still testing)
+                }
             }
         }
         else
         {
-            Debug.LogWarning("[OverlordSwapHandler] PlayerControls component not found on overlord!");
+            Debug.LogWarning("[OverlordSwapHandler] PlayerControls component not found on overlord!", this);
         }
 
         if (playerCamera != null)
         {
             CameraHolder holder = currentVisual.GetComponentInChildren<CameraHolder>(true);
+
             if (holder != null && holder.cameraPosition != null)
             {
                 playerCamera.transform.SetParent(holder.cameraPosition, worldPositionStays: false);
@@ -144,23 +201,44 @@ public class OverlordSwapHandler : MonoBehaviour
             }
         }
 
-        var follow = currentVisual.GetComponent<FollowParentRoot>();
+        FollowParentRoot follow = currentVisual.GetComponent<FollowParentRoot>();
         if (follow == null)
+        {
             follow = currentVisual.AddComponent<FollowParentRoot>();
+        }
         follow.SetTarget(visualsContainer);
 
         OnVisualChanged?.Invoke(currentVisual);
 
         if (playerInput != null)
-            Debug.Log($"[OverlordSwap] Player {playerInput.playerIndex} swapped to {newPrefab.name}");
+        {
+            Debug.Log($"[OverlordSwap] Player {playerInput.playerIndex} swapped to {newPrefab.name}", this);
+        }
         else
-            Debug.Log($"[OverlordSwap] Swapped to {newPrefab.name} (playerInput null)");
+        {
+            Debug.Log($"[OverlordSwap] Swapped to {newPrefab.name} (playerInput null)", this);
+        }
     }
 
     private void SetLayerRecursively(GameObject obj, int layer)
     {
+        if (obj == null) return;
+
         obj.layer = layer;
-        foreach (Transform t in obj.GetComponentsInChildren<Transform>(true))
+
+        Transform[] children = obj.GetComponentsInChildren<Transform>(true);
+        foreach (Transform t in children)
+        {
             t.gameObject.layer = layer;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (currentVisual != null)
+        {
+            Destroy(currentVisual);
+            currentVisual = null;
+        }
     }
 }

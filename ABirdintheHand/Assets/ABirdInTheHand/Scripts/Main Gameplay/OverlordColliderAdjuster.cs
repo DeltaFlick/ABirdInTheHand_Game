@@ -3,7 +3,6 @@ using UnityEngine;
 /// <summary>
 /// Automatically adjusts the Overlord's collider to match the current visual's collider
 /// </summary>
-
 [RequireComponent(typeof(OverlordSwapHandler))]
 public class OverlordColliderAdjuster : MonoBehaviour
 {
@@ -18,44 +17,58 @@ public class OverlordColliderAdjuster : MonoBehaviour
         if (overlordCollider == null)
         {
             overlordCollider = gameObject.AddComponent<CapsuleCollider>();
-            Debug.LogWarning("[OverlordColliderAutoAdjuster] No collider found; created default CapsuleCollider.");
+            Debug.LogWarning("[OverlordColliderAdjuster] No collider found; created default CapsuleCollider.", this);
         }
     }
 
     private void OnEnable()
     {
         if (swapHandler != null)
+        {
             swapHandler.OnVisualChanged += HandleVisualChanged;
+        }
     }
 
     private void OnDisable()
     {
         if (swapHandler != null)
+        {
             swapHandler.OnVisualChanged -= HandleVisualChanged;
+        }
     }
 
     private void HandleVisualChanged(GameObject newVisual)
     {
-        if (newVisual == null) return;
+        if (newVisual == null)
+            return;
 
         Collider src = newVisual.GetComponentInChildren<Collider>();
+
         if (src != null)
         {
             ReplaceWithMatchingCollider(src);
-            Debug.Log($"[OverlordColliderAutoAdjuster] Applied {src.GetType().Name} shape from {newVisual.name}");
+            Debug.Log($"[OverlordColliderAdjuster] Applied {src.GetType().Name} shape from {newVisual.name}", this);
         }
         else
         {
-            Debug.LogWarning($"[OverlordColliderAutoAdjuster] No collider found on {newVisual.name}. Keeping existing collider.");
+            Debug.LogWarning($"[OverlordColliderAdjuster] No collider found on {newVisual.name}. Keeping existing collider.", this);
         }
     }
 
     private void ReplaceWithMatchingCollider(Collider source)
     {
         if (overlordCollider != null)
+        {
             Destroy(overlordCollider);
+        }
 
         overlordCollider = gameObject.AddComponent(source.GetType()) as Collider;
+
+        if (overlordCollider == null)
+        {
+            Debug.LogError("[OverlordColliderAdjuster] Failed to create collider!", this);
+            return;
+        }
 
         overlordCollider.sharedMaterial = source.sharedMaterial;
 
@@ -82,20 +95,8 @@ public class OverlordColliderAdjuster : MonoBehaviour
                 break;
 
             default:
-                Debug.LogWarning($"[OverlordColliderAutoAdjuster] Collider type {source.GetType().Name} not specifically handled.");
+                Debug.LogWarning($"[OverlordColliderAdjuster] Collider type {source.GetType().Name} not specifically handled.", this);
                 break;
         }
-    }
-
-    private void ReplaceWithCapsule(Vector3 center, float height, float radius)
-    {
-        if (overlordCollider != null)
-            Destroy(overlordCollider);
-
-        CapsuleCollider capsule = gameObject.AddComponent<CapsuleCollider>();
-        capsule.center = center;
-        capsule.height = height;
-        capsule.radius = radius;
-        overlordCollider = capsule;
     }
 }

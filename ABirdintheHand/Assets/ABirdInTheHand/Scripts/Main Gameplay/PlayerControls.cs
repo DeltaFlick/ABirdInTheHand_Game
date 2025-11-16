@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Human & Bird Player Controls
+/// Human & Bird Player Controls with movement, jumping, and ladder climbing
 /// </summary>
-
 [RequireComponent(typeof(Rigidbody), typeof(PlayerInput))]
 public class PlayerControls : MonoBehaviour
 {
@@ -15,14 +12,13 @@ public class PlayerControls : MonoBehaviour
     private InputActionMap playerMap;
     private InputAction move;
     private InputAction look;
-    public bool isWalking = false;
-    public bool isJumping = false;
-    //public bool isWiggling = false;
+    private InputAction jumpAction;
 
-    //outgoing animation variables
-    public bool walkingAnim = false;
-    public bool jumpingAnim = false;
-    //public bool wigglingAnim = false; 
+    public bool isWalking { get; private set; }
+    public bool isJumping { get; private set; }
+
+    public bool walkingAnim { get; private set; }
+    public bool jumpingAnim { get; private set; }
 
     private Rigidbody rb;
     [SerializeField] private float movementForce = 1f;
@@ -31,9 +27,10 @@ public class PlayerControls : MonoBehaviour
     private Vector3 forceDirection = Vector3.zero;
 
     public PlayerInput pi { get; private set; }
-    [SerializeField] public Camera playerCamera;
-
+    [SerializeField] private Camera playerCamera;
     private Transform currentVisual;
+    private BirdIdentifier birdIdentifier;
+    private OverlordSwapHandler swapHandler;
 
     [Header("Ground Check Settings")]
     [SerializeField] private Transform groundCheck;
@@ -54,25 +51,52 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float climbSpeed = 3f;
     private bool isOnLadder = false;
 
-    private BirdIdentifier birdIdentifier;
     private Vector3 lastLookDir = Vector3.forward;
+    private bool isGroundedCache;
+    private CameraController cameraController;
+    private static readonly Vector3 gravityCompensation = Physics.gravity;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         pi = GetComponent<PlayerInput>();
 
+        if (pi == null || pi.actions == null)
+        {
+            Debug.LogError("[PlayerControls] PlayerInput or actions missing!", this);
+            enabled = false;
+            return;
+        }
+
         inputAsset = pi.actions;
         playerMap = inputAsset.FindActionMap("Player");
 
+        if (playerMap == null)
+        {
+            Debug.LogError("[PlayerControls] 'Player' action map not found!", this);
+            enabled = false;
+            return;
+        }
+
         move = playerMap.FindAction("Move");
         look = playerMap.FindAction("Look");
+        jumpAction = playerMap.FindAction("Jump");
 
         birdIdentifier = GetComponent<BirdIdentifier>();
 
-        var swapHandler = GetComponent<OverlordSwapHandler>();
+        swapHandler = GetComponent<OverlordSwapHandler>();
         if (swapHandler != null)
+        {
             swapHandler.OnVisualChanged += HandleVisualChanged;
+        }
+    }
+
+    private void Start()
+    {
+        if (playerCamera != null)
+        {
+            cameraController = playerCamera.GetComponent<CameraController>();
+        }
     }
 
     private void HandleVisualChanged(GameObject newVisual)
@@ -80,151 +104,175 @@ public class PlayerControls : MonoBehaviour
         currentVisual = newVisual != null ? newVisual.transform : null;
 
         if (playerCamera == null)
+        {
             playerCamera = GetComponentInChildren<Camera>(true);
+
+            if (playerCamera != null)
+            {
+                cameraController = playerCamera.GetComponent<CameraController>();
+            }
+        }
     }
 
     private void OnEnable()
     {
-        playerMap.FindAction("Jump").started += DoJump;
-        playerMap.Enable();
+        if (jumpAction != null)
+        {
+            jumpAction.started += DoJump;
+        }
+
+        if (playerMap != null)
+        {
+            playerMap.Enable();
+        }
     }
 
     private void OnDisable()
     {
-        playerMap.FindAction("Jump").started -= DoJump;
-        playerMap.Disable();
+        if (jumpAction != null)
+        {
+            jumpAction.started -= DoJump;
+        }
+
+        if (playerMap != null)
+        {
+            playerMap.Disable();
+        }
     }
 
     public void SetControlsEnabled(bool enabled)
     {
-        if (enabled)
-            pi.actions.FindActionMap("Player")?.Enable();
-        else
-            pi.actions.FindActionMap("Player")?.Disable();
-    }
+        if (pi?.actions == null) return;
 
-    private void UpdateAnimationBools()
-    {
-        //dunno if this is the best way but, it does work
-        switch (isWalking)
+        InputActionMap map = pi.actions.FindActionMap("Player");
+        if (map != null)
         {
-            case true:
-                walkingAnim = true;
-                break;
-            case false:
-                walkingAnim = false;
-                break;
+            if (enabled)
+                map.Enable();
+            else
+                map.Disable();
         }
-
-        switch (isJumping)
-        {
-            case true:
-                jumpingAnim = true;
-                break;
-            case false:
-                jumpingAnim = false;
-                break;
-        }
-
-        // Uncomment when wiggling is implemented
-        /*
-        switch (isWiggling)
-        {
-            case true:
-                wigglingAnim = true;
-                break;
-            case false:
-                wigglingAnim = false;
-                break;
-        }
-        */
     }
 
     private void FixedUpdate()
     {
-        if (rb.isKinematic) return;
-        if (playerCamera == null || move == null) return;
+        if (rb.isKinematic || playerCamera == null || move == null)
+            return;
 
         Vector2 moveInput = move.ReadValue<Vector2>();
 
         if (isOnLadder)
         {
-            Vector3 climbDirection = Vector3.up * moveInput.y;
-            rb.velocity = climbDirection * climbSpeed;
-
-            Vector3 sideMove = GetCameraRight(playerCamera) * moveInput.x * (climbSpeed * 0.5f);
-            rb.velocity += sideMove;
-
-            Vector3 lookDirection = -playerCamera.transform.forward;
-            lookDirection.y = 0;
-            if (lookDirection.sqrMagnitude > 0.01f)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-                rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 10f * Time.fixedDeltaTime));
-            }
-
+            HandleLadderMovement(moveInput);
             return;
         }
 
+        isGroundedCache = IsGrounded();
+
         float speedMultiplier = 1f;
         if (birdIdentifier != null && birdIdentifier.IsCaged)
+        {
             speedMultiplier = cagedSpeedMultiplier;
+        }
 
-        float controlMultiplier = IsGrounded() ? speedMultiplier : (speedMultiplier * airControlMultiplier);
+        float controlMultiplier = isGroundedCache ? speedMultiplier : (speedMultiplier * airControlMultiplier);
 
-        isWalking = moveInput.sqrMagnitude > 0.1f && IsGrounded();
+        isWalking = moveInput.sqrMagnitude > 0.1f && isGroundedCache;
 
-        forceDirection += moveInput.x * GetCameraRight(playerCamera) * movementForce * controlMultiplier;
-        forceDirection += moveInput.y * GetCameraForward(playerCamera) * movementForce * controlMultiplier;
+        if (moveInput.sqrMagnitude > 0.01f)
+        {
+            Vector3 rightDir = GetCameraRight(playerCamera);
+            Vector3 forwardDir = GetCameraForward(playerCamera);
 
-        rb.AddForce(forceDirection, ForceMode.Impulse);
-        forceDirection = Vector3.zero;
+            forceDirection = (rightDir * moveInput.x + forwardDir * moveInput.y) * movementForce * controlMultiplier;
+            rb.AddForce(forceDirection, ForceMode.Impulse);
+        }
 
         if (rb.velocity.y < 0f)
+        {
             rb.velocity -= Vector3.down * Physics.gravity.y * Time.fixedDeltaTime;
+        }
 
         Vector3 horizontalVelocity = rb.velocity;
         horizontalVelocity.y = 0;
-        if (horizontalVelocity.sqrMagnitude > maxSpeed * maxSpeed)
-            rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
+        float horizontalSpeed = horizontalVelocity.magnitude;
 
-        if (IsGrounded())
+        if (horizontalSpeed > maxSpeed)
+        {
+            rb.velocity = horizontalVelocity.normalized * maxSpeed + Vector3.up * rb.velocity.y;
+        }
+
+        if (isGroundedCache && moveInput.sqrMagnitude < 0.01f)
         {
             Vector3 counterForce = -rb.velocity;
             counterForce.y = 0f;
             rb.AddForce(counterForce * counterSlidingForce, ForceMode.Acceleration);
         }
 
-        isJumping = !IsGrounded() && rb.velocity.y > 0.1f;
+        isJumping = !isGroundedCache && rb.velocity.y > 0.1f;
 
         LookAt();
+
         UpdateAnimationBools();
+    }
+
+    private void HandleLadderMovement(Vector2 moveInput)
+    {
+        Vector3 climbDirection = Vector3.up * moveInput.y * climbSpeed;
+
+        Vector3 sideMove = GetCameraRight(playerCamera) * moveInput.x * (climbSpeed * 0.5f);
+
+        rb.velocity = climbDirection + sideMove;
+
+        Vector3 lookDirection = -playerCamera.transform.forward;
+        lookDirection.y = 0;
+
+        if (lookDirection.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 10f * Time.fixedDeltaTime));
+        }
+    }
+
+    private void UpdateAnimationBools()
+    {
+        walkingAnim = isWalking;
+        jumpingAnim = isJumping;
     }
 
     private void LookAt()
     {
-        if (playerCamera == null || currentVisual == null) return;
+        if (playerCamera == null || currentVisual == null)
+            return;
 
         Vector3 camDir = playerCamera.transform.forward;
         camDir.y = 0f;
 
         if (camDir.sqrMagnitude > 0.01f)
+        {
             lastLookDir = camDir.normalized;
+        }
 
         Quaternion targetRotation = Quaternion.LookRotation(lastLookDir, Vector3.up);
         rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 10f * Time.fixedDeltaTime));
     }
 
-    private Vector3 GetCameraForward(Camera playerCamera)
+    private Vector3 GetCameraForward(Camera cam)
     {
-        var controller = playerCamera.GetComponent<CameraController>();
-        return controller != null ? controller.orientation.forward : playerCamera.transform.forward;
+        if (cameraController != null && cameraController.orientation != null)
+        {
+            return cameraController.orientation.forward;
+        }
+        return cam.transform.forward;
     }
 
-    private Vector3 GetCameraRight(Camera playerCamera)
+    private Vector3 GetCameraRight(Camera cam)
     {
-        var controller = playerCamera.GetComponent<CameraController>();
-        return controller != null ? controller.orientation.right : playerCamera.transform.right;
+        if (cameraController != null && cameraController.orientation != null)
+        {
+            return cameraController.orientation.right;
+        }
+        return cam.transform.right;
     }
 
     private void DoJump(InputAction.CallbackContext context)
@@ -241,24 +289,20 @@ public class PlayerControls : MonoBehaviour
         {
             float jumpMultiplier = 1f;
             if (birdIdentifier != null && birdIdentifier.IsCaged)
+            {
                 jumpMultiplier = cagedJumpMultiplier;
+            }
 
-            forceDirection += Vector3.up * jumpForce * jumpMultiplier;
+            rb.AddForce(Vector3.up * jumpForce * jumpMultiplier, ForceMode.Impulse);
         }
     }
 
     private bool IsGrounded()
     {
-        return groundCheck != null && Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
-    }
+        if (groundCheck == null)
+            return false;
 
-    private void OnDrawGizmos()
-    {
-        if (groundCheck != null)
-        {
-            Gizmos.color = IsGrounded() ? Color.green : Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-        }
+        return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
     }
 
     #region Ladder Climbing
@@ -281,5 +325,23 @@ public class PlayerControls : MonoBehaviour
             rb.useGravity = true;
         }
     }
+
     #endregion
+
+    private void OnDestroy()
+    {
+        if (swapHandler != null)
+        {
+            swapHandler.OnVisualChanged -= HandleVisualChanged;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = IsGrounded() ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
+    }
 }

@@ -8,20 +8,25 @@ public class PlayerCustomPass : CustomPass
     [SerializeField] private Material playerShaderMaterial;
     [SerializeField] private int targetMaterialIndex = 1;
     [SerializeField] private bool enableFrustumCulling = true;
-    
+
     private int playerID;
     private Camera playerCamera;
     private GameObject targetObject;
     private bool isActive = false;
-    private Material materialInstance; 
+    private Material materialInstance;
+
+    private MeshRenderer cachedRenderer;
+    private MeshFilter cachedMeshFilter;
+    private Mesh cachedMesh;
+    private bool componentsValid = false;
 
     public void SetPlayerData(int id, Camera camera)
     {
         playerID = id;
         playerCamera = camera;
-        
+
         EnsureMaterialInstance();
-        
+
         if (materialInstance != null)
         {
             materialInstance.SetInt("_PlayerID", playerID);
@@ -33,9 +38,29 @@ public class PlayerCustomPass : CustomPass
     {
         targetObject = obj;
         isActive = obj != null;
-        
+
+        if (isActive && obj != null)
+        {
+            cachedRenderer = obj.GetComponent<MeshRenderer>();
+            cachedMeshFilter = obj.GetComponent<MeshFilter>();
+            cachedMesh = cachedMeshFilter != null ? cachedMeshFilter.sharedMesh : null;
+            componentsValid = cachedRenderer != null && cachedMeshFilter != null && cachedMesh != null;
+
+            if (!componentsValid)
+            {
+                Debug.LogWarning($"Player {playerID}: Target object {obj.name} missing required components");
+            }
+        }
+        else
+        {
+            cachedRenderer = null;
+            cachedMeshFilter = null;
+            cachedMesh = null;
+            componentsValid = false;
+        }
+
         EnsureMaterialInstance();
-        
+
         if (materialInstance != null)
         {
             materialInstance.SetFloat("_IsVisible", isActive ? 1f : 0f);
@@ -46,7 +71,11 @@ public class PlayerCustomPass : CustomPass
     {
         targetObject = null;
         isActive = false;
-        
+        cachedRenderer = null;
+        cachedMeshFilter = null;
+        cachedMesh = null;
+        componentsValid = false;
+
         if (materialInstance != null)
         {
             materialInstance.SetFloat("_IsVisible", 0f);
@@ -72,43 +101,37 @@ public class PlayerCustomPass : CustomPass
         if (!isActive || targetObject == null || ctx.hdCamera.camera != playerCamera)
             return;
 
-        MeshRenderer renderer = targetObject.GetComponent<MeshRenderer>();
-        if (renderer == null)
+        if (!componentsValid)
             return;
 
-        EnsureMaterialInstance();
         if (materialInstance == null)
-            return;
-
-        MeshFilter meshFilter = targetObject.GetComponent<MeshFilter>();
-        if (meshFilter != null && meshFilter.sharedMesh != null)
         {
-            if (enableFrustumCulling)
-            {
-                Bounds bounds = meshFilter.sharedMesh.bounds;
-                bounds.center = targetObject.transform.TransformPoint(bounds.center);
-                bounds.size = Vector3.Scale(bounds.size, targetObject.transform.lossyScale);
-                if (!GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(playerCamera), bounds))
-                    return;
-            }
+            EnsureMaterialInstance();
+            if (materialInstance == null)
+                return;
+        }
 
-            materialInstance.SetFloat("_TimeStamp", Time.time);
-            
-            //materialInstance.SetInt("_SrcBlend", (int)BlendMode.SrcAlpha);
-           // materialInstance.SetInt("_DstBlend", (int)BlendMode.OneMinusSrcAlpha);
-            //materialInstance.SetInt("_ZWrite", 0);
+        if (enableFrustumCulling)
+        {
+            Bounds bounds = cachedMesh.bounds;
+            bounds.center = targetObject.transform.TransformPoint(bounds.center);
+            bounds.size = Vector3.Scale(bounds.size, targetObject.transform.lossyScale);
+            if (!GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(playerCamera), bounds))
+                return;
+        }
 
-            Matrix4x4 matrix = targetObject.transform.localToWorldMatrix;
+        materialInstance.SetFloat("_TimeStamp", Time.time);
 
-            for (int i = 0; i < meshFilter.sharedMesh.subMeshCount; i++)
-            {
-                ctx.cmd.DrawMesh(
-                    meshFilter.sharedMesh,
-                    matrix,
-                    materialInstance,
-                    i 
-                );
-            }
+        Matrix4x4 matrix = targetObject.transform.localToWorldMatrix;
+
+        for (int i = 0; i < cachedMesh.subMeshCount; i++)
+        {
+            ctx.cmd.DrawMesh(
+                cachedMesh,
+                matrix,
+                materialInstance,
+                i
+            );
         }
     }
 
@@ -116,7 +139,11 @@ public class PlayerCustomPass : CustomPass
     {
         targetObject = null;
         isActive = false;
-        
+        cachedRenderer = null;
+        cachedMeshFilter = null;
+        cachedMesh = null;
+        componentsValid = false;
+
         if (materialInstance != null)
         {
             if (Application.isPlaying)
