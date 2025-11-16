@@ -14,9 +14,9 @@ public class TestPlayerCreator : MonoBehaviour
     [Header("Player Setup")]
     public GameObject playerPrefab;
     public PlayerManager playerManager;
-    
+
     private PlayerInputManager playerInputManager;
-    
+
     void Start()
     {
         playerInputManager = FindObjectOfType<PlayerInputManager>();
@@ -25,18 +25,27 @@ public class TestPlayerCreator : MonoBehaviour
             Debug.LogError("PlayerInputManager not found in scene!");
             return;
         }
-        
+
         if (playerManager == null)
         {
             playerManager = FindObjectOfType<PlayerManager>();
         }
-        
+
         if (playerPrefab != null)
         {
             playerInputManager.playerPrefab = playerPrefab;
         }
     }
-    
+
+    void Update()
+    {
+        if (Keyboard.current != null && Keyboard.current.f1Key.wasPressedThisFrame)
+        {
+            AddTestPlayer();
+            Debug.Log("Spawned test player with F1");
+        }
+    }
+
     public void AddTestPlayer()
     {
         if (playerManager == null || playerPrefab == null)
@@ -44,25 +53,23 @@ public class TestPlayerCreator : MonoBehaviour
             Debug.LogError("Missing required references!");
             return;
         }
-        
+
         GameObject playerObj = Instantiate(playerPrefab);
-        
-        
-     
+        Debug.Log("Test Player Spawned");
     }
-    
+
     public void RemoveAllPlayers()
     {
         if (playerManager == null)
             playerManager = FindObjectOfType<PlayerManager>();
-            
+
         var allPlayers = FindObjectsOfType<PlayerInput>().ToList();
-        
+
         foreach (var player in allPlayers)
         {
             DestroyImmediate(player.gameObject);
         }
-        
+
         Debug.Log("Removed all test players");
     }
 }

@@ -3,9 +3,9 @@ using UnityEngine.InputSystem;
 using System;
 
 /// <summary>
-/// Detects and tracks the control scheme for a specific player
+/// Detects and tracks the control scheme for a player
 /// </summary>
-
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerControlSchemeDetector : MonoBehaviour
 {
     public enum ControlScheme
@@ -26,12 +26,16 @@ public class PlayerControlSchemeDetector : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
 
-        if (playerInput != null)
+        if (playerInput == null)
         {
-            playerInput.onControlsChanged += OnControlsChanged;
-
-            DetectControlScheme();
+            Debug.LogError("[PlayerControlSchemeDetector] PlayerInput component missing!", this);
+            enabled = false;
+            return;
         }
+
+        playerInput.onControlsChanged += OnControlsChanged;
+
+        DetectControlScheme();
     }
 
     private void OnControlsChanged(PlayerInput input)
@@ -44,8 +48,12 @@ public class PlayerControlSchemeDetector : MonoBehaviour
         if (playerInput == null) return;
 
         ControlScheme newScheme = ControlScheme.Unknown;
-
         string schemeName = playerInput.currentControlScheme;
+
+        if (string.IsNullOrEmpty(schemeName))
+        {
+            return;
+        }
 
         if (schemeName.Contains("Keyboard") || schemeName.Contains("Mouse"))
         {
@@ -56,12 +64,12 @@ public class PlayerControlSchemeDetector : MonoBehaviour
             newScheme = ControlScheme.Gamepad;
         }
 
-        if (newScheme != currentControlScheme)
+        if (newScheme != currentControlScheme && newScheme != ControlScheme.Unknown)
         {
             currentControlScheme = newScheme;
             OnControlSchemeChanged?.Invoke(currentControlScheme);
 
-            Debug.Log($"Player {playerInput.playerIndex} control scheme: {currentControlScheme}");
+            Debug.Log($"[PlayerControlSchemeDetector] Player {playerInput.playerIndex} scheme: {currentControlScheme}", this);
         }
     }
 

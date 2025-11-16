@@ -1,11 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Updates UI prompts based on the player's control scheme
+/// Updates UI prompts based on the player's control scheme (keyboard vs gamepad)
 /// </summary>
-
 public class DynamicControlPrompt : MonoBehaviour
 {
     [Header("Control Images")]
@@ -14,7 +12,7 @@ public class DynamicControlPrompt : MonoBehaviour
 
     [Header("Alternative: Text-based")]
     [SerializeField] private TextMeshProUGUI promptText;
-    [SerializeField] private string keyboardText = "Press 'Z' to toggle menu";
+    [SerializeField] private string keyboardText = "Press 'Esc' to toggle menu";
     [SerializeField] private string gamepadText = "Press 'SELECT' to toggle menu";
 
     [Header("Settings")]
@@ -32,6 +30,10 @@ public class DynamicControlPrompt : MonoBehaviour
             if (keyboardPrompt != null) keyboardPrompt.SetActive(false);
             if (gamepadPrompt != null) gamepadPrompt.SetActive(false);
         }
+        else
+        {
+            if (promptText != null) promptText.text = string.Empty;
+        }
     }
 
     private void Update()
@@ -45,7 +47,8 @@ public class DynamicControlPrompt : MonoBehaviour
 
     public void SetPlayer(PlayerControlSchemeDetector detector)
     {
-        if (currentPlayerDetector == detector) return;
+        if (currentPlayerDetector == detector)
+            return;
 
         if (currentPlayerDetector != null)
         {
@@ -57,7 +60,6 @@ public class DynamicControlPrompt : MonoBehaviour
         if (currentPlayerDetector != null)
         {
             currentPlayerDetector.OnControlSchemeChanged += UpdatePrompt;
-
             UpdatePrompt(currentPlayerDetector.CurrentControlScheme);
         }
         else
@@ -78,16 +80,21 @@ public class DynamicControlPrompt : MonoBehaviour
 
         float closestDistance = Mathf.Infinity;
         PlayerControlSchemeDetector closest = null;
+        Vector3 myPosition = transform.position;
 
         foreach (var player in allPlayers)
         {
-            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (player == null) continue;
+
+            float distance = Vector3.Distance(myPosition, player.transform.position);
+
             if (distance < closestDistance)
             {
                 closestDistance = distance;
                 closest = player;
             }
         }
+
         SetPlayer(closest);
     }
 
@@ -95,11 +102,17 @@ public class DynamicControlPrompt : MonoBehaviour
     {
         if (useImagePrompts)
         {
+            bool isKeyboard = scheme == PlayerControlSchemeDetector.ControlScheme.KeyboardMouse;
+
             if (keyboardPrompt != null)
-                keyboardPrompt.SetActive(scheme == PlayerControlSchemeDetector.ControlScheme.KeyboardMouse);
+            {
+                keyboardPrompt.SetActive(isKeyboard);
+            }
 
             if (gamepadPrompt != null)
-                gamepadPrompt.SetActive(scheme == PlayerControlSchemeDetector.ControlScheme.Gamepad);
+            {
+                gamepadPrompt.SetActive(!isKeyboard);
+            }
         }
         else
         {
@@ -121,7 +134,7 @@ public class DynamicControlPrompt : MonoBehaviour
         }
         else
         {
-            if (promptText != null) promptText.text = "";
+            if (promptText != null) promptText.text = string.Empty;
         }
     }
 
@@ -130,6 +143,7 @@ public class DynamicControlPrompt : MonoBehaviour
         if (currentPlayerDetector != null)
         {
             currentPlayerDetector.OnControlSchemeChanged -= UpdatePrompt;
+            currentPlayerDetector = null;
         }
     }
 }

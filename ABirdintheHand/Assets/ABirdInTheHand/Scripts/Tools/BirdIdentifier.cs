@@ -1,13 +1,17 @@
 using UnityEngine;
 
+/// <summary>
+/// Identifies a bird character and tracks its state (held, caged)
+/// </summary>
 public class BirdIdentifier : MonoBehaviour
 {
     public bool IsBeingHeld { get; set; }
     public bool IsCaged { get; set; }
-
     public PlayerMenuController MenuController { get; set; }
 
-    void Awake()
+    private bool isRegistered = false;
+
+    private void Awake()
     {
         if (MenuController == null)
         {
@@ -15,23 +19,46 @@ public class BirdIdentifier : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
-        BirdManager.Instance?.RegisterBird(this.gameObject);
+        RegisterWithManager();
     }
 
-    void OnDestroy()
+    private void RegisterWithManager()
     {
-        BirdManager.Instance?.UnregisterBird(this.gameObject);
+        if (isRegistered) return;
+
+        if (BirdManager.Instance != null)
+        {
+            BirdManager.Instance.RegisterBird(gameObject);
+            isRegistered = true;
+        }
+        else
+        {
+            Debug.LogWarning("[BirdIdentifier] BirdManager instance not found! Bird not registered.", this);
+        }
     }
+
+    private void OnDestroy()
+    {
+        if (isRegistered && BirdManager.Instance != null)
+        {
+            BirdManager.Instance.UnregisterBird(gameObject);
+            isRegistered = false;
+        }
+    }
+
 
     public static BirdIdentifier GetFromOverlord(GameObject root)
     {
         if (root == null) return null;
 
         OverlordSwapHandler swapHandler = root.GetComponent<OverlordSwapHandler>();
+
         if (swapHandler != null && swapHandler.CurrentVisual != null)
+        {
             return swapHandler.CurrentVisual.GetComponentInChildren<BirdIdentifier>();
+        }
 
         return root.GetComponentInChildren<BirdIdentifier>();
     }

@@ -3,7 +3,112 @@ guid: 40f3619f04cde8548a18f2900c45a652
 ModelImporter:
   serializedVersion: 22103
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeBaseMat
+    second: {fileID: 2100000, guid: 365ff9c77816edd4a9f06ccd136b5fbb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeBlueEmissionMat
+    second: {fileID: 2100000, guid: 2cfc567bc3572a1489e8edbf829e2e41, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeGreenEmissionMat
+    second: {fileID: 2100000, guid: aa89a0f80a3451c42bb35264edf0aaa6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeHaloBlackMat
+    second: {fileID: 2100000, guid: 8c143b784ad6134439e122296b8ba949, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeHighWallsMat
+    second: {fileID: 2100000, guid: b80733271d45c804ea13a3825ca55b67, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadePillarBaseMat
+    second: {fileID: 2100000, guid: 96e8868aacca33644896de8fd0dc6388, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadePillarBlackMat
+    second: {fileID: 2100000, guid: 2aada0c3200dd6b44ba37d4eb26c4c7c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadePillarConnectionMat
+    second: {fileID: 2100000, guid: 294c2540b8efee8439ee47f8817b114e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadePinkEmissionMat
+    second: {fileID: 2100000, guid: 4495f77b66eb83c488354ca74a707408, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeSignBarMat
+    second: {fileID: 2100000, guid: 305a415bb9dc5084b90de14f08f2d44e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeSignBaseMat
+    second: {fileID: 2100000, guid: 6125285f99f01424bac68e79cbcc4b89, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeTriangleMat
+    second: {fileID: 2100000, guid: 43706f14280c6d14ea64976d4fb1b9fe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeWallsMat
+    second: {fileID: 2100000, guid: 18fce74c48be3a34580b6225a1f67b70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArcadeWindowsMat
+    second: {fileID: 2100000, guid: cb06ff7f1ad05f4459672980d1686af6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ColourPalette
+    second: {fileID: 2100000, guid: dffdede5d0b03834eb2e4e18fa855bc2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ColourPalette.003
+    second: {fileID: 2100000, guid: 88efe7de27b598c42ba4203dfb04cea2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: FenceMat
+    second: {fileID: 2100000, guid: d2df461ea060ca9438bf662e17da506d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: FenceMat.003
+    second: {fileID: 2100000, guid: f7fe71d8487e75f40aaf7429599b51b3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RopeWallMat1
+    second: {fileID: 2100000, guid: 42740874cd4e35145a5959d67b4d8133, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RopeWallMat2
+    second: {fileID: 2100000, guid: f08d6235ad7bba3409a662fd62317a25, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SpaceBlueEmissionMat
+    second: {fileID: 2100000, guid: cd4a274ba42922342a6f710abb5b680d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -89,7 +194,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 100
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
