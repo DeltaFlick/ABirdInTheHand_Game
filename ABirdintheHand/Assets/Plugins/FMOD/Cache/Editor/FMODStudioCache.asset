@@ -47,6 +47,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 134739
+--- !u!114 &-5991946147200275027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Vibin
+  m_EditorClassIdentifier: 
+  Path: event:/Vibin
+  Guid:
+    Data1: -1501550031
+    Data2: 1076513825
+    Data3: 664515739
+    Data4: -1173210620
+  Banks:
+  - {fileID: 3566529987522570746}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 42710
 --- !u!114 &-5416070948197342453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,6 +114,33 @@ MonoBehaviour:
   - Name: Desktop
     Value: 1074
   Exists: 1
+--- !u!114 &-3509525046284667895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/GroovyBass
+  m_EditorClassIdentifier: 
+  Path: event:/GroovyBass
+  Guid:
+    Data1: 266033768
+    Data2: 1258693795
+    Data3: 53730961
+    Data4: -2061674584
+  Banks:
+  - {fileID: 3566529987522570746}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 105038
 --- !u!114 &-3474808780404910036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,10 +204,10 @@ MonoBehaviour:
   Path: FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638903612797171060
+  lastModified: 639152551707539657
   FileSizes:
   - Name: Desktop
-    Value: 1010
+    Value: 1138
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -177,13 +231,16 @@ MonoBehaviour:
   - {fileID: 4007006537757209162}
   - {fileID: -3280278230075786994}
   - {fileID: -7790565696622476939}
+  - {fileID: -5991946147200275027}
+  - {fileID: 5230369639164457823}
+  - {fileID: -3509525046284667895}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2711673511143771348}
   StringsBanks:
   - {fileID: -9946768971237807}
   cacheVersion: 131848
-  cacheTime: 638903612797171060
+  cacheTime: 639152563492382329
   SerializableEventsDict:
   - key: event:/GrassyFootsteps
     index: 0
@@ -193,6 +250,12 @@ MonoBehaviour:
     index: 2
   - key: event:/Cat Song
     index: 3
+  - key: event:/Vibin
+    index: 4
+  - key: event:/Liquid Sky
+    index: 5
+  - key: event:/GroovyBass
+    index: 6
 --- !u!114 &2621709834355110359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,7 +298,7 @@ MonoBehaviour:
   Path: FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638903612797165980
+  lastModified: 639152551707539657
   FileSizes:
   - Name: Desktop
     Value: 1074
@@ -282,10 +345,10 @@ MonoBehaviour:
   Path: FMOD/Build/Desktop/Background Music.bank
   Name: Background Music
   StudioPath: bank:/Background Music
-  lastModified: 638903612797104716
+  lastModified: 639152563492382329
   FileSizes:
   - Name: Desktop
-    Value: 3630016
+    Value: 6889728
   Exists: 1
 --- !u!114 &4007006537757209162
 MonoBehaviour:
@@ -314,3 +377,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 137604
+--- !u!114 &5230369639164457823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Liquid Sky
+  m_EditorClassIdentifier: 
+  Path: event:/Liquid Sky
+  Guid:
+    Data1: -727617731
+    Data2: 1179617326
+    Data3: 26084761
+    Data4: 556089241
+  Banks:
+  - {fileID: 3566529987522570746}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 137038

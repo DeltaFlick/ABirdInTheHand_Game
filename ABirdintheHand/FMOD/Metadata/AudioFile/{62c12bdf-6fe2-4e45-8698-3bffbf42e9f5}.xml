@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{62c12bdf-6fe2-4e45-8698-3bffbf42e9f5}">
+		<property name="assetPath">
+			<value>Liquid Sky.mp3</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>137.03836734693877</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{466b664e-d2af-4ac7-aa72-9f576d719d7e}</destination>
+		</relationship>
+	</object>
+</objects>
